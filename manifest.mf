@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.php.wordpress
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/wordpress/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+
