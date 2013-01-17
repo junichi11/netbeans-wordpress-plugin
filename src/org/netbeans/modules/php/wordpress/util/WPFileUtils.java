@@ -50,12 +50,35 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author junichi11
  */
 public class WPFileUtils {
+
+    public static FileObject getPluginsDirectory(PhpModule phpModule) {
+        return getDirectory(phpModule, "wp-content/plugins"); // NOI18N
+    }
+
+    public static FileObject getThemesDirectory(PhpModule phpModule) {
+        return getDirectory(phpModule, "wp-content/themes"); // NOI18N
+    }
+
+    public static FileObject getDirectory(PhpModule phpModule, String path) {
+        if (phpModule == null) {
+            return null;
+        }
+        FileObject sourceDirectory = phpModule.getSourceDirectory();
+        FileObject fileObject = null;
+        if (sourceDirectory != null) {
+            fileObject = sourceDirectory.getFileObject(path);
+        }
+        return fileObject;
+
+    }
 
     /**
      * Unzip specified URL.
