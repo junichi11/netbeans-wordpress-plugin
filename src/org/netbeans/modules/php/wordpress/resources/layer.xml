@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-php5">
+                <folder name="CodeTemplates">
+                    <file name="org-netbeans-modules-phpeditor-snippets.xml" url="org-netbeans-modules-phpeditor-snippets.xml"/>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>
