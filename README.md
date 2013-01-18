@@ -10,6 +10,7 @@ This is NetBeans plugin for WordPress.
 - important files
 - create new WordPress project
 - code templates
+- zip compress action
 
 ### Impotant Files
 It contains wp-config.php
@@ -31,6 +32,10 @@ You can create a new WordPress project with Wizard.
 - wpgpl : wordpress license comment
 
 e.g. please type wpph [Tab]
+
+### Zip Compress Action
+You can compress specified pluign or theme directory as Zip file to the same hierarchy.  
+Right-click active plugin or theme node > Zip compress
 
 ## License
 [Common Development and Distribution License (CDDL) v1.0 and GNU General Public License (GPL) v2](http://netbeans.org/cddl-gplv2.html)
