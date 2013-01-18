@@ -44,14 +44,18 @@ package org.netbeans.modules.php.wordpress.util;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -78,6 +82,66 @@ public class WPFileUtils {
         }
         return fileObject;
 
+    }
+
+    /**
+     * Zip compress. Create a zip file to the same hierarchy as the target
+     * directory.
+     *
+     * @param target target directory
+     * @throws IOException
+     */
+    public static void zip(FileObject target) throws IOException {
+        // check whether target is directory or not null
+        if (target == null || !target.isFolder()) {
+            return;
+        }
+        // create zip file
+        FileObject parent = target.getParent();
+        FileObject zipFile = parent.createData(target.getName() + ".zip"); // NOI18N
+        ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(FileUtil.toFile(zipFile)));
+
+        // compress
+        File targetDirectory = FileUtil.toFile(target);
+        File[] files = targetDirectory.listFiles();
+        try {
+            compress(targetDirectory, files, zipOutputStream);
+        } finally {
+            zipOutputStream.close();
+        }
+    }
+
+    /**
+     * Compress
+     *
+     * @param target target root directory
+     * @param files directory children
+     * @param zipOutputStream
+     * @param buffer
+     * @throws IOException
+     */
+    private static void compress(File target, File[] files, ZipOutputStream zipOutputStream) throws IOException {
+        String parentPath = target.getParentFile().getPath();
+        byte[] buffer = new byte[1024];
+        for (File file : files) {
+            if (file.isDirectory()) {
+                // directory
+                compress(target, file.listFiles(), zipOutputStream);
+            } else {
+                // file
+                InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+                String path = file.getPath();
+                path = path.replace(parentPath, ""); // NOI18N
+                path = path.replace("\\", "/"); // NOI18N
+                zipOutputStream.putNextEntry(new ZipEntry(path));
+                int data;
+                while ((data = inputStream.read(buffer)) > 0) {
+                    zipOutputStream.write(buffer, 0, data);
+                }
+                zipOutputStream.closeEntry();
+                inputStream.close();
+            }
+        }
     }
 
     /**
