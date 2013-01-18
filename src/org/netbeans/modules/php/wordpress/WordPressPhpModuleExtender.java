@@ -266,7 +266,11 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
         String language = locale.getLanguage();
         String urlPath = null;
         if (language != null && !language.isEmpty()) {
-            urlPath = String.format(WP_DL_URL_FORMAT, language, language);
+            if (language.equals("en")) { // NOI18N
+                urlPath = WP_DL_URL_DEFAULT;
+            } else {
+                urlPath = String.format(WP_DL_URL_FORMAT, language, language);
+            }
         }
         try {
             URL check = new URL(urlPath);
@@ -297,6 +301,8 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
         if (pw == null) {
             return;
         }
+
+        // write
         try {
             Pattern pattern = Pattern.compile(DEFINE_PATTERN);
             boolean isSecret = false;
