@@ -11,6 +11,7 @@ This is NetBeans plugin for WordPress.
 - create new WordPress project
 - code templates
 - zip compress action
+- template files
 
 ### Impotant Files
 It contains wp-config.php
@@ -36,6 +37,11 @@ e.g. please type wpph [Tab]
 ### Zip Compress Action
 You can compress specified pluign or theme directory as Zip file to the same hierarchy.  
 Right-click active plugin or theme node > Zip compress
+
+### Template Files
+You can create a pluign file and readme file with new file wizard.
+
+Right-click directory > New > Others > WordPress > (WordPress Plugin | WordPress Plugin Readme)
 
 ## License
 [Common Development and Distribution License (CDDL) v1.0 and GNU General Public License (GPL) v2](http://netbeans.org/cddl-gplv2.html)
