@@ -12,6 +12,7 @@ This is NetBeans plugin for WordPress.
 - code templates
 - zip compress action
 - template files
+- display and change debug status
 
 ### Impotant Files
 It contains wp-config.php
@@ -42,6 +43,10 @@ Right-click active plugin or theme node > Zip compress
 You can create a pluign file and readme file with new file wizard.
 
 Right-click directory > New > Others > WordPress > (WordPress Plugin | WordPress Plugin Readme)
+
+### Display And Change Debug Status
+WP_DEBUG value(wp-config.php) is displayed on bottome-right of IDE. 
+If you click there, you can change WP_DEBUG value.
 
 ## License
 [Common Development and Distribution License (CDDL) v1.0 and GNU General Public License (GPL) v2](http://netbeans.org/cddl-gplv2.html)
