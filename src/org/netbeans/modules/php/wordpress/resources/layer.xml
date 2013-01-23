@@ -10,4 +10,8 @@
             </folder>
         </folder>
     </folder>
+    <folder name="org-netbeans-modules-php-wordpress">
+            <file name="wp-filters-list.txt" url="wp-filters-list.txt" />
+            <file name="wp-actions-list.txt" url="wp-actions-list.txt" />
+    </folder>
 </filesystem>
