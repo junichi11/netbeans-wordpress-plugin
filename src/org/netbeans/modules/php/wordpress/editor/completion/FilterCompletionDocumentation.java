@@ -41,7 +41,9 @@
  */
 package org.netbeans.modules.php.wordpress.editor.completion;
 
-import org.openide.util.NbBundle;
+import java.net.MalformedURLException;
+import java.net.URL;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -57,7 +59,12 @@ public class FilterCompletionDocumentation extends WordPressCompletionDocumentat
     }
 
     @Override
-    public String getText() {
-        return NbBundle.getMessage(WordPressCompletionDocumentation.class, "WP_Filter_Description_" + item.getText()); // NOI18N
+    public URL getURL() {
+        try {
+            return new URL("http://codex.wordpress.org/Plugin_API/Filter_Reference"); // NO18N
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return null;
     }
 }

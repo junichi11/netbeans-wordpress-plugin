@@ -41,9 +41,14 @@
  */
 package org.netbeans.modules.php.wordpress.editor.completion;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.Document;
@@ -53,6 +58,7 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
@@ -62,6 +68,11 @@ import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  *
@@ -70,29 +81,43 @@ import org.openide.util.Exceptions;
 @MimeRegistration(mimeType = "text/x-php5", service = CompletionProvider.class)
 public class FilterAndActionCompletion extends WordPressCompletionProvider {
 
-    private static final List<String> filters = new ArrayList<String>();
-    private static final List<String> actions = new ArrayList<String>();
     private static final Logger LOGGER = Logger.getLogger(FilterAndActionCompletion.class.getName());
-    private static final String FILTER_CODE_COMPLETION_FILE = "org-netbeans-modules-php-wordpress/wp-filters-list.txt"; // NOI18N
-    private static final String ACTION_CODE_COMPLETION_FILE = "org-netbeans-modules-php-wordpress/wp-actions-list.txt"; // NOI18N
+    private static final String CUSTOM_FILTER_CODE_COMPLETION_XML = "nbproject/code-completion-filter.xml"; // NOI18N
+    private static final String CUSTOM_ACTION_CODE_COMPLETION_XML = "nbproject/code-completion-action.xml"; // NOI18N
+    private static final String DEFAULT_FILTER_CODE_COMPLETION_XML = "org-netbeans-modules-php-wordpress/code-completion-filter.xml"; // NOI18N
+    private static final String DEFAULT_ACTION_CODE_COMPLETION_XML = "org-netbeans-modules-php-wordpress/code-completion-action.xml"; // NOI18N
     private int argCount;
     private boolean isFilter = false;
     private boolean isAction = false;
+    private List<WordPressCompletionItem> filterItems = new ArrayList<WordPressCompletionItem>();
+    private List<WordPressCompletionItem> actionItems = new ArrayList<WordPressCompletionItem>();
 
-    static {
-        FileObject filterFile = FileUtil.getConfigFile(FILTER_CODE_COMPLETION_FILE);
-        FileObject actionFile = FileUtil.getConfigFile(ACTION_CODE_COMPLETION_FILE);
+    public FilterAndActionCompletion() {
+        // read file for filter
+        FileObject filterXml = null;
+        FileObject actionXml = null;
+        PhpModule phpModule = PhpModule.inferPhpModule();
+        // use custom file
+        if (phpModule != null) {
+            FileObject projectDirectory = phpModule.getProjectDirectory();
+            if (projectDirectory != null) {
+                filterXml = projectDirectory.getFileObject(CUSTOM_FILTER_CODE_COMPLETION_XML);
+                actionXml = projectDirectory.getFileObject(CUSTOM_ACTION_CODE_COMPLETION_XML);
+            }
+        }
+        if (filterXml == null) {
+            filterXml = FileUtil.getConfigFile(DEFAULT_FILTER_CODE_COMPLETION_XML);
+        }
+        if (actionXml == null) {
+            actionXml = FileUtil.getConfigFile(DEFAULT_ACTION_CODE_COMPLETION_XML);
+        }
         try {
-            List<String> lines = filterFile.asLines();
-            for (String line : lines) {
-                filters.add(line);
-            }
-            lines = actionFile.asLines();
-            for (String line : lines) {
-                actions.add(line);
-            }
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            Reader filterReader = new BufferedReader(new InputStreamReader(filterXml.getInputStream()));
+            WordPressCodeCompletionParser.parse(filterReader, filterItems);
+            Reader actionReader = new BufferedReader(new InputStreamReader(actionXml.getInputStream()));
+            WordPressCodeCompletionParser.parse(actionReader, actionItems);
+        } catch (FileNotFoundException ex) {
+            LOGGER.log(Level.WARNING, null, ex);
         }
     }
 
@@ -136,17 +161,15 @@ public class FilterAndActionCompletion extends WordPressCompletionProvider {
                     }
 
                     // set isAction and isFilter
-                    List<String> completions = getCodeCompletionList(doc);
+                    List<WordPressCompletionItem> completions = getCodeCompletionList();
 
                     if (isAction || isFilter) {
-                        for (String completion : completions) {
-                            if (!completion.isEmpty()
-                                    && completion.startsWith(filter)) {
-                                if (isAction) {
-                                    completionResultSet.addItem(new ActionCompletionItem(completion, startOffset, removeLength));
-                                } else if (isFilter) {
-                                    completionResultSet.addItem(new FilterCompletionItem(completion, startOffset, removeLength));
-                                }
+                        for (WordPressCompletionItem completion : completions) {
+                            String text = completion.getText();
+                            if (!text.isEmpty()
+                                    && text.startsWith(filter)) {
+                                completion.setOffset(startOffset, removeLength);
+                                completionResultSet.addItem(completion);
                             }
                         }
                     }
@@ -211,16 +234,96 @@ public class FilterAndActionCompletion extends WordPressCompletionProvider {
         return list;
     }
 
-    private List<String> getCodeCompletionList(Document doc) {
-        List<String> list = new ArrayList<String>();
+    private List<WordPressCompletionItem> getCodeCompletionList() {
+        List<WordPressCompletionItem> list = new ArrayList<WordPressCompletionItem>();
         if (argCount == 1) {
             if (isFilter) {
-                list = filters;
+                list = filterItems;
             } else if (isAction) {
-                list = actions;
+                list = actionItems;
             }
         } else if (argCount == 2) {
         }
         return list;
+    }
+
+    private static class WordPressCodeCompletionParser extends DefaultHandler {
+
+        private static final String NAME = "name"; // NOI18N
+        private static final String DESCRIPTION = "description"; // NOI18N
+        private static final String FILTER = "filter"; // NOI18N
+        private static final String ACTION = "action"; // NOI18N
+        private static final String CATEGORY = "category"; // NOI18N
+        private final XMLReader xmlReader;
+        private final List<WordPressCompletionItem> items;
+        private String currentName = null;
+        private String currentDescription = null;
+        private String currentCategory = null;
+        boolean isName = false;
+        boolean isDescription = false;
+
+        public WordPressCodeCompletionParser(List<WordPressCompletionItem> items) throws SAXException {
+            this.xmlReader = FileUtils.createXmlReader();
+            this.items = items;
+            xmlReader.setContentHandler(this);
+        }
+
+        public static void parse(Reader reader, List<WordPressCompletionItem> items) {
+            try {
+                WordPressCodeCompletionParser parser = new WordPressCodeCompletionParser(items);
+                parser.xmlReader.parse(new InputSource(reader));
+            } catch (SAXException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            } finally {
+                try {
+                    reader.close();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+            if (FILTER.equals(qName) || ACTION.equals(qName)) {
+                currentCategory = "<b>" + attributes.getValue(CATEGORY) + "</b><br/>"; // NOI18N
+            } else if (NAME.equals(qName)) {
+                isName = true;
+            } else if (DESCRIPTION.equals(qName)) {
+                isDescription = true;
+            }
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+            if (NAME.equals(qName)) {
+                isName = false;
+            } else if (DESCRIPTION.equals(qName)) {
+                isDescription = false;
+            } else if (FILTER.equals(qName)) {
+                items.add(new FilterCompletionItem(currentName, currentCategory + currentDescription));
+                resetCurrentValues();
+            } else if (ACTION.equals(qName)) {
+                items.add(new ActionCompletionItem(currentName, currentCategory + currentDescription));
+                resetCurrentValues();
+            }
+        }
+
+        @Override
+        public void characters(char[] ch, int start, int length) throws SAXException {
+            if (isName) {
+                currentName = new String(ch, start, length);
+            } else if (isDescription) {
+                currentDescription = new String(ch, start, length);
+            }
+        }
+
+        private void resetCurrentValues() {
+            currentName = ""; // NOI18N
+            currentDescription = ""; // NOI18N
+            currentCategory = ""; // NOI18N
+        }
     }
 }

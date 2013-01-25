@@ -11,7 +11,7 @@
         </folder>
     </folder>
     <folder name="org-netbeans-modules-php-wordpress">
-            <file name="wp-filters-list.txt" url="wp-filters-list.txt" />
-            <file name="wp-actions-list.txt" url="wp-actions-list.txt" />
+            <file name="code-completion-filter.xml" url="code-completion-filter.xml" />
+            <file name="code-completion-action.xml" url="code-completion-action.xml" />
     </folder>
 </filesystem>

@@ -41,6 +41,10 @@
  */
 package org.netbeans.modules.php.wordpress.editor.completion;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import org.openide.util.Exceptions;
+
 /**
  *
  * @author junichi11
@@ -52,5 +56,15 @@ public class ActionCompletionDocumentation extends WordPressCompletionDocumentat
     public ActionCompletionDocumentation(ActionCompletionItem item) {
         super(item);
         this.item = item;
+    }
+
+    @Override
+    public URL getURL() {
+        try {
+            return new URL("http://codex.wordpress.org/Plugin_API/Action_Reference"); // NOI18N
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return null;
     }
 }

@@ -47,12 +47,16 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
 import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.modules.php.wordpress.WordPress;
 import org.netbeans.spi.editor.completion.CompletionItem;
+import org.netbeans.spi.editor.completion.CompletionResultSet;
 import org.netbeans.spi.editor.completion.CompletionTask;
+import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
+import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -64,6 +68,7 @@ import org.openide.util.ImageUtilities;
 public class WordPressCompletionItem implements CompletionItem {
 
     private String text;
+    private String description;
     private static ImageIcon fieldIcon = new ImageIcon(ImageUtilities.loadImage(WordPress.WP_ICON_16)); // NOI18N
     private static Color fieldColor = Color.decode("0x21759b"); // NOI18N
     private int startOffset;
@@ -71,6 +76,23 @@ public class WordPressCompletionItem implements CompletionItem {
 
     WordPressCompletionItem(String text, int startOffset, int removeLength) {
         this.text = text;
+        this.startOffset = startOffset;
+        this.removeLength = removeLength;
+    }
+
+    WordPressCompletionItem(String text, String description, int startOffset, int removeLength) {
+        this.text = text;
+        this.description = description;
+        this.startOffset = startOffset;
+        this.removeLength = removeLength;
+    }
+
+    WordPressCompletionItem(String text, String description) {
+        this.text = text;
+        this.description = description;
+    }
+
+    protected void setOffset(int startOffset, int removeLength) {
         this.startOffset = startOffset;
         this.removeLength = removeLength;
     }
@@ -103,7 +125,13 @@ public class WordPressCompletionItem implements CompletionItem {
 
     @Override
     public CompletionTask createDocumentationTask() {
-        return null;
+        return new AsyncCompletionTask(new AsyncCompletionQuery() {
+            @Override
+            protected void query(CompletionResultSet completionResultSet, Document document, int i) {
+                completionResultSet.setDocumentation(new WordPressCompletionDocumentation(WordPressCompletionItem.this));
+                completionResultSet.finish();
+            }
+        });
     }
 
     @Override
@@ -133,5 +161,9 @@ public class WordPressCompletionItem implements CompletionItem {
 
     public String getText() {
         return text;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

@@ -41,6 +41,12 @@
  */
 package org.netbeans.modules.php.wordpress.editor.completion;
 
+import javax.swing.text.Document;
+import org.netbeans.spi.editor.completion.CompletionResultSet;
+import org.netbeans.spi.editor.completion.CompletionTask;
+import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
+import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
+
 /**
  *
  * @author junichi11
@@ -49,5 +55,20 @@ public class ActionCompletionItem extends WordPressCompletionItem {
 
     public ActionCompletionItem(String text, int startOffset, int removeLength) {
         super(text, startOffset, removeLength);
+    }
+
+    ActionCompletionItem(String text, String description) {
+        super(text, description);
+    }
+
+    @Override
+    public CompletionTask createDocumentationTask() {
+        return new AsyncCompletionTask(new AsyncCompletionQuery() {
+            @Override
+            protected void query(CompletionResultSet completionResultSet, Document document, int i) {
+                completionResultSet.setDocumentation(new ActionCompletionDocumentation(ActionCompletionItem.this));
+                completionResultSet.finish();
+            }
+        });
     }
 }

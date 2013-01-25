@@ -69,7 +69,7 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         downloadUrlTextField = new javax.swing.JTextField();
         localFileTextField = new javax.swing.JTextField();
-        searchButton = new javax.swing.JButton();
+        browseButton = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(downloadUrlLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.downloadUrlLabel.text")); // NOI18N
 
@@ -79,10 +79,10 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
 
         localFileTextField.setText(org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.localFileTextField.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(searchButton, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.searchButton.text")); // NOI18N
-        searchButton.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(browseButton, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.browseButton.text")); // NOI18N
+        browseButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchButtonActionPerformed(evt);
+                browseButtonActionPerformed(evt);
             }
         });
 
@@ -100,7 +100,7 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(localFileTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(downloadUrlTextField))
                 .addContainerGap())
         );
@@ -115,13 +115,13 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(localFileTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchButton))
+                    .addComponent(browseButton))
                 .addContainerGap(74, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     @NbBundle.Messages("LBL_LocalFilePath=Local file path")
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+    private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
         File localFile = new FileChooserBuilder(WordPressOptionsPanel.class.getName())
                 .setTitle(Bundle.LBL_LocalFilePath())
@@ -130,7 +130,7 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         if (localFile != null) {
             setLocalPath(localFile.getAbsolutePath());
         }
-    }//GEN-LAST:event_searchButtonActionPerformed
+    }//GEN-LAST:event_browseButtonActionPerformed
 
     public void setLocalPath(String path) {
         localFileTextField.setText(path);
@@ -188,10 +188,10 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton browseButton;
     private javax.swing.JLabel downloadUrlLabel;
     private javax.swing.JTextField downloadUrlTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField localFileTextField;
-    private javax.swing.JButton searchButton;
     // End of variables declaration//GEN-END:variables
 }

@@ -57,6 +57,10 @@ public class FilterCompletionItem extends WordPressCompletionItem {
         super(text, startOffset, removeLength);
     }
 
+    public FilterCompletionItem(String text, String description) {
+        super(text, description);
+    }
+
     @Override
     public CompletionTask createDocumentationTask() {
         return new AsyncCompletionTask(new AsyncCompletionQuery() {

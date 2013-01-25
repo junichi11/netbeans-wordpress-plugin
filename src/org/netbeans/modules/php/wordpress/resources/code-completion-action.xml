@@ -1,0 +1,1100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 2013 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+
+Portions Copyrighted 2013 Sun Microsystems, Inc.
+-->
+<codecompletion>
+    <actions>
+        <action category="Actions Run During a Typical Request">
+            <name>muplugins_loaded</name>
+            <description><![CDATA[After must-use plugins are loaded]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>registered_taxonomy</name>
+            <description><![CDATA[For category, post_tag, <i>etc.</i>]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>registered_post_type</name>
+            <description><![CDATA[For post, page, <i>etc.</i>]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>plugins_loaded</name>
+            <description><![CDATA[After active plugins and pluggable functions are loaded]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>sanitize_comment_cookies</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>setup_theme</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>load_textdomain</name>
+            <description><![CDATA[For the <tt>default</tt> domain]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>after_setup_theme</name>
+            <description><![CDATA[Generally used to initialize theme settings/options. This is the <strong>first action hook available to themes</strong>, triggered immediately after the active theme's <tt>functions.php</tt> file is loaded. <tt>add_theme_support()</tt> should be called here, since the <tt>init</tt> action hook is too late to add some features.]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>auth_cookie_malformed</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>auth_cookie_valid</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>set_current_user</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>init</name>
+            <description><![CDATA[Typically used by plugins to initialize]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>widgets_init</name>
+            <description><![CDATA[Used to register sidebars. This is fired at 'init', with a priority of 1.]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>register_sidebar</name>
+            <description><![CDATA[For each sidebar and footer area]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>wp_register_sidebar_widget</name>
+            <description><![CDATA[For each widget]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>wp_default_scripts</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>wp_default_styles</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>admin_bar_init</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>add_admin_bar_menus</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>wp_loaded</name>
+            <description><![CDATA[After WordPress is fully loaded]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>parse_request</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>send_headers</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>parse_query</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>pre_get_posts</name>
+            <description><![CDATA[Exposes the query-variables object before a query is executed. (ref array)]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>posts_selection</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>wp</name>
+            <description><![CDATA[After WP object is set up (ref array)]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>template_redirect</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>get_header</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>wp_head</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>wp_enqueue_scripts</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>wp_print_styles</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>wp_print_scripts</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>get_search_form</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>loop_start</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>the_post</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>get_template_part_content</name>
+            <description><![CDATA[Template part for the content]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>loop_end</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>get_sidebar</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>dynamic_sidebar</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>get_search_form</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>pre_get_posts</name>
+            <description><![CDATA[Exposes the query-variables object before a query is executed. (ref array)]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>pre_get_comments</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>wp_meta</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>get_footer</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>get_sidebar</name>
+            <description><![CDATA[This 'sidebar' is a footer area]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>twentyeleven_credits</name>
+            <description><![CDATA[(Specific to Twenty Eleven)]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>wp_footer</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>wp_print_footer_scripts</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>admin_bar_menu</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>wp_before_admin_bar_render</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>wp_after_admin_bar_render</name>
+            <description><![CDATA[]]></description>
+        </action>
+        <action category="Actions Run During a Typical Request">
+            <name>shutdown</name>
+            <description><![CDATA[PHP execution is about to end]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>muplugins_loaded</name>
+            <description><![CDATA[After must-use plugins are loaded]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>registered_taxonomy</name>
+            <description><![CDATA[For category, post_teg, <i>etc.</i>]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>registered_post_type</name>
+            <description><![CDATA[For post, page, <i>etc.</i>]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>plugins_loaded</name>
+            <description><![CDATA[After active plugins and pluggable functions are loaded]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>load_textdomain</name>
+            <description><![CDATA[For domain <tt>default</tt>]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>load_textdomain</name>
+            <description><![CDATA[For domain <tt>twentyeleven</tt>]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>init</name>
+            <description><![CDATA[Typically used by plugins to initialize]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>register_sidebar</name>
+            <description><![CDATA[For each sidebar]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>wp_register_sidebar_widget</name>
+            <description><![CDATA[For each widget]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>wp_default_scripts</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>wp_default_styles</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>wp_loaded</name>
+            <description><![CDATA[After WordPress is fully loaded]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>_admin_menu</name>
+            <description><![CDATA[See also: <a href="http://codex.wordpress.org/Plugin_API/Action_Reference/_user_admin_menu" title="Plugin API/Action Reference/ user admin menu">_user_admin_menu</a>, <a href="http://codex.wordpress.org/Plugin_API/Action_Reference/_network_admin_menu" title="Plugin API/Action Reference/ network admin menu">_network_admin_menu</a>]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>admin_menu</name>
+            <description><![CDATA[See also: <a href="http://codex.wordpress.org/Plugin_API/Action_Reference/user_admin_menu" title="Plugin API/Action Reference/user admin menu">user_admin_menu</a>, <a href="http://codex.wordpress.org/Plugin_API/Action_Reference/network_admin_menu" title="Plugin API/Action Reference/network admin menu">network_admin_menu</a>]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>parse_request</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>send_headers</name>
+            <description><![CDATA[Where custom HTTP headers can be added]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>parse_query</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>pre_get_posts</name>
+            <description><![CDATA[Exposes the query-variables object before a query is executed. (ref array)]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>wp</name>
+            <description><![CDATA[After WP object is set up (ref array)]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>the_post</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>pre_user_query</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>pre_user_query</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>admin_bar_menu</name>
+            <description><![CDATA[(ref array)]]></description>
+        </action>
+        <action category="Actions Run During an Admin Page Request">
+            <name>shutdown</name>
+            <description><![CDATA[PHP execution is about to end]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>add_attachment</name>
+            <description><![CDATA[Runs when an attached file is first added to the database. Action function arguments: attachment ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>add_category</name>
+            <description><![CDATA[Same as 
+<tt>create_category</tt>.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>category_add_form_fields</name>
+            <description><![CDATA[Runs when category add form is cerated in admin. Useful to add a field in this form before the submit button]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>category_edit_form</name>
+            <description><![CDATA[Runs when category edit form is created in admin. Useful to add a new field to this form]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>clean_post_cache</name>
+            <description><![CDATA[Runs when post cache is cleaned. Action function arguments: post ID. See 
+<a href="http://codex.wordpress.org/Function_Reference/clean_post_cache" title="Function Reference/clean post cache"><tt>clean_post_cache()</tt></a>.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>create_category</name>
+            <description><![CDATA[Runs when a new category is created. Action function arguments: category ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>delete_attachment</name>
+            <description><![CDATA[Runs just after an attached file is deleted from the database. Action function arguments: attachment ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>delete_category</name>
+            <description><![CDATA[Runs just after a category is deleted from the database and its corresponding links/posts are updated to remove the category. Action function arguments: category ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>wp_trash_post</name>
+            <description><![CDATA[Runs when a post or page is about to be trashed. Action function arguments: post or page ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>trashed_post</name>
+            <description><![CDATA[Runs just after a post or page is trashed. Action function arguments: post or page ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>before_delete_post</name>
+            <description><![CDATA[Runs when a post or page is about to be deleted. Comments, attachments and metadata are still available. Action function arguments: post or page ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>delete_post</name>
+            <description><![CDATA[Runs when a post or page is about to be deleted. Comments, attachments and metadata are already deleted. Action function arguments: post or page ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>deleted_post</name>
+            <description><![CDATA[Runs just after a post or page is deleted. Action function arguments: post or page ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>edit_attachment</name>
+            <description><![CDATA[Runs when an attached file is edited/updated to the database. Action function arguments: attachment ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>edit_category</name>
+            <description><![CDATA[Runs when a category is updated/edited, including when a post or blogroll link is added/deleted or its categories are updated (which causes the count for the category to update). Action function arguments: category ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>edit_post</name>
+            <description><![CDATA[Runs when a post or page is updated/edited, including when a comment is added or updated (which causes the comment count for the post to update). Action function arguments: post or page ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>pre_post_update</name>
+            <description><![CDATA[Runs just before a post or page is updated. Action function arguments: post or page ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>private_to_publish</name>
+            <description><![CDATA[(See also 
+<a href="http://codex.wordpress.org/Post_Status_Transitions" title="Post Status Transitions">Post Status Transitions</a>) Runs when a post is changed from private to published status. Action function arguments: post object. (Actions for all post status transitions are available: see wp_transition_post_status()).]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>publish_page</name>
+            <description><![CDATA[Runs when a page is published, or if it is edited and its status is &quot;published&quot;. Action function arguments: page ID. (WARNING: this hook seems to never fire on v2.3 and higher. The 'transition_post_status' hook does work though;
+<a href="http://codex.wordpress.org/index.php?title=Plugin_API/Action_Reference/_UPDATE&amp;action=edit&amp;redlink=1" class="new" title="Plugin API/Action Reference/ UPDATE (page does not exist)"> UPDATE</a>&nbsp;: publish_page hook appears to be working as of 2.6)]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>publish_phone</name>
+            <description><![CDATA[Runs just after a post is added via email. Action function argument: post ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>publish_post</name>
+            <description><![CDATA[Runs when a post is published, or if it is edited and its status is &quot;published&quot;. Action function arguments: post ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>publish_future_post</name>
+            <description><![CDATA[Runs when a future post or page is published. Action function arguments: post ID.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>save_post</name>
+            <description><![CDATA[Runs whenever a post or page is created or updated, which could be from an import, post/page edit form, xmlrpc, or post by email. Action function arguments: post ID and post object.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>wp_insert_post</name>
+            <description><![CDATA[Same as 
+<tt>save_post</tt>, runs immediately afterwards.]]></description>
+        </action>
+        <action category="Post, Page, Attachment, and Category Actions (Admin)">
+            <name>xmlrpc_publish_post</name>
+            <description><![CDATA[Runs when a post is published via XMLRPC request, or if it is edited via XMLRPC and its status is &quot;published&quot;. Action function arguments: post ID.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>comment_closed</name>
+            <description><![CDATA[Runs when the post is marked as not allowing comments while trying to display comment entry form. Action function argument: post ID.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>comment_id_not_found</name>
+            <description><![CDATA[Runs when the post ID is not found while trying to display comments or comment entry form. Action function argument: post ID.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>comment_flood_trigger</name>
+            <description><![CDATA[Runs when a comment flood is detected, just before 
+<tt>wp_die</tt> is called to stop the comment from being accepted. Action function arguments: time of previous comment, time of current comment.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>comment_(old status)_to_(new status)</name>
+            <description><![CDATA[Runs when a comment status transition occurs. Action function arguments: Comment object.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>comment_on_draft</name>
+            <description><![CDATA[Runs when the post is a draft while trying to display a comment entry form or comments. Action function argument: post ID.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>comment_post</name>
+            <description><![CDATA[Runs just after a comment is saved in the database. Action function arguments: comment ID, approval status (&quot;spam&quot;, or 0/1 for disapproved/approved).]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>edit_comment</name>
+            <description><![CDATA[Runs after a comment is updated/edited in the database. Action function arguments: comment ID.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>delete_comment</name>
+            <description><![CDATA[Runs just before a comment is deleted. Action function arguments: comment ID.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>deleted_comment</name>
+            <description><![CDATA[Runs just after a comment is deleted. Action function arguments: comment ID.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>trash_comment</name>
+            <description><![CDATA[Runs just before a comment is trashed. Action function arguments: comment ID.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>trashed_comment</name>
+            <description><![CDATA[Runs just after a comment is trashed. Action function arguments: comment ID.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>comment_closed</name>
+            <description><![CDATA[Runs when the post is marked as not a spam.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>pingback_post</name>
+            <description><![CDATA[Runs when a ping is added to a post. Action function argument: comment ID.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>pre_ping</name>
+            <description><![CDATA[Runs before a ping is fully processed. Action function arguments: array of the post links to be processed, and the &quot;pung&quot; setting for the post.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>trackback_post</name>
+            <description><![CDATA[Runs when a trackback is added to a post. Action function argument: comment ID.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>wp_blacklist_check</name>
+            <description><![CDATA[Runs to check whether a comment should be blacklisted. Action function arguments: author name, author email, author URL, comment text, author IP address, author's user agent (browser). Your function can execute a 
+<tt>wp_die</tt> to reject the comment, or perhaps modify one of the input arguments so that it will contain one of the blacklist keywords set in the WordPress options.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>wp_insert_comment</name>
+            <description><![CDATA[Runs whenever a comment is created.]]></description>
+        </action>
+        <action category="Comment, Ping, and Trackback Actions">
+            <name>wp_set_comment_status</name>
+            <description><![CDATA[Runs when the status of a comment changes. Action function arguments: comment ID, status string indicating the new status (&quot;delete&quot;, &quot;approve&quot;, &quot;spam&quot;, &quot;hold&quot;).]]></description>
+        </action>
+        <action category="Blogroll Actions">
+            <name>add_link</name>
+            <description><![CDATA[Runs when a new blogroll link is first added to the database. Action function arguments: link ID.]]></description>
+        </action>
+        <action category="Blogroll Actions">
+            <name>delete_link</name>
+            <description><![CDATA[Runs when a blogroll link is deleted. Action function arguments: link ID.]]></description>
+        </action>
+        <action category="Blogroll Actions">
+            <name>edit_link</name>
+            <description><![CDATA[Runs when a blogroll link is edited. Action function arguments: link ID.]]></description>
+        </action>
+        <action category="Feed Actions">
+            <name>atom_entry</name>
+            <description><![CDATA[Runs just after the entry information has been printed (but before closing the entry tag) for each blog entry in an atom feed.]]></description>
+        </action>
+        <action category="Feed Actions">
+            <name>atom_head</name>
+            <description><![CDATA[Runs just after the blog information has been printed in an atom feed, just before the first entry.]]></description>
+        </action>
+        <action category="Feed Actions">
+            <name>atom_ns</name>
+            <description><![CDATA[Runs inside the root XML element for an atom feed (to add namespaces).]]></description>
+        </action>
+        <action category="Feed Actions">
+            <name>commentrss2_item</name>
+            <description><![CDATA[Runs just after a single comment's information has been printed in a comment feed (but before closing the item tag). Action function arguments: comment ID, post ID.]]></description>
+        </action>
+        <action category="Feed Actions">
+            <name>do_feed_(feed)</name>
+            <description><![CDATA[Runs when a feed is generated, where 
+<var>feed</var> is the type of feed (
+<tt>rss2, atom, rdf</tt>, etc.). Use 
+<var>priority</var> less than 10 to run 
+<strong>before</strong> printing the feed. Action function argument: 
+<var>true</var> (the feed is for comments) or 
+<var>false</var> (it is for posts).]]></description>
+        </action>
+        <action category="Feed Actions">
+            <name>rdf_header</name>
+            <description><![CDATA[Runs just after the blog information has been printed in an RDF feed, just before the first entry.]]></description>
+        </action>
+        <action category="Feed Actions">
+            <name>rdf_item</name>
+            <description><![CDATA[Runs just after the entry information has been printed (but before closing the item tag) for each blog entry in an RDF feed.]]></description>
+        </action>
+        <action category="Feed Actions">
+            <name>rdf_ns</name>
+            <description><![CDATA[Runs inside the root XML element in an RDF feed (to add namespaces).]]></description>
+        </action>
+        <action category="Feed Actions">
+            <name>rss_head</name>
+            <description><![CDATA[Runs just after the blog information has been printed in an RSS feed, just before the first entry.]]></description>
+        </action>
+        <action category="Feed Actions">
+            <name>rss_item</name>
+            <description><![CDATA[Runs just after the entry information has been printed (but before closing the item tag) for each blog entry in an RSS feed.]]></description>
+        </action>
+        <action category="Feed Actions">
+            <name>rss2_head</name>
+            <description><![CDATA[Runs just after the blog information has been printed in an RSS 2 feed, just before the first entry.]]></description>
+        </action>
+        <action category="Feed Actions">
+            <name>rss2_item</name>
+            <description><![CDATA[Runs just after the entry information has been printed (but before closing the item tag) for each blog entry in an RSS 2 feed.]]></description>
+        </action>
+        <action category="Feed Actions">
+            <name>rss2_ns</name>
+            <description><![CDATA[Runs inside the root XML element in an RSS 2 feed (to add namespaces).]]></description>
+        </action>
+        <action category="Template Actions">
+            <name>after_setup_theme</name>
+            <description><![CDATA[Runs during a themes initialization. Is generally used to perform basic setup, registration, and init actions for a theme.]]></description>
+        </action>
+        <action category="Template Actions">
+            <name>comment_form</name>
+            <description><![CDATA[Runs in standard themes to insert the comment form. Action function argument: post ID.]]></description>
+        </action>
+        <action category="Template Actions">
+            <name>do_robots</name>
+            <description><![CDATA[Runs when the template file chooser determines that it is a robots.txt request.]]></description>
+        </action>
+        <action category="Template Actions">
+            <name>do_robotstxt</name>
+            <description><![CDATA[Runs in the 
+<tt>do_robots</tt> function before it prints out the Disallow lists for the robots.txt file.]]></description>
+        </action>
+        <action category="Template Actions">
+            <name>get_footer</name>
+            <description><![CDATA[Runs when the template calls the 
+<tt>get_footer</tt> function, just before the 
+<tt>footer.php</tt> template file is loaded.]]></description>
+        </action>
+        <action category="Template Actions">
+            <name>get_header</name>
+            <description><![CDATA[Runs when the template calls the 
+<tt>get_header</tt> function, just before the 
+<tt>header.php</tt> template file is loaded.]]></description>
+        </action>
+        <action category="Template Actions">
+            <name>switch_theme</name>
+            <description><![CDATA[Runs when the blog's theme is changed. Action function argument: name of the new theme. If used in a theme, it only works if the theme that adds action is the one being disabled.]]></description>
+        </action>
+        <action category="Template Actions">
+            <name>after_switch_theme</name>
+            <description><![CDATA[Runs when the blog's theme is changed. Action function argument: name of the new theme. If used in a theme, it only works if the theme that adds action is the one being enabled. Can be used to run certain code when enabling a theme.]]></description>
+        </action>
+        <action category="Template Actions">
+            <name>template_redirect</name>
+            <description><![CDATA[Runs before the determination of the template file to be used to display the requested page.]]></description>
+        </action>
+        <action category="Template Actions">
+            <name>wp_footer</name>
+            <description><![CDATA[Runs when the template calls the 
+<tt>wp_footer</tt> function, generally near the bottom of the blog page.]]></description>
+        </action>
+        <action category="Template Actions">
+            <name>wp_head</name>
+            <description><![CDATA[Runs when the template calls the 
+<tt>wp_head</tt> function. This hook is generally placed near the top of a page template between 
+<tt>&lt;head&gt;</tt> and 
+<tt>&lt;/head&gt;</tt>. This hook does not take any parameters.]]></description>
+        </action>
+        <action category="Template Actions">
+            <name>wp_meta</name>
+            <description><![CDATA[Runs when the 
+<tt>sidebar.php</tt> template file calls the 
+<tt>wp_meta</tt> function, to allow the plugin to insert content into the sidebar.]]></description>
+        </action>
+        <action category="Template Actions">
+            <name>wp_print_scripts</name>
+            <description><![CDATA[Runs just before WordPress prints registered JavaScript scripts into the page header.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>activate_(plugin file name)</name>
+            <description><![CDATA[Runs when the plugin is first activated. See 
+<a href="http://codex.wordpress.org/Function_Reference/register_activation_hook" title="Function Reference/register activation hook">Function_Reference/register_activation_hook</a>.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>activity_box_end</name>
+            <description><![CDATA[Runs at the end of the activity box on the admin Dashboard screen.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>add_category_form_pre</name>
+            <description><![CDATA[Runs before the add category form is put on the screen in the admin menus.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>admin_head</name>
+            <description><![CDATA[Runs in the HTML 
+<tt>&lt;head&gt;</tt> section of the admin panel.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>admin_head-(page_hook)</name>
+            <description><![CDATA[Runs in the HTML 
+<tt>&lt;head&gt;</tt> section of a specific admin page 
+<b>or</b> the admin panel of a plugin-generated page.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>admin_head-(plugin_page)</name>
+            <description><![CDATA[Runs in the HTML 
+<tt>&lt;head&gt;</tt> section of a specific admin page 
+<b>or</b> the admin panel of a plugin-generated page.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>admin_init</name>
+            <description><![CDATA[Runs at the beginning of every admin page before the page is rendered. See 
+<tt>wp-admin/admin.php</tt>, 
+<tt>wp-admin/admin-post.php</tt>, and 
+<tt>wp-admin/admin-ajax.php</tt>.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>admin_footer-(plugin_page)</name>
+            <description><![CDATA[Runs at the end of the &lt;body&gt; section of the admin panel of a plugin-generated page.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>admin_footer</name>
+            <description><![CDATA[Runs at the end of the admin panel inside the body tag]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>admin_enqueue_scripts</name>
+            <description><![CDATA[Runs in the HTML header so a plugin or theme can enqueue JavaScript and CSS to all admin pages.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>admin_print_scripts</name>
+            <description><![CDATA[Runs in the HTML header so a plugin can add JavaScript scripts to all admin pages.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>admin_print_scripts-(plugin_page)</name>
+            <description><![CDATA[Runs to print JavaScript scripts in the HTML head section of a specific plugin-generated admin page. The (page_hook) is returned when using any of the functions that add plugin menu items to the admin menu: add_management_page(), add_options_page(), etc. Example:]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>admin_print_scripts-(plugin_page)</name>
+            <description><![CDATA[Runs to print JavaScript scripts in the HTML head section of a specific plugin-generated admin page. The (page_hook) is returned when using any of the functions that add plugin menu items to the admin menu: add_management_page(), add_options_page(), etc. Example:]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>admin_print_styles</name>
+            <description><![CDATA[Runs in the HTML header so a plugin can add CSS/Stylesheets to all admin pages.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>admin_print_styles-(page_hook)</name>
+            <description><![CDATA[Runs when styles should be enqueued with 
+<a href="http://codex.wordpress.org/Function_Reference/wp_enqueue_style" title="Function Reference/wp enqueue style">wp_enqueue_style()</a> for a particular admin page. Use the return value of a function such as 
+<a href="http://codex.wordpress.org/Function_Reference/add_submenu_page" title="Function Reference/add submenu page">add_submenu_page()</a> to determine the value of 
+<i>(page_hook)</i>.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>admin_print_style-(plugin_page)</name>
+            <description><![CDATA[Runs when styles should be enqueued with 
+<a href="http://codex.wordpress.org/Function_Reference/wp_enqueue_style" title="Function Reference/wp enqueue style">wp_enqueue_style()</a> for a particular admin page. Use the return value of a function such as 
+<a href="http://codex.wordpress.org/Function_Reference/add_submenu_page" title="Function Reference/add submenu page">add_submenu_page()</a> to determine the value of 
+<i>(page_hook)</i>.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>check_passwords</name>
+            <description><![CDATA[Runs to validate the double-entry of password when creating a new user. Action function arguments: array of login name, first password, second password.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>dbx_page_advanced</name>
+            <description><![CDATA[Runs at the bottom of the &quot;advanced&quot; section on the page editing screen in the admin menus.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>dbx_page_sidebar</name>
+            <description><![CDATA[Runs at the bottom of the sidebar on the page editing screen in the admin menus.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>dbx_post_advanced</name>
+            <description><![CDATA[Runs at the bottom of the &quot;advanced&quot; section on the post editing screen in the admin menus.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>dbx_post_sidebar</name>
+            <description><![CDATA[Runs at the bottom of the sidebar on the post editing screen in the admin menus. Use 
+<a href="http://codex.wordpress.org/Function_Reference/add_meta_box" title="Function Reference/add meta box">add_meta_box()</a> in Wordpress 2.5 and higher.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>deactivate_(plugin file name)</name>
+            <description><![CDATA[Runs when a plugin is deactivated.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>delete_user</name>
+            <description><![CDATA[Runs when a user is deleted. Action function arguments: user ID.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>edit_category_form</name>
+            <description><![CDATA[Runs after the add/edit category form is put on the screen (but before the end of the HTML form tag).]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>edit_category_form_pre</name>
+            <description><![CDATA[Runs before the edit category form is put on the screen in the admin menus.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>edit_tag_form</name>
+            <description><![CDATA[Runs after the add/edit tag form is put on the screen (but before the end of the HTML form tag).]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>edit_tag_form_pre</name>
+            <description><![CDATA[Runs before the edit tag form is put on the screen in the admin menus.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>edit_form_after_title</name>
+            <description><![CDATA[Runs after the title on WordPress post edit screen (and Custom Post Types) but before the built in WordPress content area.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>edit_form_after_editor</name>
+            <description><![CDATA[Runs just after the WordPress post editor but before all other meta boxes. also available in Custom Post Types.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>edit_form_advanced</name>
+            <description><![CDATA[Runs just before the &quot;advanced&quot; section of the post editing form in the admin menus.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>edit_page_form</name>
+            <description><![CDATA[Runs just before the &quot;advanced&quot; section of the page editing form in the admin menus.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>edit_user_profile</name>
+            <description><![CDATA[Runs near the end of the user profile editing screen in the admin menus.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>load-(page)</name>
+            <description><![CDATA[Runs when an administration menu page is loaded. This action is not usually added directly -- see 
+<a href="http://codex.wordpress.org/Adding_Administration_Menus" title="Adding Administration Menus" class="mw-redirect">Adding Administration Menus</a> for more details of how to add admin menus. If you do want to use it directly, the return value from 
+<tt>add_options_page</tt> and similar functions gives you the 
+<tt>(page)</tt> part of the action name.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>login_form</name>
+            <description><![CDATA[Runs just before the end of the login form.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>login_head</name>
+            <description><![CDATA[Runs just before the end of the HTML head section of the login page.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>lost_password</name>
+            <description><![CDATA[Runs before the &quot;retrieve your password by email&quot; form is printed on the login screen.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>lostpassword_form</name>
+            <description><![CDATA[Runs at the end of the form used to retrieve a user's password by email, to allow a plugin to supply extra fields.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>lostpassword_post</name>
+            <description><![CDATA[runs when the user has requested an email message to retrieve their password, to allow a plugin to modify the PHP 
+<tt>$_POST</tt> variable before processing.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>manage_link_custom_column</name>
+            <description><![CDATA[Runs when there is an unknown column name for the blogroll managing admin screen. Action function arguments: column name, link ID. See also filter 
+<tt>manage_link_columns</tt> in the 
+<a href="http://codex.wordpress.org/Plugin_API/Filter_Reference" title="Plugin API/Filter Reference">Plugin API/Filter Reference</a>, which adds custom columns.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>manage_posts_custom_column</name>
+            <description><![CDATA[Runs when there is an unknown column name for the managing posts admin screen. Action function arguments: column name, post ID. See also filter 
+<a href="http://codex.wordpress.org/Plugin_API/Filter_Reference/manage_posts_columns" title="Plugin API/Filter Reference/manage posts columns">manage_posts_columns</a> in the 
+<a href="http://codex.wordpress.org/Plugin_API/Filter_Reference" title="Plugin API/Filter Reference">Plugin API/Filter Reference</a>, which adds custom columns. (see 
+<a href="http://codex.wordpress.orghttp://scompt.com/archives/2007/10/20/adding-custom-columns-to-the-wordpress-manage-posts-screen" class="external text" title="http://scompt.com/archives/2007/10/20/adding-custom-columns-to-the-wordpress-manage-posts-screen">Scompt's tutorial</a> for examples and use.)]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>manage_pages_custom_column</name>
+            <description><![CDATA[Runs when there is an unknown column name for the managing pages admin screen. Action function arguments: column name, page ID. See also filter 
+<a href="http://codex.wordpress.org/Plugin_API/Filter_Reference/manage_pages_columns" title="Plugin API/Filter Reference/manage pages columns">manage_pages_columns</a> in the 
+<a href="http://codex.wordpress.org/Plugin_API/Filter_Reference" title="Plugin API/Filter Reference">Plugin API/Filter Reference</a>, which adds custom columns.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>manage_{$post_type}_posts_custom_column</name>
+            <description><![CDATA[Runs when there is an unknown column name for the managing custom post type admin screen. Action function arguments: column name, post ID. See also filter 
+<a href="http://codex.wordpress.org/Plugin_API/Filter_Reference/manage_$post_type_posts_columns" title="Plugin API/Filter Reference/manage $post type posts columns">manage_${post_type}_posts_columns</a> in the 
+<a href="http://codex.wordpress.org/Plugin_API/Filter_Reference" title="Plugin API/Filter Reference">Plugin API/Filter Reference</a>, which adds custom columns for custom post types.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>password_reset</name>
+            <description><![CDATA[Runs before the user's password is reset to a random new password.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>personal_options_update</name>
+            <description><![CDATA[Runs when a user updates personal options from the admin screen.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>plugins_loaded</name>
+            <description><![CDATA[Runs after all plugins have been loaded.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>profile_personal_options</name>
+            <description><![CDATA[Runs at the end of the Personal Options section of the user profile editing screen.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>profile_update</name>
+            <description><![CDATA[Runs when a user's profile is updated. Action function argument: user ID.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>quick_edit_custom_box</name>
+            <description><![CDATA[Runs when there is an unknown column name when creating the quick editor.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>register_form</name>
+            <description><![CDATA[Runs just before the end of the new user registration form.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>register_post</name>
+            <description><![CDATA[Runs before a new user registration request is processed.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>restrict_manage_posts</name>
+            <description><![CDATA[Runs before the list of posts to edit is put on the screen in the admin menus.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>retrieve_password</name>
+            <description><![CDATA[Runs when a user's password is retrieved, to send them a reminder email. Action function argument: login name.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>set_current_user</name>
+            <description><![CDATA[Runs after the user has been changed by the default 
+<tt>wp_set_current_user</tt> function. Note that 
+<tt>wp_set_current_user</tt> is also a &quot;pluggable&quot; function, meaning that plugins can override it; see 
+<a href="http://codex.wordpress.org/Plugin_API" title="Plugin API">Plugin API</a>).]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>show_user_profile</name>
+            <description><![CDATA[Runs near the end of the user profile editing screen.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>simple_edit_form</name>
+            <description><![CDATA[Runs at the end of the &quot;simple&quot; post editing form in the admin menus (by default the simple form is used only for bookmarklets -- it doesn't have the &quot;advanced&quot; sections).]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>update_option_(option_name)</name>
+            <description><![CDATA[Runs after a WordPress option has been updated by the 
+<tt>update_option</tt> function. Action function arguments: old option value, new option value. You must add an action for the specific options that you want to respond to, such as 
+<tt>update_option_foo</tt> to respond when option &quot;foo&quot; has been updated.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>upload_files_(tab)</name>
+            <description><![CDATA[Runs to print a screen on the upload files admin screen; &quot;tab&quot; is the name of the custom action tab. Define custom tabs using the 
+<tt>wp_upload_tabs</tt> filter (see 
+<a href="http://codex.wordpress.org/Plugin_API/Filter_Reference" title="Plugin API/Filter Reference">Plugin API/Filter Reference</a>).]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>user_profile_update_errors</name>
+            <description><![CDATA[Runs just before updated user details are commited to the database.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>user_register</name>
+            <description><![CDATA[Runs when a user's profile is first created. Action function argument: user ID.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>welcome_panel</name>
+            <description><![CDATA[Allows you to hide the Welcome Panel in the Dashboard. This is also a smart filter, which hides the related Screen Option.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>wp_ajax_(action)</name>
+            <description><![CDATA[Runs to do an unknown type of AJAX action in the administrative menus.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>wp_authenticate</name>
+            <description><![CDATA[Runs to authenticate a user when they log in. Action function arguments: array with user name and password.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>wp_login</name>
+            <description><![CDATA[Runs when a user logs in.]]></description>
+        </action>
+        <action category="Administrative Actions">
+            <name>wp_logout</name>
+            <description><![CDATA[Runs when a user logs out.]]></description>
+        </action>
+        <action category="Dashboard Right Now Widget Actions">
+            <name>right_now_content_table_end</name>
+            <description><![CDATA[Adds table rows at the bottom the content column of the Right Now Dashboard widget.]]></description>
+        </action>
+        <action category="Dashboard Right Now Widget Actions">
+            <name>right_now_table_end</name>
+            <description><![CDATA[Called after displaying the number of Spam comments in the Discussion column of the Right Now Dashboard widget.]]></description>
+        </action>
+        <action category="Dashboard Right Now Widget Actions">
+            <name>right_now_discussion_table_end</name>
+            <description><![CDATA[Called after displaying the number of Spam comments and after the 
+<a href="http://codex.wordpress.org/index.php?title=Plugin_API/Action_Reference/right_now_table_end&amp;action=edit&amp;redlink=1" class="new" title="Plugin API/Action Reference/right now table end (page does not exist)">right_now_table_end</a> action in the Discussion column of the Right Now Dashboard widget.]]></description>
+        </action>
+        <action category="Dashboard Right Now Widget Actions">
+            <name>right_now_end</name>
+            <description><![CDATA[Called after the current version information is displayed on the Right Now Dashboardwidget. (Note: In v3.4, this is actually rightnow_end. See ticket 
+<a href="http://codex.wordpress.orghttp://core.trac.wordpress.org/ticket/21046" class="external text" title="http://core.trac.wordpress.org/ticket/21046">#21046</a>.)]]></description>
+        </action>
+        <action category="Dashboard Right Now Widget Actions">
+            <name>activity_box_end</name>
+            <description><![CDATA[Last action called on the Right Now Dashboard widget.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>add_meta_boxes</name>
+            <description><![CDATA[Runs when &quot;edit post&quot; page loads. (
+<b>3.0+</b>)]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>admin_menu</name>
+            <description><![CDATA[Runs after the basic admin panel menu structure is in place.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>network_admin_notices</name>
+            <description><![CDATA[Runs after the admin menu is printed to network admin screens.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>user_admin_notices</name>
+            <description><![CDATA[Runs after the admin menu is printed to user admin screens.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>admin_notices</name>
+            <description><![CDATA[Runs after the admin menu is printed to screens that aren't network- or user-admin screens.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>all_admin_notices</name>
+            <description><![CDATA[Runs after the admin menu is printed to all screens.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>blog_privacy_selector</name>
+            <description><![CDATA[Runs after the default blog privacy options are printed on the screen.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>check_admin_referer</name>
+            <description><![CDATA[Runs in the default 
+<tt>check_admin_referrer</tt> function after the nonce has been checked for security purposes, to allow a plugin to force WordPress to die for extra security reasons. Note that 
+<tt>check_admin_referrer</tt> is also a &quot;pluggable&quot; function, meaning that plugins can override it; see 
+<a href="http://codex.wordpress.org/Plugin_API" title="Plugin API">Plugin API</a>).]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>check_ajax_referer</name>
+            <description><![CDATA[Runs in the default 
+<tt>check_ajax_referer</tt> function (which is called when an AJAX request goes to the 
+<tt>wp-admin/admin-ajax.php</tt> script) after the user's login and password have been successfully validated from cookies, to allow a plugin to force WordPress to die for extra security reasons. Note that 
+<tt>check_ajax_referer</tt> is also a &quot;pluggable&quot; function, meaning that plugins can override it; see 
+<a href="http://codex.wordpress.org/Plugin_API" title="Plugin API">Plugin API</a>).]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>customize_register</name>
+            <description><![CDATA[Runs on every request, allowing developers to register new theme options and controls for use with the 
+<a href="http://codex.wordpress.org/Theme_Customization_API" title="Theme Customization API">Theme Customization API</a> (as of 
+<a href="http://codex.wordpress.org/Version_3.4" title="Version 3.4">Version 3.4</a>).]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>generate_rewrite_rules</name>
+            <description><![CDATA[Runs after the rewrite rules are generated. Action function arguments: 
+<tt>WP_Rewrite</tt> object ($wp_rewrite) by reference. Note that it is easier to use the 
+<tt>rewrite_rules_array</tt> filter instead of this action, to modify the rewrite rules.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>init</name>
+            <description><![CDATA[Runs after WordPress has finished loading but before any headers are sent. Useful for intercepting $_GET or $_POST triggers.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>loop_end</name>
+            <description><![CDATA[Runs after the last post of the WordPress loop is processed.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>loop_start</name>
+            <description><![CDATA[Runs before the first post of the WordPress loop is processed.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>network_admin_menu</name>
+            <description><![CDATA[Runs when the basic menu structure is prepared for the 
+<a href="http://codex.wordpress.org/Create_A_Network" title="Create A Network">Network</a> administration page. (
+<a href="http://codex.wordpress.org/Administration_Menus" title="Administration Menus">Administration Menus</a>)]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>parse_query</name>
+            <description><![CDATA[Runs at the end of query parsing in 
+<a href="http://codex.wordpress.org/Query_Overview" title="Query Overview">the main query</a> or any instance of 
+<a href="http://codex.wordpress.org/Function_Reference" title="Function Reference">WP_Query</a>, such as 
+<a href="http://codex.wordpress.org/Template_Tags/query_posts" title="Template Tags/query posts" class="mw-redirect">query_posts</a>, 
+<a href="http://codex.wordpress.org/Template_Tags/get_posts" title="Template Tags/get posts">get_posts</a>, or 
+<a href="http://codex.wordpress.org/Function_Reference/get_children" title="Function Reference/get children">get_children</a>. Action function arguments: 
+<tt>WP_Query</tt> object by reference.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>parse_request</name>
+            <description><![CDATA[Runs after the query request is parsed inside the main WordPress function 
+<tt>wp</tt>. Action function argument: 
+<tt>WP</tt> object ($wp) by reference.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>pre_get_posts</name>
+            <description><![CDATA[Runs before a query is executed in 
+<a href="http://codex.wordpress.org/Query_Overview" title="Query Overview">the main query</a> or any instance of 
+<a href="http://codex.wordpress.org/Function_Reference" title="Function Reference">WP_Query</a>, such as 
+<a href="http://codex.wordpress.org/Template_Tags/query_posts" title="Template Tags/query posts" class="mw-redirect">query_posts</a>, 
+<a href="http://codex.wordpress.org/Template_Tags/get_posts" title="Template Tags/get posts">get_posts</a>, or 
+<a href="http://codex.wordpress.org/Function_Reference/get_children" title="Function Reference/get children">get_children</a>. Action function arguments: 
+<tt>WP_Query</tt> object by reference.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>sanitize_comment_cookies</name>
+            <description><![CDATA[Runs after cookies have been read from the HTTP request.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>send_headers</name>
+            <description><![CDATA[Runs after the basic HTTP headers are sent inside the main WordPress function 
+<tt>wp</tt>. Action function argument: 
+<tt>WP</tt> object ($wp) by reference.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>shutdown</name>
+            <description><![CDATA[Runs when the page output is complete.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>wp_loaded</name>
+            <description><![CDATA[This hook is fired once WP, all plugins, and the theme are fully loaded and instantiated.]]></description>
+        </action>
+        <action category="Advanced Actions">
+            <name>wp</name>
+            <description><![CDATA[Executes after the query has been parsed and post(s) loaded, but before any template execution, inside the main WordPress function 
+<tt>wp</tt>. Useful if you need to have access to post data but can't use templates for output. Action function argument: 
+<tt>WP</tt> object ($wp) by reference.]]></description>
+        </action>
+    </actions>
+</codecompletion>

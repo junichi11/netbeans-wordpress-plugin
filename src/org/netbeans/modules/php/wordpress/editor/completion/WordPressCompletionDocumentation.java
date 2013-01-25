@@ -59,7 +59,7 @@ public class WordPressCompletionDocumentation implements CompletionDocumentation
 
     @Override
     public String getText() {
-        return ""; // NOI18N
+        return item.getDescription();
     }
 
     @Override

@@ -1,0 +1,1638 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 2013 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+
+Portions Copyrighted 2013 Sun Microsystems, Inc.
+-->
+<codecompletion>
+    <filters>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>attachment_fields_to_edit</name>
+            <description><![CDATA[applied to the form fields to be displayed when editing an attachment. Called in the 
+<tt>get_attachment_fields_to_edit</tt> function. Filter function arguments: an array of form fields, the post object.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>attachment_icon</name>
+            <description><![CDATA[applied to the icon for an attachment in the 
+<tt>get_attachment_icon</tt> function. Filter function arguments: icon file as an HTML IMG tag, attachment ID.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>attachment_innerHTML</name>
+            <description><![CDATA[applied to the title to be used for an attachment if there is no icon, in the 
+<tt>get_attachment_innerHTML</tt> function. Filter function arguments: inner HTML (defaults to the title), attachment ID.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>body_class</name>
+            <description><![CDATA[applied to the classes for the HTML 
+<code>&lt;body&gt;</code> element. Called in the 
+<code><a href="http://codex.wordpress.org/Function_Reference/get_body_class" title="Function Reference/get body class">get_body_class</a></code> function. Filter function arguments: an array of class names and an array of additional class names that were added to the first array.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>content_edit_pre</name>
+            <description><![CDATA[applied to post content prior to display for editing.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>excerpt_edit_pre</name>
+            <description><![CDATA[applied to post excerpt prior to display for editing.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>get_attached_file</name>
+            <description><![CDATA[applied to the attached file information retrieved by the 
+<tt>get_attached_file</tt> function. Filter function arguments: file information, attachment ID.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>get_enclosed</name>
+            <description><![CDATA[applied to the enclosures list for a post by the 
+<tt>get_enclosed</tt> function.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>get_pages</name>
+            <description><![CDATA[applied to the list of pages returned by the 
+<a href="http://codex.wordpress.org/Function_Reference/get_pages" title="Function Reference/get pages"><tt>get_pages</tt> function</a>. Filter function arguments: list of pages (each item of which contains a page data array), 
+<tt>get_pages</tt> function argument list (telling which pages were requested).]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>get_pung</name>
+            <description><![CDATA[applied to the list of pinged URLs for a post by the 
+<tt>get_pung</tt> function.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>get_the_excerpt</name>
+            <description><![CDATA[applied to the post's excerpt in the 
+<tt>get_the_excerpt</tt> function.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>get_the_guid</name>
+            <description><![CDATA[applied to the post's GUID in the 
+<tt>get_the_guid</tt> function.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>get_to_ping</name>
+            <description><![CDATA[applied to the list of URLs to ping for a post by the 
+<tt>get_to_ping</tt> function.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>icon_dir</name>
+            <description><![CDATA[applied to the template's image directory in several functions. Basically allows a plugin to specify that icons for MIME types should come from a different location.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>icon_dir_uri</name>
+            <description><![CDATA[applied to the template's image directory URI in several functions. Basically allows a plugin to specify that icons for MIME types should come from a different location.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>post_class</name>
+            <description><![CDATA[applied to the classes of the outermost HTML element for a post. Called in the 
+<code><a href="http://codex.wordpress.org/Function_Reference/get_post_class" title="Function Reference/get post class">get_post_class</a></code> function. Filter function arguments: an array of class names, an array of additional class names that were added to the first array, and the post ID.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>prepend_attachment</name>
+            <description><![CDATA[applied to the HTML to be prepended by the 
+<tt>prepend_attachment</tt> function.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>sanitize_title</name>
+            <description><![CDATA[applied to a post title by the 
+<tt>sanitize_title</tt> function, after stripping out HTML tags.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>single_post_title</name>
+            <description><![CDATA[applied to the post title when used to create a blog page title by the 
+<tt>wp_title</tt> and 
+<tt>single_post_title</tt> functions.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>the_content</name>
+            <description><![CDATA[applied to the post content retrieved from the database, prior to printing on the screen (also used in some other operations, such as trackbacks).]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>the_content_rss</name>
+            <description><![CDATA[applied to the post content prior to including in an RSS feed. This filter hasn't been functional since 2.7.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>the_content_feed</name>
+            <description><![CDATA[applied to the post content prior to including in an RSS feed.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>the_editor_content</name>
+            <description><![CDATA[applied to post content before putting it into a rich editor window.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>the_excerpt</name>
+            <description><![CDATA[applied to the post excerpt (or post content, if there is no excerpt) retrieved from the database, prior to printing on the screen (also used in some other operations, such as trackbacks).]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>the_excerpt_rss</name>
+            <description><![CDATA[applied to the post excerpt prior to including in an RSS feed.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>the_password_form</name>
+            <description><![CDATA[applied to the password form for protected posts.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>the_tags</name>
+            <description><![CDATA[applied to the tags retrieved from the database, prior to printing on the screen.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>the_title</name>
+            <description><![CDATA[applied to the post title retrieved from the database, prior to printing on the screen (also used in some other operations, such as trackbacks).]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>the_title_rss</name>
+            <description><![CDATA[applied to the post title before including in an RSS feed (after first filtering with 
+<tt>the_title</tt>.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>title_edit_pre</name>
+            <description><![CDATA[applied to post title prior to display for editing.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_dropdown_pages</name>
+            <description><![CDATA[applied to the HTML dropdown list of WordPress pages generated by the 
+<tt>wp_dropdown_pages</tt> function.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_list_pages</name>
+            <description><![CDATA[applied to the HTML list generated by the 
+<tt>wp_list_pages</tt> function.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_list_pages_excludes</name>
+            <description><![CDATA[applied to the list of excluded pages (an array of page IDs) in the 
+<tt>wp_list_pages</tt> function.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_get_attachment_metadata</name>
+            <description><![CDATA[applied to the attachment metadata retrieved by the 
+<tt>wp_get_attachment_metadata</tt> function. Filter function arguments: meta data, attachment ID.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_get_attachment_thumb_file</name>
+            <description><![CDATA[applied to the attachment thumbnail file retrieved by the 
+<tt>wp_get_attachment_thumb_file</tt> function. Filter function arguments: thumbnail file, attachment ID.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_get_attachment_thumb_url</name>
+            <description><![CDATA[applied to the attachment thumbnail URL retrieved by the 
+<tt>wp_get_attachment_thumb_URL</tt> function. Filter function arguments: thumbnail URL, attachment ID.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_get_attachment_url</name>
+            <description><![CDATA[applied to the attachment URL retrieved by the 
+<tt>wp_get_attachment_url</tt> function. Filter function arguments: URL, attachment ID.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_mime_type_icon</name>
+            <description><![CDATA[applied to the MIME type icon for an attachment calculated by the 
+<tt>wp_mime_type_icon</tt> function. Filter function arguments: icon URI calculated, MIME type, post ID.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_title</name>
+            <description><![CDATA[applied to the blog page title before sending to the browser in the 
+<tt>wp_title</tt> function.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>add_ping</name>
+            <description><![CDATA[applied to the new value of the pinged field on a post when a ping is added, prior to saving the new information in the database.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>attachment_fields_to_save</name>
+            <description><![CDATA[applied to fields associated with an attachment prior to saving them in the database. Called in the 
+<tt>media_upload_form_handler</tt> function. Filter function arguments: an array of post attributes, an array of attachment fields including the changes submitted from the form.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>attachment_max_dims</name>
+            <description><![CDATA[applied to the maximum image dimensions before reducing an image size. Filter function input (and return value) is either false (if no maximum dimensions have been specified) or a two-item list (width, height).]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>category_save_pre</name>
+            <description><![CDATA[applied to post category comma-separated list prior to saving it in the database (also used for attachments).]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>comment_status_pre</name>
+            <description><![CDATA[applied to post comment status prior to saving it in the database (also used for attachments).]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>content_filtered_save_pre</name>
+            <description><![CDATA[applied to filtered post content prior to saving it in the database (also used for attachments).]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>content_save_pre</name>
+            <description><![CDATA[applied to post content prior to saving it in the database (also used for attachments).]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>excerpt_save_pre</name>
+            <description><![CDATA[applied to post excerpt prior to saving it in the database (also used for attachments).]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>image_save_pre</name>
+            <description><![CDATA[(deprecated)use 
+<a href="http://codex.wordpress.org/index.php?title=Plugin_API/Filter_Reference/image_editor_sav_pre&amp;action=edit&amp;redlink=1" class="new" title="Plugin API/Filter Reference/image editor sav pre (page does not exist)"><tt>image_editor_save_pre</tt></a> instead.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>jpeg_quality</name>
+            <description><![CDATA[(deprecated)use 
+<a href="http://codex.wordpress.org/index.php?title=Plugin_API/Filter_Reference/wp_editor_set_quality&amp;action=edit&amp;redlink=1" class="new" title="Plugin API/Filter Reference/wp editor set quality (page does not exist)"><tt> wp_editor_set_quality</tt></a> or 
+<tt>WP_Image_Editor::set_quality()</tt> instead.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>name_save_pre</name>
+            <description><![CDATA[applied to post name prior to saving it in the database (also used for attachments).]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>phone_content</name>
+            <description><![CDATA[applied to the content of a post submitted by email, before saving.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>ping_status_pre</name>
+            <description><![CDATA[applied to post ping status prior to saving it in the database (also used for attachments).]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>post_mime_type_pre</name>
+            <description><![CDATA[applied to the MIME type for an attachment prior to saving it in the database.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>status_save_pre</name>
+            <description><![CDATA[applied to post status prior to saving it in the database.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>thumbnail_filename</name>
+            <description><![CDATA[applied to the file name for the thumbnail when uploading an image.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>title_save_pre</name>
+            <description><![CDATA[applied to post title prior to saving it in the database (also used for attachments).]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>update_attached_file</name>
+            <description><![CDATA[applied to the attachment information prior to saving in post metadata in the 
+<tt>update_attached_file</tt> function. Filter function arguments: attachment information, attachment ID.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_create_thumbnail</name>
+            <description><![CDATA[(deprecated)]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_delete_file</name>
+            <description><![CDATA[applied to an attachment file name just before deleting.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_generate_attachment_metadata</name>
+            <description><![CDATA[applied to the attachment metadata array before saving in the database.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_save_image_file</name>
+            <description><![CDATA[(deprecated)use 
+<a href="http://codex.wordpress.org/index.php?title=Plugin_API/Filter_Reference/wp_save_image_editor_file&amp;action=edit&amp;redlink=1" class="new" title="Plugin API/Filter Reference/wp save image editor file (page does not exist)"><tt>wp_save_image_editor_file</tt></a> instead.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_thumbnail_creation_size_limit</name>
+            <description><![CDATA[applied to the size of the thumbnail when uploading an image. Filter function arguments: max file size, attachment ID, attachment file name.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_thumbnail_max_side_length</name>
+            <description><![CDATA[applied to the size of the thumbnail when uploading an image. Filter function arguments: image side max size, attachment ID, attachment file name.]]></description>
+        </filter>
+        <filter category="Post, Page, and Attachment (Upload) Filters">
+            <name>wp_update_attachment_metadata</name>
+            <description><![CDATA[applied to the attachment metadata just before saving in the 
+<tt>wp_update_attachment_metadata</tt> function. Filter function arguments: meta data, attachment ID.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>comment_excerpt</name>
+            <description><![CDATA[applied to the comment excerpt by the 
+<tt>comment_excerpt</tt> function. See also 
+<tt>get_comment_excerpt</tt>.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>comment_flood_filter</name>
+            <description><![CDATA[applied when someone appears to be flooding your blog with comments. Filter function arguments: already blocked (true/false, whether a previous filtering plugin has already blocked it; set to true and return true to block this comment in a plugin), time of previous comment, time of current comment.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>comment_post_redirect</name>
+            <description><![CDATA[applied to the redirect location after someone adds a comment. Filter function arguments: redirect location, comment info array.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>comment_text</name>
+            <description><![CDATA[applied to the comment text before displaying on the screen by the 
+<tt>comment_text</tt> function, and in the admin menus.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>comment_text_rss</name>
+            <description><![CDATA[applied to the comment text prior to including in an RSS feed.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>comments_array</name>
+            <description><![CDATA[applied to the array of comments for a post in the 
+<tt>comments_template</tt> function. Filter function arguments: array of comment information structures, post ID.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>comments_number</name>
+            <description><![CDATA[applied to the formatted text giving the number of comments generated by the 
+<tt>comments_number</tt> function. See also 
+<tt>get_comments_number</tt>.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>get_comment_excerpt</name>
+            <description><![CDATA[applied to the comment excerpt read from the database by the 
+<tt>get_comment_excerpt</tt> function (which is also called by 
+<tt>comment_excerpt</tt>. See also 
+<tt>comment_excerpt</tt>.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>get_comment_ID</name>
+            <description><![CDATA[applied to the comment ID read from the global 
+<tt>$comments</tt> variable by the 
+<tt>get_comment_ID</tt> function.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>get_comment_text</name>
+            <description><![CDATA[applied to the comment text of the current comment in the 
+<tt>get_comment_text</tt> function, which is also called by the 
+<tt>comment_text</tt> function.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>get_comment_type</name>
+            <description><![CDATA[applied to the comment type (&quot;comment&quot;, &quot;trackback&quot;, or &quot;pingback&quot;) by the 
+<tt>get_comment_type</tt> function (which is also called by 
+<tt>comment_type</tt>).]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>get_comments_number</name>
+            <description><![CDATA[applied to the comment count read from the 
+<tt>$post</tt> global variable by the 
+<tt>get_comments_number</tt> function (which is also called by the 
+<tt>comments_number</tt> function; see also 
+<tt>comments_number</tt> filter).]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>post_comments_feed_link</name>
+            <description><![CDATA[applied to the feed URL generated for the comments feed by the 
+<tt>comments_rss</tt> function.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>comment_save_pre</name>
+            <description><![CDATA[applied to the comment data just prior to updating/editing comment data. Function arguments: comment data array, with indices &quot;comment_post_ID&quot;, &quot;comment_author&quot;, &quot;comment_author_email&quot;, &quot;comment_author_url&quot;, &quot;comment_content&quot;, &quot;comment_type&quot;, and &quot;user_ID&quot;.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>pre_comment_approved</name>
+            <description><![CDATA[applied to the current comment's approval status (true/false) to allow a plugin to override. Return true/false and set first argument to true/false to approve/disapprove the comment, and use global variables such as 
+<tt>$comment_ID</tt> to access information about this comment.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>pre_comment_content</name>
+            <description><![CDATA[applied to the content of a comment prior to saving the comment in the database.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>preprocess_comment</name>
+            <description><![CDATA[applied to the comment data prior to any other processing, when saving a new comment in the database. Function arguments: comment data array, with indices &quot;comment_post_ID&quot;, &quot;comment_author&quot;, &quot;comment_author_email&quot;, &quot;comment_author_url&quot;, &quot;comment_content&quot;, &quot;comment_type&quot;, and &quot;user_ID&quot;.]]></description>
+        </filter>
+        <filter category="Comment, Trackback, and Ping Filters">
+            <name>wp_insert_post_data</name>
+            <description><![CDATA[applied to modified and unmodified post data in wp_insert_post() prior to update or insertion of post into database. Function arguments: modified and extended post array and sanitized post array.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>category_description</name>
+            <description><![CDATA[applied to the &quot;description&quot; field categories by the 
+<tt>category_description</tt> and 
+<tt><a href="http://codex.wordpress.org/Template_Tags/wp_list_categories" title="Template Tags/wp list categories">wp_list_categories</a></tt> functions. Filter function arguments: description, category ID when called from 
+<tt>category_description</tt>; description, category information array (all fields from the category table for that particular category) when called from 
+<tt><a href="http://codex.wordpress.org/Template_Tags/wp_list_categories" title="Template Tags/wp list categories">wp_list_categories</a></tt>.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>category_feed_link</name>
+            <description><![CDATA[applied to the feed URL generated for the category feed by the 
+<tt><a href="http://codex.wordpress.org/Function_Reference/get_category_feed_link" title="Function Reference/get category feed link">get_category_feed_link</a></tt> function.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>category_link</name>
+            <description><![CDATA[applied to the URL created for a category by the 
+<tt><a href="http://codex.wordpress.org/Function_Reference/get_category_link" title="Function Reference/get category link">get_category_link</a></tt> function. Filter function arguments: link URL, category ID.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>get_ancestors</name>
+            <description><![CDATA[applied to the list of ancestor IDs returned by the 
+<tt><a href="http://codex.wordpress.org/Function_Reference/get_ancestors" title="Function Reference/get ancestors">get_ancestors</a></tt> function (which is in turn used by many other functions). Filter function arguments: ancestor IDs array, given object ID, given object type.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>get_categories</name>
+            <description><![CDATA[applied to the category list generated by the 
+<tt><a href="http://codex.wordpress.org/Function_Reference/get_categories" title="Function Reference/get categories">get_categories</a></tt> function (which is in turn used by many other functions). Filter function arguments: category list, 
+<tt><a href="http://codex.wordpress.org/Function_Reference/get_categories" title="Function Reference/get categories">get_categories</a></tt> options list.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>get_category</name>
+            <description><![CDATA[applied to the category information that the 
+<tt><a href="http://codex.wordpress.org/Function_Reference/get_category" title="Function Reference/get category">get_category</a></tt> function looks up, which is basically an array of all the fields in WordPress's category table for a particular category ID.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>list_cats</name>
+            <description><![CDATA[called for two different purposes:]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>list_cats_exclusions</name>
+            <description><![CDATA[applied to the SQL WHERE statement giving the categories to be excluded by the 
+<tt><a href="http://codex.wordpress.org/Function_Reference/get_categories" title="Function Reference/get categories">get_categories</a></tt> function. Typically, a plugin would add to this list, in order to exclude certain categories or groups of categories from category lists. Filter function arguments: excluded category WHERE clause, 
+<tt><a href="http://codex.wordpress.org/Function_Reference/get_categories" title="Function Reference/get categories">get_categories</a></tt> options list.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>single_cat_title</name>
+            <description><![CDATA[applied to the category name when used to create a blog page title by the 
+<tt><a href="http://codex.wordpress.org/Template_Tags/wp_title" title="Template Tags/wp title" class="mw-redirect">wp_title</a></tt> and 
+<tt><a href="http://codex.wordpress.org/Template_Tags/single_cat_title" title="Template Tags/single cat title" class="mw-redirect">single_cat_title</a></tt> functions.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>the_category</name>
+            <description><![CDATA[applied to the list of categories (an HTML list with links) created by the 
+<tt>get_the_category_list</tt> function. Filter function arguments: generated HTML text, list separator being used (empty string means it is a default LI list), 
+<tt>parents</tt> argument to 
+<tt>get_the_category_list</tt>.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>the_category_rss</name>
+            <description><![CDATA[applied to the category list (a list of category XML elements) for a post by the 
+<tt><a href="http://codex.wordpress.org/Function_Reference/get_the_category_rss" title="Function Reference/get the category rss">get_the_category_rss</a></tt> function, before including in an RSS feed. Filter function arguments are the list text and the type (&quot;rdf&quot; or &quot;rss&quot; generally).]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>wp_dropdown_cats</name>
+            <description><![CDATA[applied to the drop-down category list (a text string containing HTML option elements) generated by the 
+<tt><a href="http://codex.wordpress.org/Template_Tags/wp_dropdown_categories" title="Template Tags/wp dropdown categories" class="mw-redirect">wp_dropdown_categories</a></tt> function.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>wp_list_categories</name>
+            <description><![CDATA[applied to the category list (an HTML list) generated by the 
+<tt><a href="http://codex.wordpress.org/Template_Tags/wp_list_categories" title="Template Tags/wp list categories">wp_list_categories</a></tt> function.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>wp_get_object_terms</name>
+            <description><![CDATA[applied to the list of terms (an array of objects) generated by the 
+<tt><a href="http://codex.wordpress.org/Function_Reference/wp_get_object_terms" title="Function Reference/wp get object terms">wp_get_object_terms</a></tt> function, which is called by a number of category/term related functions, such as 
+<tt><a href="http://codex.wordpress.org/Function_Reference/get_the_terms" title="Function Reference/get the terms">get_the_terms</a></tt> and 
+<tt><a href="http://codex.wordpress.org/Function_Reference/get_the_category" title="Function Reference/get the category">get_the_category</a></tt>.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>pre_category_description</name>
+            <description><![CDATA[applied to the category desription prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>edited_terms</name>
+            <description><![CDATA[applied prior saving taxonomy/category change in the database.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>pre_category_name</name>
+            <description><![CDATA[applied to the category name prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Category and Term Filters">
+            <name>pre_category_nicename</name>
+            <description><![CDATA[applied to the category nice name prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>attachment_link</name>
+            <description><![CDATA[applied to the calculated attachment permalink by the 
+<tt>get_attachment_link</tt> function. Filter function arguments: link URL, attachment ID.]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>author_feed_link</name>
+            <description><![CDATA[applied to the feed URL generated for the author feed by the 
+<tt>get_author_rss_link</tt> function.]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>author_link</name>
+            <description><![CDATA[applied to the author's archive permalink created by the 
+<tt>get_author_posts_url</tt> function. Filter function arguments: link URL, author ID, author's &quot;nice&quot; name. Note that 
+<tt>get_author_posts_url</tt> is called within functions 
+<tt>wp_list_authors</tt> and 
+<tt>the_author_posts_link</tt>.]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>comment_reply_link</name>
+            <description><![CDATA[applied to the link generated for replying to a specific comment by the 
+<tt>get_comment_reply_link</tt> function which is called within function 
+<tt>comments_template</tt>. Filter function arguments: link (string), custom options (array), current comment (object), current post (object).]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>day_link</name>
+            <description><![CDATA[applied to the link URL for a daily archive by the 
+<tt>get_day_link</tt> function. Filter function arguments: URL, year, month number, day number.]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>feed_link</name>
+            <description><![CDATA[applied to the link URL for a feed by the 
+<tt>get_feed_link</tt> function. Filter function arguments: URL, type of feed (e.g. &quot;rss2&quot;, &quot;atom&quot;, etc.).]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>get_comment_author_link</name>
+            <description><![CDATA[applied to the HTML generated for the author's link on a comment, in the 
+<tt>get_comment_author_link</tt> function (which is also called by 
+<tt>comment_author_link</tt>. Action function arguments: user name]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>get_comment_author_url_link</name>
+            <description><![CDATA[applied to the HTML generated for the author's lnik on a comment, in the 
+<tt>get_comment_author_url_link</tt> function (which is also called by 
+<tt>comment_author_link</tt>).]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>month_link</name>
+            <description><![CDATA[applied to the link URL for a monthly archive by the 
+<tt>get_month_link</tt> function. Filter function arguments: URL, year, month number.]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>page_link</name>
+            <description><![CDATA[applied to the calculated page URL by the 
+<tt>get_page_link</tt> function. Filter function arguments: URL, page ID. Note that there is also an internal filter called 
+<tt>_get_page_link</tt> that can be used to filter the URLS of pages that are not designated as the blog's home page (same arguments). Note that this only applies to Wordpress pages, not posts, custom post types, or attachments.]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>post_link</name>
+            <description><![CDATA[applied to the calculated post permalink by the 
+<tt>get_permalink</tt> function, which is also called by the 
+<tt>the_permalink</tt>, 
+<tt>post_permalink</tt>, 
+<tt>previous_post_link</tt>, and 
+<tt>next_post_link</tt> functions. Filter function arguments: permalink URL, post data list. Note that this only applies to Wordpress's default posts, and not custom post types (nor pages or attachments).]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>post_type_link</name>
+            <description><![CDATA[applied to the calculated custom post type permalink by the 
+<tt>get_post_permalink</tt> function.]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>the_permalink</name>
+            <description><![CDATA[applied to the permalink URL for a post prior to printing by function 
+<tt>the_permalink</tt>.]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>year_link</name>
+            <description><![CDATA[applied to the link URL for a yearly archive by the 
+<tt>get_year_link</tt> function. Filter function arguments: URL, year.]]></description>
+        </filter>
+        <filter category="Link Filters">
+            <name>tag_link</name>
+            <description><![CDATA[applied to the URL created for a tag by the get_tag_link function. Filter function arguments: link URL, tag ID.]]></description>
+        </filter>
+        <filter category="Date and Time Filters">
+            <name>get_comment_date</name>
+            <description><![CDATA[applied to the formatted comment date generated by the 
+<tt>get_comment_date</tt> function (which is also called by 
+<tt>comment_date</tt>).]]></description>
+        </filter>
+        <filter category="Date and Time Filters">
+            <name>get_comment_time</name>
+            <description><![CDATA[applied to the formatted comment time in the 
+<tt>get_comment_time</tt> function (which is also called by 
+<tt>comment_time</tt>).]]></description>
+        </filter>
+        <filter category="Date and Time Filters">
+            <name>get_the_modified_date</name>
+            <description><![CDATA[applied to the formatted post modification date generated by the 
+<tt>get_the_modified_date</tt> function (which is also called by the 
+<tt>the_modified_date</tt> function).]]></description>
+        </filter>
+        <filter category="Date and Time Filters">
+            <name>get_the_modified_time</name>
+            <description><![CDATA[applied to the formatted post modification time generated by the 
+<tt>get_the_modified_time</tt> and 
+<tt>get_post_modified_time</tt> functions (which are also called by the 
+<tt>the_modified_time</tt> function).]]></description>
+        </filter>
+        <filter category="Date and Time Filters">
+            <name>get_the_time</name>
+            <description><![CDATA[applied to the formatted post time generated by the 
+<tt>get_the_time</tt> and 
+<tt>get_post_time</tt> functions (which are also called by the 
+<tt>the_time</tt> function).]]></description>
+        </filter>
+        <filter category="Date and Time Filters">
+            <name>the_date</name>
+            <description><![CDATA[applied to the formatted post date generated by the 
+<tt>the_date</tt> function.]]></description>
+        </filter>
+        <filter category="Date and Time Filters">
+            <name>the_modified_date</name>
+            <description><![CDATA[applied to the formatted post modification date generated by the 
+<tt>the_modified_date</tt> function.]]></description>
+        </filter>
+        <filter category="Date and Time Filters">
+            <name>the_modified_time</name>
+            <description><![CDATA[applied to the formatted post modification time generated by the 
+<tt>the_modified_time</tt> function.]]></description>
+        </filter>
+        <filter category="Date and Time Filters">
+            <name>the_time</name>
+            <description><![CDATA[applied to the formatted post time generated by the 
+<tt>the_time</tt> function.]]></description>
+        </filter>
+        <filter category="Date and Time Filters">
+            <name>the_weekday</name>
+            <description><![CDATA[applied to the post date weekday name generated by the 
+<tt>the_weekday</tt> function.]]></description>
+        </filter>
+        <filter category="Date and Time Filters">
+            <name>the_weekday_date</name>
+            <description><![CDATA[applied to the post date weekday name generated by the 
+<tt>the_weekday_date</tt> function. Function arguments are the weekday name, before text, and after text (before text and after text are added to the weekday name if the current post's weekday is different from the previous post's weekday).]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>login_body_class</name>
+            <description><![CDATA[Allows filtering of the body class applied to the login screen in 
+<tt><a href="http://codex.wordpress.org/Function_Reference/login_header" title="Function Reference/login header">login_header()</a></tt>.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>login_redirect</name>
+            <description><![CDATA[applied to the 
+<tt>redirect_to</tt> post/get variable during the user login process.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>contactmethods</name>
+            <description><![CDATA[applied to the contact methods fields on the user profile page.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>author_email</name>
+            <description><![CDATA[applied to the comment author's email address retrieved from the database by the 
+<tt>comment_author_email</tt> function. See also 
+<tt>get_comment_author_email</tt>.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>comment_author</name>
+            <description><![CDATA[applied to the comment author's name retrieved from the database by the 
+<tt>comment_author</tt> function. See also 
+<tt>get_comment_author</tt>.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>comment_author_rss</name>
+            <description><![CDATA[applied to the comment author's name prior to including in an RSS feed.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>comment_email</name>
+            <description><![CDATA[applied to the comment author's email address retrieved from the database by the 
+<tt>comment_author_email_link</tt> function.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>comment_url</name>
+            <description><![CDATA[applied to the comment author's URL retrieved from the database by the 
+<tt>comment_author_url</tt> function (see also 
+<tt>get_comment_author_url</tt>).]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>get_comment_author</name>
+            <description><![CDATA[applied to the comment author's name retrieved from the database by 
+<tt>get_comment_author</tt>, which is also called by 
+<tt>comment_author</tt>. See also 
+<tt>comment_author</tt>.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>get_comment_author_email</name>
+            <description><![CDATA[applied to the comment author's email address retrieved from the database by 
+<tt>get_comment_author_email</tt>, which is also called by 
+<tt>comment_author_email</tt>. See also 
+<tt>author_email</tt>.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>get_comment_author_IP</name>
+            <description><![CDATA[applied to the comment author's IP address retrieved from the database by the 
+<tt>get_comment_author_IP</tt> function, which is also called by 
+<tt>comment_author_IP</tt>.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>get_comment_author_url</name>
+            <description><![CDATA[applied to the comment author's URL retrieved from the database by the 
+<tt>get_comment_author_url</tt> function, which is also called by 
+<tt>comment_author_url</tt>. See also 
+<tt>comment_url</tt>.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>login_errors</name>
+            <description><![CDATA[applied to the login error message printed on the login screen.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>login_headertitle</name>
+            <description><![CDATA[applied to the title for the login header URL (Powered by WordPress by default) printed on the login screen.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>login_headerurl</name>
+            <description><![CDATA[applied to the login header URL (points to wordpress.org by default) printed on the login screen.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>login_message</name>
+            <description><![CDATA[applied to the login message printed on the login screen.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>role_has_cap</name>
+            <description><![CDATA[applied to a role's capabilities list in the 
+<tt>WP_Role-&gt;has_cap</tt> function. Filter function arguments are the capabilities list to be filtered, the capability being questioned, and the role's name.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>sanitize_user</name>
+            <description><![CDATA[applied to a user name by the 
+<tt>sanitize_user</tt> function. Filter function arguments: user name (after some cleaning up), raw user name, strict (true or false to use strict ASCII or not).]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>the_author</name>
+            <description><![CDATA[applied to a post author's displayed name by the 
+<tt>get_the_author</tt> function, which is also called by the 
+<tt>the_author</tt> function.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>the_author_email</name>
+            <description><![CDATA[applied to a post author's email address by the 
+<tt>the_author_email</tt> function.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_comment_author_email</name>
+            <description><![CDATA[applied to a comment author's email address prior to saving the comment in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_comment_author_name</name>
+            <description><![CDATA[applied to a comment author's user name prior to saving the comment in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_comment_author_url</name>
+            <description><![CDATA[applied to a comment author's URL prior to saving the comment in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_comment_user_agent</name>
+            <description><![CDATA[applied to the comment author's user agent prior to saving the comment in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_comment_user_ip</name>
+            <description><![CDATA[applied to the comment author's IP address prior to saving the comment in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_user_id</name>
+            <description><![CDATA[applied to the comment author's user ID prior to saving the comment in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_user_description</name>
+            <description><![CDATA[applied to the user's description prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_user_display_name</name>
+            <description><![CDATA[applied to the user's displayed name prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_user_email</name>
+            <description><![CDATA[applied to the user's email address prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_user_first_name</name>
+            <description><![CDATA[applied to the user's first name prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_user_last_name</name>
+            <description><![CDATA[applied to the user's last name prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_user_login</name>
+            <description><![CDATA[applied to the user's login name prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_user_nicename</name>
+            <description><![CDATA[applied to the user's &quot;nice name&quot; prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_user_nickname</name>
+            <description><![CDATA[applied to the user's nickname prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>pre_user_url</name>
+            <description><![CDATA[applied to the user's URL prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>registration_errors</name>
+            <description><![CDATA[applied to the list of registration errors generated while registering a user for a new account.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>user_registration_email</name>
+            <description><![CDATA[applied to the user's email address read from the registration page, prior to trying to register the person as a new user.]]></description>
+        </filter>
+        <filter category="Author and User Filters">
+            <name>validate_username</name>
+            <description><![CDATA[applied to the validation result on a new user name. Filter function arguments: valid (true/false), user name being validated.]]></description>
+        </filter>
+        <filter category="Blogroll Filters">
+            <name>get_bookmarks</name>
+            <description><![CDATA[applied to link/blogroll database query results by the 
+<tt>get_bookmarks</tt> function. Filter function arguments: database query results list, 
+<tt>get_bookmarks</tt> arguments list.]]></description>
+        </filter>
+        <filter category="Blogroll Filters">
+            <name>link_category</name>
+            <description><![CDATA[applied to the link category by the 
+<tt>get_links_list</tt> and 
+<tt>wp_list_bookmarks</tt> functions (as of WordPress 2.2).]]></description>
+        </filter>
+        <filter category="Blogroll Filters">
+            <name>link_description</name>
+            <description><![CDATA[applied to the link description by the 
+<tt>get_links</tt> and 
+<tt>wp_list_bookmarks</tt> functions (as of WordPress 2.2).]]></description>
+        </filter>
+        <filter category="Blogroll Filters">
+            <name>link_rating</name>
+            <description><![CDATA[applied to the link rating number by the 
+<tt>get_linkrating</tt> function.]]></description>
+        </filter>
+        <filter category="Blogroll Filters">
+            <name>link_title</name>
+            <description><![CDATA[applied to the link title by the 
+<tt>get_links</tt> and 
+<tt>wp_list_bookmarks</tt> functions (as of WordPress 2.2)]]></description>
+        </filter>
+        <filter category="Blogroll Filters">
+            <name>pre_link_description</name>
+            <description><![CDATA[applied to the link description prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Blogroll Filters">
+            <name>pre_link_image</name>
+            <description><![CDATA[applied to the link image prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Blogroll Filters">
+            <name>pre_link_name</name>
+            <description><![CDATA[applied to the link name prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Blogroll Filters">
+            <name>pre_link_notes</name>
+            <description><![CDATA[applied to the link notes prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Blogroll Filters">
+            <name>pre_link_rel</name>
+            <description><![CDATA[applied to the link relation information prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Blogroll Filters">
+            <name>pre_link_rss</name>
+            <description><![CDATA[applied to the link RSS URL prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Blogroll Filters">
+            <name>pre_link_target</name>
+            <description><![CDATA[applied to the link target information prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Blogroll Filters">
+            <name>pre_link_url</name>
+            <description><![CDATA[applied to the link URL prior to saving in the database.]]></description>
+        </filter>
+        <filter category="Blog Information and Option Filters">
+            <name>all_options</name>
+            <description><![CDATA[applied to the option list retrieved from the database by the 
+<tt>get_alloptions</tt> function.]]></description>
+        </filter>
+        <filter category="Blog Information and Option Filters">
+            <name>bloginfo</name>
+            <description><![CDATA[applied to the blog option information retrieved from the database by the 
+<tt>bloginfo</tt> function, after first retrieving the information with the 
+<tt>get_bloginfo</tt> function. A second argument 
+<tt>$show</tt> gives the name of the bloginfo option that was requested. Note that 
+<tt>bloginfo(&quot;url&quot;)</tt>, 
+<tt>bloginfo(&quot;directory&quot;)</tt> and 
+<tt>bloginfo(&quot;home&quot;)</tt> do 
+<i>not</i> use this filtering function (see 
+<tt>bloginfo_url</tt>).]]></description>
+        </filter>
+        <filter category="Blog Information and Option Filters">
+            <name>bloginfo_rss</name>
+            <description><![CDATA[applied to the blog option information by function 
+<tt>get_bloginfo_rss</tt> (which is also called from 
+<tt>bloginfo_rss</tt>), after first retrieving the information with the 
+<tt>get_bloginfo</tt> function, stripping out HTML tags, and converting characters appropriately. A second argument 
+<tt>$show</tt> gives the name of the bloginfo option that was requested.]]></description>
+        </filter>
+        <filter category="Blog Information and Option Filters">
+            <name>bloginfo_url</name>
+            <description><![CDATA[applied to the the output of 
+<tt>bloginfo(&quot;url&quot;)</tt>, 
+<tt>bloginfo(&quot;directory&quot;)</tt> and 
+<tt>bloginfo(&quot;home&quot;)</tt> before returning the information.]]></description>
+        </filter>
+        <filter category="Blog Information and Option Filters">
+            <name>loginout</name>
+            <description><![CDATA[applied to the HTML link for logging in and out (generally placed in the sidebar) generated by the 
+<tt>wp_loginout</tt> function.]]></description>
+        </filter>
+        <filter category="Blog Information and Option Filters">
+            <name>option_(option name)</name>
+            <description><![CDATA[applied to the option value retrieved from the database by the 
+<tt>get_option</tt> function, after unserializing (which decodes array-based options). To use this filter, you will need to add filters for specific options names, such as &quot;option_foo&quot; to filter the output of 
+<tt>get_option(&quot;foo&quot;)</tt>.]]></description>
+        </filter>
+        <filter category="Blog Information and Option Filters">
+            <name>pre_get_space_used</name>
+            <description><![CDATA[applied to the 
+<tt><a href="http://codex.wordpress.org/Function_Reference/get_space_used" title="Function Reference/get space used">get_space_used()</a></tt> function to provide an alternative way of displaying storage space used. Returning false from this filter will revert to default display behavior (used wp_upload_dir() directory space in megabytes).]]></description>
+        </filter>
+        <filter category="Blog Information and Option Filters">
+            <name>pre_option_(option name)</name>
+            <description><![CDATA[applied to the option value retrieved from the database by the 
+<tt>get_alloptions</tt> function, after unserializing (which decodes array-based options). To use this filter, you will need to add filters for specific options names, such as &quot;pre_option_foo&quot; to filter the option &quot;foo&quot;.]]></description>
+        </filter>
+        <filter category="Blog Information and Option Filters">
+            <name>pre_update_option_(option name)</name>
+            <description><![CDATA[applied the option value before being saving to the database to allow overriding the value to be stored. To use this filter, you will need to add filters for specific options names, such as &quot;pre_update_option_foo&quot; to filter the option &quot;foo&quot;.]]></description>
+        </filter>
+        <filter category="Blog Information and Option Filters">
+            <name>register</name>
+            <description><![CDATA[applied to the sidebar link created for the user to register (if allowed) or visit the admin panels (if already logged in) by the 
+<tt>wp_register</tt> function.]]></description>
+        </filter>
+        <filter category="Blog Information and Option Filters">
+            <name>upload_dir</name>
+            <description><![CDATA[applied to the directory to be used for uploads calculated by the 
+<tt>wp_upload_dir</tt> function. Filter function argument is an array with components &quot;dir&quot; (the upload directory path), &quot;url&quot; (the URL of the upload directory), and &quot;error&quot; (which you can set to true if you want to generate an error).]]></description>
+        </filter>
+        <filter category="Blog Information and Option Filters">
+            <name>upload_mimes</name>
+            <description><![CDATA[allows a filter function to return a list of MIME types for uploads, if there is no MIME list input to the 
+<tt>wp_check_filetype</tt> function. Filter function argument is an associated list of MIME types whose component names are file extensions (separated by vertical bars) and values are the corresponding MIME types.]]></description>
+        </filter>
+        <filter category="General Text Filters">
+            <name>attribute_escape</name>
+            <description><![CDATA[applied to post text and other content by the 
+<tt>attribute_escape</tt> function, which is called in many places in WordPress to change certain characters into HTML attributes before sending to the browser.]]></description>
+        </filter>
+        <filter category="General Text Filters">
+            <name>js_escape</name>
+            <description><![CDATA[applied to JavaScript code before sending to the browser in the 
+<tt>js_escape</tt> function.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>admin_user_info_links</name>
+            <description><![CDATA[applied to the user profile and info links in the WordPress admin quick menu.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>autosave_interval</name>
+            <description><![CDATA[applied to the interval for auto-saving posts.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>bulk_actions</name>
+            <description><![CDATA[applied to an array of bulk items in admin bulk action dropdowns.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>cat_rows</name>
+            <description><![CDATA[applied to the category rows HTML generated for managing categories in the admin menus.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>comment_edit_pre</name>
+            <description><![CDATA[applied to comment content prior to display in the editing screen.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>comment_edit_redirect</name>
+            <description><![CDATA[applied to the redirect location after someone edits a comment in the admin menus. Filter function arguments: redirect location, comment ID.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>comment_moderation_subject</name>
+            <description><![CDATA[applied to the mail subject before sending email notifying the administrator of the need to moderate a new comment. Filter function arguments: mail subject, comment ID. Note that this happens inside the default 
+<tt>wp_notify_moderator</tt> function, which is a &quot;pluggable&quot; function, meaning that plugins can override it; see 
+<a href="http://codex.wordpress.org/Plugin_API" title="Plugin API">Plugin API</a>).]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>comment_moderation_text</name>
+            <description><![CDATA[applied to the body of the mail message before sending email notifying the administrator of the need to moderate a new comment. Filter function arguments: mail body text, comment ID. Note that this happens inside the default 
+<tt>wp_notify_moderator</tt> function, which is a &quot;pluggable&quot; function, meaning that plugins can override it; see 
+<a href="http://codex.wordpress.org/Plugin_API" title="Plugin API">Plugin API</a>).]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>comment_notification_headers</name>
+            <description><![CDATA[applied to the mail headers before sending email notifying the post author of a new comment. Filter function arguments: mail header text, comment ID. Note that this happens inside the default 
+<tt>wp_notify_postauthor</tt> function, which is a &quot;pluggable&quot; function, meaning that plugins can override it; see 
+<a href="http://codex.wordpress.org/Plugin_API" title="Plugin API">Plugin API</a>).]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>comment_notification_subject</name>
+            <description><![CDATA[applied to the mail subject before sending email notifying the post author of a new comment. Filter function arguments: mail subject, comment ID. Note that this happens inside the default 
+<tt>wp_notify_postauthor</tt> function, which is a &quot;pluggable&quot; function, meaning that plugins can override it; see 
+<a href="http://codex.wordpress.org/Plugin_API" title="Plugin API">Plugin API</a>).]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>comment_notification_text</name>
+            <description><![CDATA[applied to the body of the mail message before sending email notifying the post author of a new comment. Filter function arguments: mail body text, comment ID. Note that this happens inside the default 
+<tt>wp_notify_postauthor</tt> function, which is a &quot;pluggable&quot; function, meaning that plugins can override it; see 
+<a href="http://codex.wordpress.org/Plugin_API" title="Plugin API">Plugin API</a>).]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>cron_request</name>
+            <description><![CDATA[Allows filtering of the URL, key and arguments passed to 
+<a href="http://codex.wordpress.org/Function_Reference/wp_remote_post" title="Function Reference/wp remote post">wp_remote_post()</a> in 
+<a href="http://codex.wordpress.org/Function_Reference/spawn_cron" title="Function Reference/spawn cron">spawn_cron()</a>.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>cron_schedules</name>
+            <description><![CDATA[applied to an empty array to allow a plugin to generate cron schedules in the 
+<tt>wp_get_schedules</tt> function.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>custom_menu_order</name>
+            <description><![CDATA[used to activate the 'menu_order' filter.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>default_content</name>
+            <description><![CDATA[applied to the default post content prior to opening the editor for a new post.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>default_excerpt</name>
+            <description><![CDATA[applied to the default post excerpt prior to opening the editor for a new post.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>default_title</name>
+            <description><![CDATA[applied to the default post title prior to opening the editor for a new post.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>editable_slug</name>
+            <description><![CDATA[applied to the post, page, tag or category slug by the 
+<tt>get_sample_permalink</tt> function.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>explain_nonce_(verb)-(noun)</name>
+            <description><![CDATA[allows a filter function to define text to be used to explain a nonce that is otherwise not explained by the WordPress core code. You will need to define specific verb/noun filters to use this. For instance, if your plugin defines a nonce for updating a tag, you would define a filter for &quot;explain_nonce_update-tag&quot;. Filter function arguments: text to display (defaults to a generic &quot;Are you sure you want to do this?&quot; message) and extra information from the end of the action URL. In the example here, your function might simply return the string &quot;Are you sure you want to update this tag?&quot;.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>format_to_edit</name>
+            <description><![CDATA[applied to post content, excerpt, title, and password by the 
+<tt>format_to_edit</tt> function, which is called by the admin menus to set up a post for editing. Also applied to when editing comments in the admin menus.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>format_to_post</name>
+            <description><![CDATA[applied to post content by the 
+<tt>format_to_post</tt> function, which is not used in WordPress by default.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>manage_edit-${post_type}_columns</name>
+            <description><![CDATA[applied to the list of columns to print on the manage posts screen for a custom post type. Filter function argument/return value is an associative array where the element key is the name of the column, and the value is the header text for that column. See also action 
+<a href="http://codex.wordpress.org/index.php?title=Plugin_API/Action_Reference/manage_post_type_posts_custom_column&amp;action=edit&amp;redlink=1" class="new" title="Plugin API/Action Reference/manage post type posts custom column (page does not exist)"><tt>manage_${post_type}_posts_custom_column</tt></a>, which puts the column information into the edit screen.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>manage_link-manager_columns</name>
+            <description><![CDATA[was 
+<tt>manage_link_columns</tt> until wordpress 2.7. applied to the list of columns to print on the blogroll management screen. Filter function argument/return value is an associative list where the element key is the name of the column, and the value is the header text for that column. See also action 
+<a href="http://codex.wordpress.org/Plugin_API/Action_Reference/manage_posts_custom_column" title="Plugin API/Action Reference/manage posts custom column"><tt>manage_link_custom_column</tt></a>, which puts the column information into the edit screen.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>manage_posts_columns</name>
+            <description><![CDATA[applied to the list of columns to print on the manage posts screen. Filter function argument/return value is an associative array where the element key is the name of the column, and the value is the header text for that column. See also action 
+<a href="http://codex.wordpress.org/Plugin_API/Action_Reference/manage_posts_custom_column" title="Plugin API/Action Reference/manage posts custom column"><tt>manage_posts_custom_column</tt></a>, which puts the column information into the edit screen. (see 
+<a href="http://codex.wordpress.orghttp://scompt.com/archives/2007/10/20/adding-custom-columns-to-the-wordpress-manage-posts-screen" class="external text" title="http://scompt.com/archives/2007/10/20/adding-custom-columns-to-the-wordpress-manage-posts-screen">Scompt's tutorial</a> for examples and use.)]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>manage_pages_columns</name>
+            <description><![CDATA[applied to the list of columns to print on the manage pages screen. Filter function argument/return value is an associative array where the element key is the name of the column, and the value is the header text for that column. See also action 
+<tt>manage_pages_custom_column</tt>, which puts the column information into the edit screen.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>manage_users_custom_column</name>
+            <description><![CDATA[]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>manage_users_sortable_columns</name>
+            <description><![CDATA[]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>menu_order</name>
+            <description><![CDATA[applied to the array for the admin menu order. Must be activated with the 'custom_menu_order' filter before.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>postmeta_form_limit</name>
+            <description><![CDATA[applied to the number of post-meta information items shown on the post edit screen.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>pre_upload_error</name>
+            <description><![CDATA[applied to allow a plugin to create an XMLRPC error for uploading files.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>preview_page_link</name>
+            <description><![CDATA[applied to the link on the page editing screen that shows the page preview at the bottom of the screen.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>preview_post_link</name>
+            <description><![CDATA[applied to the link on the post editing screen that shows the post preview at the bottom of the screen.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>richedit_pre</name>
+            <description><![CDATA[applied to post content by the 
+<tt>wp_richedit_pre</tt> function, before displaying in the rich text editor.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>schedule_event</name>
+            <description><![CDATA[applied to each recurring and single event as it is added to the cron schedule.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>show_password_fields</name>
+            <description><![CDATA[applied to the true/false variable that controls whether the user is presented with the opportunity to change their password on the user profile screen (true means to show password changing fields; false means don't).]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>terms_to_edit</name>
+            <description><![CDATA[applied to the CSV of terms (for each taxonomy) that is used to show which terms are attached to the post.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>the_editor</name>
+            <description><![CDATA[applied to the HTML DIV created to house the rich text editor, prior to printing it on the screen. Filter function argument/return value is a string.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>user_can_richedit</name>
+            <description><![CDATA[applied to the calculation of whether the user's browser has rich editing capabilities, and whether the user wants to use the rich editor, in the 
+<tt>user_can_richedit</tt> function. Filter function argument and return value is true/false if the current user can/cannot use the rich editor.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>user_has_cap</name>
+            <description><![CDATA[applied to a user's capabilities list in the 
+<tt>WP_User-&gt;has_cap</tt> function (which is called by the 
+<tt>current_user_can</tt> function). Filter function arguments are the capabilities list to be filtered, the capability being questioned, and the argument list (which has things such as the post ID if the capability is to edit posts, etc.)]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>wp_handle_upload</name>
+            <description><![CDATA[applied to the upload information when uploading a file. Filter function argument: array with elements &quot;file&quot; (file name), &quot;url&quot;, &quot;type&quot;.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>wp_terms_checklist_args</name>
+            <description><![CDATA[applied to arguments of the wp_terms_checklist() function. Filter function argument: array of checklist arguments, post ID.]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>wp_upload_tabs</name>
+            <description><![CDATA[applied to the list of custom tabs to display on the upload management admin screen. Use action 
+<tt>upload_files_(tab)</tt> to display a page for your custom tab (see 
+<a href="http://codex.wordpress.org/Plugin_API/Action_Reference" title="Plugin API/Action Reference">Plugin API/Action Reference</a>).]]></description>
+        </filter>
+        <filter category="Administrative Filters">
+            <name>media_upload_tabs</name>
+            <description><![CDATA[applied to the list of custom tabs to display on the upload management admin screen. Use action 
+<tt>upload_files_(tab)</tt> to display a page for your custom tab (see 
+<a href="http://codex.wordpress.org/Plugin_API/Action_Reference" title="Plugin API/Action Reference">Plugin API/Action Reference</a>).]]></description>
+        </filter>
+        <filter category="Rich Text Editor Filters">
+            <name>mce_spellchecker_languages</name>
+            <description><![CDATA[applied to the language selection available in the spell checker.]]></description>
+        </filter>
+        <filter category="Rich Text Editor Filters">
+            <name>mce_buttons, mce_buttons_2, mce_buttons_3, mce_buttons_4</name>
+            <description><![CDATA[applied to the rows of buttons for the rich editor toolbar (each is an array of button names).]]></description>
+        </filter>
+        <filter category="Rich Text Editor Filters">
+            <name>mce_buttons_2</name>
+            <description><![CDATA[applied to the rows of buttons for the rich editor toolbar (each is an array of button names).]]></description>
+        </filter>
+        <filter category="Rich Text Editor Filters">
+            <name>mce_buttons_3</name>
+            <description><![CDATA[applied to the rows of buttons for the rich editor toolbar (each is an array of button names).]]></description>
+        </filter>
+        <filter category="Rich Text Editor Filters">
+            <name>mce_buttons_4</name>
+            <description><![CDATA[applied to the rows of buttons for the rich editor toolbar (each is an array of button names).]]></description>
+        </filter>
+        <filter category="Rich Text Editor Filters">
+            <name>mce_css</name>
+            <description><![CDATA[applied to the CSS file URL for the rich text editor.]]></description>
+        </filter>
+        <filter category="Rich Text Editor Filters">
+            <name>mce_external_plugins</name>
+            <description><![CDATA[applied to the array of external plugins to be loaded by the rich text editor.]]></description>
+        </filter>
+        <filter category="Rich Text Editor Filters">
+            <name>mce_external_languages</name>
+            <description><![CDATA[applied to the array of language files loaded by external plugins, allowing them to use the standard translation method (see tinymce/langs/wp-langs.php for reference).]]></description>
+        </filter>
+        <filter category="Rich Text Editor Filters">
+            <name>tiny_mce_before_init</name>
+            <description><![CDATA[applied to the whole init array for the editor.]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>locale_stylesheet_uri</name>
+            <description><![CDATA[applied to the locale-specific stylesheet URI returned by the 
+<tt>get_locale_stylesheet_uri</tt> function. Filter function arguments: URI, stylesheet directory URI.]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>stylesheet</name>
+            <description><![CDATA[applied to the stylesheet returned by the 
+<tt>get_stylesheet</tt> function.]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>stylesheet_directory</name>
+            <description><![CDATA[applied to the stylesheet directory returned by the 
+<tt>get_stylesheet_directory</tt> function. Filter function arguments: stylesheet directory, stylesheet.]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>stylesheet_directory_uri</name>
+            <description><![CDATA[applied to the stylesheet directory URI returned by the 
+<tt>get_stylesheet_directory_uri</tt> function. Filter function arguments: stylesheet directory URI, stylesheet.]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>stylesheet_uri</name>
+            <description><![CDATA[applied to the stylesheet URI returned by the 
+<tt>get_stylesheet_uri</tt> function. Filter function arguments: stylesheet URI, stylesheet.]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>template</name>
+            <description><![CDATA[applied to the template returned by the 
+<tt>get_template</tt> function.]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>template_directory</name>
+            <description><![CDATA[applied to the template directory returned by the 
+<tt>get_template_directory</tt> function. Filter function arguments: template directory, template.]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>template_directory_uri</name>
+            <description><![CDATA[applied to the template directory URI returned by the 
+<tt>get_template_directory_uri</tt> function. Filter function arguments: template directory URI, template.]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>theme_root</name>
+            <description><![CDATA[applied to the theme root directory (normally wp-content/themes) returned by the 
+<tt>get_theme_root</tt> function.]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>theme_root_uri</name>
+            <description><![CDATA[applied to the theme root directory URI returned by the 
+<tt>get_theme_root_uri</tt> function. Filter function arguments: URI, site URL.]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>404_template</name>
+            <description><![CDATA[]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>archive_template</name>
+            <description><![CDATA[You can use this for example to enforce a specific template for a custom post type archive. This way you can keep all the code in a plugin.]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>attachment_template</name>
+            <description><![CDATA[]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>author_template</name>
+            <description><![CDATA[]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>category_template</name>
+            <description><![CDATA[]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>comments_popup_template</name>
+            <description><![CDATA[]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>comments_template</name>
+            <description><![CDATA[The &quot;comments_template&quot; filter can be used to load a custom template form a plugin which replace the themes default comment template.]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>date_template</name>
+            <description><![CDATA[]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>home_template</name>
+            <description><![CDATA[]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>page_template</name>
+            <description><![CDATA[]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>paged_template</name>
+            <description><![CDATA[]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>search_template</name>
+            <description><![CDATA[]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>single_template</name>
+            <description><![CDATA[You can use this for example to enforce a specific template for a custom post type. This way you can keep all the code in a plugin.]]></description>
+        </filter>
+        <filter category="Template Filters">
+            <name>template_include</name>
+            <description><![CDATA[]]></description>
+        </filter>
+        <filter category="Kubrick Filters">
+            <name>kubrick_header_color</name>
+            <description><![CDATA[applied to the color for the header of the kubrick theme.]]></description>
+        </filter>
+        <filter category="Kubrick Filters">
+            <name>kubrick_header_display</name>
+            <description><![CDATA[applied to the display option for the header of the kubrick theme.]]></description>
+        </filter>
+        <filter category="Kubrick Filters">
+            <name>kubrick_header_image</name>
+            <description><![CDATA[applied to the header image file for the kubrick theme.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>allowed_redirect_hosts</name>
+            <description><![CDATA[applied to the list of host names deemed safe for redirection. wp-login.php uses this to defend against a dangerous 'redirect_to' request parameter]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>author_rewrite_rules</name>
+            <description><![CDATA[applied to the author-related rewrite rules after they are generated.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>category_rewrite_rules</name>
+            <description><![CDATA[applied to the category-related rewrite rules after they are generated.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>comments_rewrite_rules</name>
+            <description><![CDATA[applied to the comment-related rewrite rules after they are generated.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>create_user_query</name>
+            <description><![CDATA[applied to the query used to save a new user's information to the database, just prior to running the query.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>date_rewrite_rules</name>
+            <description><![CDATA[applied to the date-related rewrite rules after they are generated.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>found_posts</name>
+            <description><![CDATA[applied to the list of posts, just after querying from the database.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>found_posts_query</name>
+            <description><![CDATA[after the list of posts to display is queried from the database, WordPress selects rows in the query results. This filter allows you to do something other than 
+<tt>SELECT FOUND_ROWS()</tt> at that step.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>get_editable_authors</name>
+            <description><![CDATA[applied to the list of post authors that the current user is authorized to edit in the 
+<tt>get_editable_authors</tt> function.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>gettext</name>
+            <description><![CDATA[applied to the translated text by the 
+<a href="http://codex.wordpress.org/index.php?title=Function_Reference/translation&amp;action=edit&amp;redlink=1" class="new" title="Function Reference/translation (page does not exist)"><tt>translation()</tt></a> function (which is called by functions like the 
+<a href="http://codex.wordpress.org/Function_Reference/_2" title="Function Reference/ 2"><tt>__()</tt></a> and 
+<a href="http://codex.wordpress.org/Function_Reference/_e" title="Function Reference/ e"><tt>_e()</tt></a> internationalization functions ). Filter function arguments: translated text, untranslated text and the text domain. Gets applied even if internationalization is not in effect or if the text domain has not been loaded.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>override_load_textdomain</name>
+            <description><![CDATA[]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>get_meta_sql</name>
+            <description><![CDATA[in function 
+<tt>WP_Meta_Query::get_sql</tt> (which generates SQL clauses to be appended to a main query for advanced meta queries.), applied to the SQL JOIN and WHERE clause generated by the advanced meta query. Filter function arguments: array( compact( 'join', 'where' ), $this-&gt;queries, $type, $primary_table, $primary_id_column, $context )]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>get_next_post_join</name>
+            <description><![CDATA[in function 
+<tt>get_next_post</tt> (which finds the post after the currently-displayed post), applied to the SQL JOIN clause (which normally joins to the category table if user is viewing a category archive). Filter function arguments: JOIN clause, stay in same category (true/false), list of excluded categories.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>get_next_post_sort</name>
+            <description><![CDATA[in function 
+<tt>get_next_post</tt> (which finds the post after the currently-displayed post), applied to the SQL ORDER BY clause (which normally orders by post date in ascending order with a limit of 1 post). Filter function arguments: ORDER BY clause.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>get_next_post_where</name>
+            <description><![CDATA[in function 
+<tt>get_next_post</tt> (which finds the post after the currently-displayed post), applied to the SQL WHERE clause (which normally looks for the next dated published post). Filter function arguments: WHERE clause, stay in same category (true/false), list of excluded categories.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>get_others_drafts</name>
+            <description><![CDATA[applied to the query that selects the other users' drafts for display in the admin menus.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>get_previous_post_join</name>
+            <description><![CDATA[in function 
+<tt>get_previous_post</tt> (which finds the post before the currently-displayed post), applied to the SQL JOIN clause (which normally joins to the category table if user is viewing a category archive). Filter function arguments: join clause, stay in same category (true/false), list of excluded categories.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>get_previous_post_sort</name>
+            <description><![CDATA[in function 
+<tt>get_previous_post</tt> (which finds the post before the currently-displayed post), applied to the SQL ORDER BY clause (which normally orders by post date in descending order with a limit of 1 post). Filter function arguments: ORDER BY clause.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>get_previous_post_where</name>
+            <description><![CDATA[in function 
+<tt>get_previous_post</tt> (which finds the post before the currently-displayed post), applied to the SQL WHERE clause (which normally looks for the previous dated published post). Filter function arguments: WHERE clause, stay in same category (true/false), list of excluded categories.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>get_users_drafts</name>
+            <description><![CDATA[applied to the query that selects the users' drafts for display in the admin menus.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>locale</name>
+            <description><![CDATA[applied to the locale by the 
+<tt>get_locale</tt> function.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>mod_rewrite_rules</name>
+            <description><![CDATA[applied to the list of rewrite rules given to the user to put into their .htaccess file when they change their permalink structure. (Note: replaces deprecated filter 
+<tt>rewrite_rules</tt>.)]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>post_limits</name>
+            <description><![CDATA[applied to the 
+<tt>LIMIT</tt> clause of the query that returns the post array.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>posts_distinct</name>
+            <description><![CDATA[allows a plugin to add a 
+<tt>DISTINCTROW</tt> clause to the query that returns the post array.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>posts_fields</name>
+            <description><![CDATA[applied to the field list for the query that returns the post array.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>posts_groupby</name>
+            <description><![CDATA[applied to the 
+<tt>GROUP BY</tt> clause of the query that returns the post array (normally empty).]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>posts_join_paged</name>
+            <description><![CDATA[applied to the 
+<tt>JOIN</tt> clause of the query that returns the post array, after the paging is calculated (though paging does not affect the JOIN, so this is actually equivalent to 
+<tt>posts_join</tt>).]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>posts_orderby</name>
+            <description><![CDATA[applied to the 
+<tt>ORDER BY</tt> clause of the query that returns the post array.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>posts_request</name>
+            <description><![CDATA[applied to the entire SQL query that returns the post array, just prior to running the query.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>post_rewrite_rules</name>
+            <description><![CDATA[applied to the post-related rewrite rules after they are generated.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>root_rewrite_rules</name>
+            <description><![CDATA[applied to the root-level rewrite rules after they are generated.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>page_rewrite_rules</name>
+            <description><![CDATA[applied to the page-related rewrite rules after they are generated.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>posts_where_paged</name>
+            <description><![CDATA[applied to the 
+<tt>WHERE</tt> clause of the query that returns the post array, after the paging is calculated (though paging does not affect the WHERE, so this is actually equivalent to 
+<tt>posts_where</tt>).]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>posts_join</name>
+            <description><![CDATA[applied to the 
+<tt>JOIN</tt> clause of the query that returns the post array. This is typically used to add a table to the 
+<tt>JOIN</tt>, in combination with the 
+<tt>posts_where</tt> filter.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>posts_where</name>
+            <description><![CDATA[applied to the 
+<tt>WHERE</tt> clause of the query that returns the post array.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>query</name>
+            <description><![CDATA[applied to all queries (at least all queries run after plugins are loaded).]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>query_string</name>
+            <description><![CDATA[deprecated - use 
+<tt>query_vars</tt> or 
+<tt>request</tt> instead.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>query_vars</name>
+            <description><![CDATA[applied to the list of public WordPress query variables before the SQL query is formed. Useful for removing extra permalink information the plugin has dealt with in some other manner.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>request</name>
+            <description><![CDATA[like 
+<tt>query_vars</tt>, but applied after &quot;extra&quot; and private query variables have been added.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>rewrite_rules_array</name>
+            <description><![CDATA[applied to the entire rewrite rules array after it is generated.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>search_rewrite_rules</name>
+            <description><![CDATA[applied to the search-related rewrite rules after they are generated.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>the_posts</name>
+            <description><![CDATA[applied to the list of posts queried from the database after minimal processing for permissions and draft status on single-post pages.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>excerpt_length</name>
+            <description><![CDATA[Defines the length of a single-post excerpt.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>excerpt_more</name>
+            <description><![CDATA[Defines the more string at the end of the excerpt.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>post_edit_form_tag</name>
+            <description><![CDATA[Allows you to append code to the form tag in the default post/page editor.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>update_user_query</name>
+            <description><![CDATA[applied to the update query used to update user information, prior to running the query.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>uploading_iframe_src</name>
+            <description><![CDATA[(removed since WP 2.5) applied to the HTML src tag for the uploading iframe on the post and page editing screens.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>wp_redirect</name>
+            <description><![CDATA[applied to a redirect URL by the default 
+<tt>wp_redirect</tt> function. Filter function arguments: URL, HTTP status code. Note that 
+<tt>wp_redirect</tt> is also a &quot;pluggable&quot; function, meaning that plugins can override it; see 
+<a href="http://codex.wordpress.org/Plugin_API" title="Plugin API">Plugin API</a>).]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>wp_redirect_status</name>
+            <description><![CDATA[applied to the HTTP status code when redirecting by the default 
+<tt>wp_redirect</tt> function. Filter function arguments: HTTP status code, URL. Note that 
+<tt>wp_redirect</tt> is also a &quot;pluggable&quot; function, meaning that plugins can override it; see 
+<a href="http://codex.wordpress.org/Plugin_API" title="Plugin API">Plugin API</a>).]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>redirect_canonical</name>
+            <description><![CDATA[Can be used to cancel a &quot;canonical&quot; URL redirect. Accepts 2 parameters: 
+<tt>$redirect_url</tt>, 
+<tt>$requested_url</tt>. To cancel the redirect return 
+<tt><b>FALSE</b></tt>, to allow the redirect return 
+<tt>$redirect_url</tt>]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>xmlrpc_methods</name>
+            <description><![CDATA[applied to list of defined XMLRPC methods for the XMLRPC server.]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>wp_mail_from</name>
+            <description><![CDATA[applied before any mail is sent by the wp_mail function. Supplied value is the calculated from address which is wordpress at the current hostname (set by $_SERVER['SERVER_NAME']). The filter should return an email address or name/email combo in the form &quot;user@example.com&quot; or &quot;Name &lt;user@example.com&gt;&quot; (without the quotes!).]]></description>
+        </filter>
+        <filter category="Advanced WordPress Filters">
+            <name>wp_mail_from_name</name>
+            <description><![CDATA[applied before any mail is sent by the wp_mail function. The filter should return a name string to be used as the email from name.]]></description>
+        </filter>
+        <filter category="Widgets">
+            <name>widget_archives_dropdown_args</name>
+            <description><![CDATA[applied to the arguments passed to the 
+<a href="http://codex.wordpress.org/Function_Reference/wp_get_archives" title="Function Reference/wp get archives"><tt>wp_get_archives()</tt></a> function in the WordPress Archives widget.]]></description>
+        </filter>
+        <filter category="Widgets">
+            <name>widget_categories_args</name>
+            <description><![CDATA[applied to the arguments passed to the 
+<a href="http://codex.wordpress.org/Template_Tags/wp_list_categories" title="Template Tags/wp list categories"><tt>wp_list_categories()</tt></a> function in the WordPress Categories widget.]]></description>
+        </filter>
+        <filter category="Widgets">
+            <name>widget_links_args</name>
+            <description><![CDATA[applied to the arguments passed to the 
+<a href="http://codex.wordpress.org/Function_Reference/wp_list_bookmarks" title="Function Reference/wp list bookmarks"><tt>wp_list_bookmarks()</tt></a> function in the WordPress Links widget.]]></description>
+        </filter>
+        <filter category="Widgets">
+            <name>widget_pages_args</name>
+            <description><![CDATA[applied to the arguments passed to the 
+<a href="http://codex.wordpress.org/Function_Reference/wp_list_pages" title="Function Reference/wp list pages"><tt>wp_list_pages()</tt></a> function in the WordPress Pages widget.]]></description>
+        </filter>
+        <filter category="Widgets">
+            <name>widget_tag_cloud_args</name>
+            <description><![CDATA[applied to the arguments passed to the 
+<a href="http://codex.wordpress.org/Function_Reference/wp_tag_cloud" title="Function Reference/wp tag cloud"><tt>wp_tag_cloud()</tt></a> function in the WordPress Pages widget.]]></description>
+        </filter>
+        <filter category="Widgets">
+            <name>widget_text</name>
+            <description><![CDATA[applied to the widget text of the WordPress Text widget. May also apply to some third party widgets as well.]]></description>
+        </filter>
+        <filter category="Widgets">
+            <name>widget_title</name>
+            <description><![CDATA[applied to the widget title of any user editable WordPress Widget. May also apply to some third party widgets as well.]]></description>
+        </filter>
+        <filter category="Admin Bar">
+            <name>wp_admin_bar_class</name>
+            <description><![CDATA[allows changing the default 'WP_Admin_Bar' class in the 
+<a href="http://codex.wordpress.org/index.php?title=Function_Reference/_wp_admin_bar_init&amp;action=edit&amp;redlink=1" class="new" title="Function Reference/ wp admin bar init (page does not exist)"><tt>_wp_admin_bar_init()</tt></a> function in 
+<code><a href="http://codex.wordpress.orghttp://core.trac.wordpress.org/browser/tags/3.5.1/wp-includes/admin-bar.php#L0" class="external text" title="http://core.trac.wordpress.org/browser/tags/3.5.1/wp-includes/admin-bar.php#L0">wp-includes/admin-bar.php</a></code>.]]></description>
+        </filter>
+    </filters>
+</codecompletion>
