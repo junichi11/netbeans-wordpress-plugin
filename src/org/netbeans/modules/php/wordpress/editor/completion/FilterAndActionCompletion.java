@@ -79,7 +79,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author junichi11
  */
 @MimeRegistration(mimeType = "text/x-php5", service = CompletionProvider.class)
-public class FilterAndActionCompletion extends WordPressCompletionProvider {
+public final class FilterAndActionCompletion extends WordPressCompletionProvider {
 
     private static final Logger LOGGER = Logger.getLogger(FilterAndActionCompletion.class.getName());
     private static final String CUSTOM_FILTER_CODE_COMPLETION_XML = "nbproject/code-completion-filter.xml"; // NOI18N
@@ -89,36 +89,11 @@ public class FilterAndActionCompletion extends WordPressCompletionProvider {
     private int argCount;
     private boolean isFilter = false;
     private boolean isAction = false;
-    private List<WordPressCompletionItem> filterItems = new ArrayList<WordPressCompletionItem>();
-    private List<WordPressCompletionItem> actionItems = new ArrayList<WordPressCompletionItem>();
+    private List<WordPressCompletionItem> filterItems;
+    private List<WordPressCompletionItem> actionItems;
 
     public FilterAndActionCompletion() {
-        // read file for filter
-        FileObject filterXml = null;
-        FileObject actionXml = null;
-        PhpModule phpModule = PhpModule.inferPhpModule();
-        // use custom file
-        if (phpModule != null) {
-            FileObject projectDirectory = phpModule.getProjectDirectory();
-            if (projectDirectory != null) {
-                filterXml = projectDirectory.getFileObject(CUSTOM_FILTER_CODE_COMPLETION_XML);
-                actionXml = projectDirectory.getFileObject(CUSTOM_ACTION_CODE_COMPLETION_XML);
-            }
-        }
-        if (filterXml == null) {
-            filterXml = FileUtil.getConfigFile(DEFAULT_FILTER_CODE_COMPLETION_XML);
-        }
-        if (actionXml == null) {
-            actionXml = FileUtil.getConfigFile(DEFAULT_ACTION_CODE_COMPLETION_XML);
-        }
-        try {
-            Reader filterReader = new BufferedReader(new InputStreamReader(filterXml.getInputStream()));
-            WordPressCodeCompletionParser.parse(filterReader, filterItems);
-            Reader actionReader = new BufferedReader(new InputStreamReader(actionXml.getInputStream()));
-            WordPressCodeCompletionParser.parse(actionReader, actionItems);
-        } catch (FileNotFoundException ex) {
-            LOGGER.log(Level.WARNING, null, ex);
-        }
+        refresh();
     }
 
     @Override
@@ -245,6 +220,39 @@ public class FilterAndActionCompletion extends WordPressCompletionProvider {
         } else if (argCount == 2) {
         }
         return list;
+    }
+
+    public void refresh() {
+        // read file for filter
+        filterItems = new ArrayList<WordPressCompletionItem>();
+        actionItems = new ArrayList<WordPressCompletionItem>();
+        FileObject filterXml = null;
+        FileObject actionXml = null;
+        PhpModule phpModule = PhpModule.inferPhpModule();
+        // TODO improve for each locales
+//        String locale = "";
+        // use custom file
+        if (phpModule != null) {
+            FileObject projectDirectory = phpModule.getProjectDirectory();
+            if (projectDirectory != null) {
+                filterXml = projectDirectory.getFileObject(CUSTOM_FILTER_CODE_COMPLETION_XML);
+                actionXml = projectDirectory.getFileObject(CUSTOM_ACTION_CODE_COMPLETION_XML);
+            }
+        }
+        if (filterXml == null) {
+            filterXml = FileUtil.getConfigFile(DEFAULT_FILTER_CODE_COMPLETION_XML);
+        }
+        if (actionXml == null) {
+            actionXml = FileUtil.getConfigFile(DEFAULT_ACTION_CODE_COMPLETION_XML);
+        }
+        try {
+            Reader filterReader = new BufferedReader(new InputStreamReader(filterXml.getInputStream()));
+            WordPressCodeCompletionParser.parse(filterReader, filterItems);
+            Reader actionReader = new BufferedReader(new InputStreamReader(actionXml.getInputStream()));
+            WordPressCodeCompletionParser.parse(actionReader, actionItems);
+        } catch (FileNotFoundException ex) {
+            LOGGER.log(Level.WARNING, null, ex);
+        }
     }
 
     private static class WordPressCodeCompletionParser extends DefaultHandler {

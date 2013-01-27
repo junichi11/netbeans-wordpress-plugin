@@ -141,7 +141,7 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
 
     @Override
     public PhpModuleActionsExtender getActionsExtender(PhpModule pm) {
-        return null;
+        return new WordPressActionsExtender();
     }
 
     @Override
