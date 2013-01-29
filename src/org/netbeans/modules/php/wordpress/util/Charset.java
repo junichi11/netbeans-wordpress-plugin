@@ -39,30 +39,13 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress.editor.completion;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import org.openide.util.Exceptions;
+package org.netbeans.modules.php.wordpress.util;
 
 /**
  *
  * @author junichi11
  */
-public class FilterCompletionDocumentation extends WordPressCompletionDocumentation {
+public class Charset {
 
-
-    public FilterCompletionDocumentation(FilterCompletionItem item) {
-        super(item);
-    }
-
-    @Override
-    public URL getURL() {
-        try {
-            return new URL("http://codex.wordpress.org/Plugin_API/Filter_Reference"); // NO18N
-        } catch (MalformedURLException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return null;
-    }
+    public static final String UTF8 = "UTF-8";
 }

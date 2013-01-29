@@ -51,11 +51,8 @@ import org.openide.util.Exceptions;
  */
 public class ActionCompletionDocumentation extends WordPressCompletionDocumentation {
 
-    private ActionCompletionItem item;
-
     public ActionCompletionDocumentation(ActionCompletionItem item) {
         super(item);
-        this.item = item;
     }
 
     @Override
