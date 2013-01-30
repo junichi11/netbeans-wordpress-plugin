@@ -48,6 +48,7 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
@@ -71,6 +72,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.wordpress.WordPress;
+import org.netbeans.modules.php.wordpress.util.Charset;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
 import org.openide.awt.StatusLineElementProvider;
@@ -176,7 +178,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
         try {
             List<String> lines = config.asLines();
             Pattern pattern = Pattern.compile(DEBUG_REGEX);
-            PrintWriter pw = new PrintWriter(config.getOutputStream());
+            PrintWriter pw = new PrintWriter(new OutputStreamWriter(config.getOutputStream(), Charset.UTF8));
             try {
                 for (String line : lines) {
                     Matcher matcher = pattern.matcher(line);
@@ -205,14 +207,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      * @return Component
      */
     private Component panelWithSeparator(JLabel cell) {
-        JSeparator separator = new JSeparator(SwingConstants.VERTICAL) {
-            private static final long serialVersionUID = -6385848933295984637L;
-
-            @Override
-            public Dimension getPreferredSize() {
-                return new Dimension(3, 3);
-            }
-        };
+        JSeparator separator = new JSeparatorImpl(SwingConstants.VERTICAL);
         separator.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 5));
 
         JPanel panel = new JPanel(new BorderLayout());
@@ -339,6 +334,20 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             String level = getDebugLevel(config);
             setLevel(level);
             setDebugLevelLabel(level);
+        }
+    }
+
+    private static class JSeparatorImpl extends JSeparator {
+
+        private static final long serialVersionUID = -6385848933295984637L;
+
+        public JSeparatorImpl(int orientation) {
+            super(orientation);
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            return new Dimension(3, 3);
         }
     }
 }

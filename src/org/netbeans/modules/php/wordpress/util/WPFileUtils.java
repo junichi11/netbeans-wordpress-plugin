@@ -130,16 +130,19 @@ public class WPFileUtils {
             } else {
                 // file
                 InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-                String path = file.getPath();
-                path = path.replace(parentPath, ""); // NOI18N
-                path = path.replace("\\", "/"); // NOI18N
-                zipOutputStream.putNextEntry(new ZipEntry(path));
-                int data;
-                while ((data = inputStream.read(buffer)) > 0) {
-                    zipOutputStream.write(buffer, 0, data);
+                try {
+                    String path = file.getPath();
+                    path = path.replace(parentPath, ""); // NOI18N
+                    path = path.replace("\\", "/"); // NOI18N
+                    zipOutputStream.putNextEntry(new ZipEntry(path));
+                    int data;
+                    while ((data = inputStream.read(buffer)) > 0) {
+                        zipOutputStream.write(buffer, 0, data);
+                    }
+                    zipOutputStream.closeEntry();
+                } finally {
+                    inputStream.close();
                 }
-                zipOutputStream.closeEntry();
-                inputStream.close();
             }
         }
     }
@@ -216,7 +219,9 @@ public class WPFileUtils {
      */
     private static void createDirectories(File file, ZipEntry entry) {
         if (entry.isDirectory()) {
-            file.mkdir();
+            if (!file.mkdir()) {
+                // do nothing
+            }
         } else {
             File parent = file.getParentFile();
             if (!parent.exists()) {

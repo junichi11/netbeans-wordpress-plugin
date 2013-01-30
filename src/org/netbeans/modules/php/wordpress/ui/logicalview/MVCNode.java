@@ -210,12 +210,9 @@ public class MVCNode extends FilterNode {
 
     private static final class PackageNode extends FilterNode {
 
-        private final PhpProject project;
-
         public PackageNode(PhpProject project, final Node originalNode, boolean isTest) {
             super(originalNode, new MVCNode.FolderChildren(project, originalNode, isTest),
                     new ProxyLookup(originalNode.getLookup()));
-            this.project = project;
 
         }
 

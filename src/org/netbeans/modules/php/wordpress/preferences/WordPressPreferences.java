@@ -81,10 +81,6 @@ public class WordPressPreferences {
         p.put("text-line-wrap", "none"); // NOI18N
     }
 
-    private static Preferences getIndentProjectPreferences(PhpModule phpModule) {
-        return getIndentPreferences(phpModule).node("CodeStyle").node("project"); // NOI18N
-    }
-
     private static Preferences getIndentPreferences(PhpModule phpModule) {
         return phpModule.getPreferences(IndentUtils.class, true);
     }

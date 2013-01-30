@@ -46,6 +46,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -60,6 +61,7 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
+import org.netbeans.modules.php.wordpress.util.Charset;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
 import org.netbeans.spi.editor.completion.CompletionTask;
@@ -105,7 +107,7 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
                 ad.readLock();
                 TokenHierarchy hierarchy = TokenHierarchy.get(doc);
                 try {
-                    TokenSequence<PHPTokenId> ts = hierarchy.tokenSequence(PHPTokenId.language());
+                    TokenSequence<PHPTokenId> ts = (TokenSequence<PHPTokenId>) hierarchy.tokenSequence(PHPTokenId.language());
                     ts.move(caretOffset);
                     ts.moveNext();
                     Token<PHPTokenId> token = ts.token();
@@ -218,6 +220,7 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
                 list = actionItems;
             }
         } else if (argCount == 2) {
+            // TODO implement
         }
         return list;
     }
@@ -246,11 +249,13 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
             actionXml = FileUtil.getConfigFile(DEFAULT_ACTION_CODE_COMPLETION_XML);
         }
         try {
-            Reader filterReader = new BufferedReader(new InputStreamReader(filterXml.getInputStream()));
+            Reader filterReader = new BufferedReader(new InputStreamReader(filterXml.getInputStream(), Charset.UTF8));
             WordPressCodeCompletionParser.parse(filterReader, filterItems);
-            Reader actionReader = new BufferedReader(new InputStreamReader(actionXml.getInputStream()));
+            Reader actionReader = new BufferedReader(new InputStreamReader(actionXml.getInputStream(), Charset.UTF8));
             WordPressCodeCompletionParser.parse(actionReader, actionItems);
         } catch (FileNotFoundException ex) {
+            LOGGER.log(Level.WARNING, null, ex);
+        } catch (UnsupportedEncodingException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
     }

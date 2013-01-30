@@ -45,6 +45,8 @@ import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -66,10 +68,12 @@ import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.FileUtils;
+import org.netbeans.modules.php.api.util.FileUtils.ZipEntryFilter;
 import org.netbeans.modules.php.spi.framework.PhpModuleExtender;
 import org.netbeans.modules.php.wordpress.preferences.WordPressPreferences;
 import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
 import org.netbeans.modules.php.wordpress.ui.wizards.NewProjectConfigurationPanel;
+import org.netbeans.modules.php.wordpress.util.Charset;
 import org.netbeans.modules.php.wordpress.util.NetUtils;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.netbeans.modules.php.wordpress.util.WPZipEntryFilter;
@@ -199,24 +203,7 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
             // local file
             String path = panel.getLocalFileLabel();
             try {
-                FileUtils.unzip(path, FileUtil.toFile(sourceDirectory), new FileUtils.ZipEntryFilter() {
-                    @Override
-                    public boolean accept(ZipEntry ze) {
-                        if (ze.isDirectory() && ze.getName().equals(WORDPRESS)) {
-                            return false;
-                        }
-                        return true;
-                    }
-
-                    @Override
-                    public String getName(ZipEntry ze) {
-                        String name = ze.getName();
-                        if (name.startsWith(WORDPRESS)) {
-                            name = name.replaceFirst(WORDPRESS, ""); // NOI18N
-                        }
-                        return name;
-                    }
-                });
+                FileUtils.unzip(path, FileUtil.toFile(sourceDirectory), new ZipEntryFilterImpl());
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -264,11 +251,9 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
         }
         Locale locale = Locale.getDefault();
         String language = locale.getLanguage();
-        String urlPath = null;
+        String urlPath = WP_DL_URL_DEFAULT;
         if (language != null && !language.isEmpty()) {
-            if (language.equals("en")) { // NOI18N
-                urlPath = WP_DL_URL_DEFAULT;
-            } else {
+            if (!language.equals("en")) { // NOI18N
                 urlPath = String.format(WP_DL_URL_FORMAT, language, language);
             }
         }
@@ -294,7 +279,8 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
         try {
             lines = sample.asLines();
             FileObject parent = sample.getParent();
-            pw = new PrintWriter(parent.createAndOpen(WP_CONFIG_PHP)); // NOI18N
+            OutputStream outpuStream = parent.createAndOpen(WP_CONFIG_PHP);
+            pw = new PrintWriter(new OutputStreamWriter(outpuStream, Charset.UTF8)); // NOI18N
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -355,10 +341,14 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
             URLConnection connection = url.openConnection();
             if (connection instanceof HttpsURLConnection) {
                 HttpsURLConnection httpsConnection = (HttpsURLConnection) connection;
-                BufferedReader reader = new BufferedReader(new InputStreamReader(httpsConnection.getInputStream()));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    keys.add(line);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpsConnection.getInputStream(), Charset.UTF8)); // NOI18N
+                try {
+                    String line = null;
+                    while ((line = reader.readLine()) != null) {
+                        keys.add(line);
+                    }
+                } finally {
+                    reader.close();
                 }
             }
         } catch (MalformedURLException ex) {
@@ -370,7 +360,7 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
         return keys;
     }
 
-    private void setConfigMap() {
+    private synchronized void setConfigMap() {
         CONFIG_MAP.put(DB_NAME, panel.getDbName());
         CONFIG_MAP.put(DB_USER, panel.getDbUser());
         CONFIG_MAP.put(DB_PASSWORD, panel.getDbPassword());
@@ -396,5 +386,28 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
             panel.setLocalFileLabel(getLocalFile());
         }
         return panel;
+    }
+
+    private static class ZipEntryFilterImpl implements ZipEntryFilter {
+
+        public ZipEntryFilterImpl() {
+        }
+
+        @Override
+        public boolean accept(ZipEntry ze) {
+            if (ze.isDirectory() && ze.getName().equals(WORDPRESS)) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public String getName(ZipEntry ze) {
+            String name = ze.getName();
+            if (name.startsWith(WORDPRESS)) {
+                name = name.replaceFirst(WORDPRESS, ""); // NOI18N
+            }
+            return name;
+        }
     }
 }
