@@ -14,6 +14,7 @@ This is NetBeans plugin for WordPress.
 - template files
 - display and change debug status
 - code completion for filter and action
+- create new theme action
 
 ### Impotant Files
 It contains wp-config.php
@@ -51,6 +52,14 @@ Since this is not good yet, this feature have to be improved.
 ### Display And Change Debug Status
 WP_DEBUG value(wp-config.php) is displayed on bottome-right of IDE. 
 If you click there, you can change WP_DEBUG value.
+
+### Create New Theme Action
+Right-click Project > WordPress > Create Theme (_s)
+
+Create theme from [Underscores | A Starter Theme for WordPress](http://underscores.me/). Underscores is awesome!
+This plugin uses [Automattic/_s · GitHub](https://github.com/automattic/_s).
+
+**Please notice that license of created theme is GPLv2**
 
 ## License
 [Common Development and Distribution License (CDDL) v1.0 and GNU General Public License (GPL) v2](http://netbeans.org/cddl-gplv2.html)
