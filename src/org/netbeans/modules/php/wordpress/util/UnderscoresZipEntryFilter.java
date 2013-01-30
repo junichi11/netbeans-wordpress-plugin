@@ -39,33 +39,21 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress;
+package org.netbeans.modules.php.wordpress.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.Action;
-import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
-import org.netbeans.modules.php.wordpress.ui.actions.CodeCompletionRefreshAction;
-import org.netbeans.modules.php.wordpress.ui.actions.CreateThemeAction;
-import org.openide.util.NbBundle;
+import java.util.HashSet;
 
 /**
  *
  * @author junichi11
  */
-public class WordPressActionsExtender extends PhpModuleActionsExtender {
+public class UnderscoresZipEntryFilter extends GithubZipEntryFilter {
 
-    @NbBundle.Messages("LBL_MenuName=WordPress")
-    @Override
-    public String getMenuName() {
-        return Bundle.LBL_MenuName();
-    }
-
-    @Override
-    public List<? extends Action> getActions() {
-        List<Action> actions = new ArrayList<Action>();
-        actions.add(new CodeCompletionRefreshAction());
-        actions.add(new CreateThemeAction());
-        return actions;
+    public UnderscoresZipEntryFilter() {
+        topDirectories = new HashSet<String>();
+        topDirectories.add("inc"); // NOI18N
+        topDirectories.add("js"); // NOI18N
+        topDirectories.add("languages"); // NOI18N
+        topDirectories.add("layouts"); // NOI18N
     }
 }

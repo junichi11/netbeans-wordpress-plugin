@@ -39,33 +39,89 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress;
+package org.netbeans.modules.php.wordpress.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.Action;
-import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
-import org.netbeans.modules.php.wordpress.ui.actions.CodeCompletionRefreshAction;
-import org.netbeans.modules.php.wordpress.ui.actions.CreateThemeAction;
-import org.openide.util.NbBundle;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import javax.swing.text.JTextComponent;
 
 /**
  *
  * @author junichi11
  */
-public class WordPressActionsExtender extends PhpModuleActionsExtender {
+public class GithubZipEntryFilter implements ZipEntryFilter {
 
-    @NbBundle.Messages("LBL_MenuName=WordPress")
-    @Override
-    public String getMenuName() {
-        return Bundle.LBL_MenuName();
+    private JTextComponent component = null;
+    protected Set<String> topDirectories;
+
+    public GithubZipEntryFilter() {
     }
 
+    public GithubZipEntryFilter(Set<String> topDirectories) {
+        this.topDirectories = topDirectories;
+    }
+
+    public GithubZipEntryFilter(Set<String> topDirectories, JTextComponent component) {
+        this.topDirectories = topDirectories;
+        this.component = component;
+    }
+
+    /**
+     * Check whether unzip for ZipEntry.
+     *
+     * @param entry
+     * @return true if unzip the file, otherwize false.
+     */
     @Override
-    public List<? extends Action> getActions() {
-        List<Action> actions = new ArrayList<Action>();
-        actions.add(new CodeCompletionRefreshAction());
-        actions.add(new CreateThemeAction());
-        return actions;
+    public boolean accept(ZipEntry entry) {
+        String name = entry.getName();
+        String[] splitPath = splitPath(name);
+        int length = splitPath.length;
+
+        if (length == 1 && entry.isDirectory()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get path of ZipEntry.
+     *
+     * @param entry
+     * @return
+     */
+    @Override
+    public String getPath(ZipEntry entry) {
+        String path = entry.getName();
+        String[] splitPath = splitPath(path);
+        String topDirectory = splitPath[0];
+        if (splitPath.length == 1 || topDirectories.contains(topDirectory)) {
+            return path;
+        }
+        return path.replaceFirst(topDirectory + "/", ""); // NOI18N
+    }
+
+    /**
+     * Set text to JTextComponent. e.g. display the file path on the
+     * JTextComponent.
+     *
+     * @param text
+     */
+    @Override
+    public void setText(String text) {
+        if (component != null) {
+            component.setText(text);
+        }
+    }
+
+    /**
+     * Split path by "/".
+     *
+     * @param path
+     * @return
+     */
+    private String[] splitPath(String path) {
+        return path.split("/"); // NOI18N
     }
 }
