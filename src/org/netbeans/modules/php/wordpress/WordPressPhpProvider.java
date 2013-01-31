@@ -55,6 +55,7 @@ import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
 import org.netbeans.modules.php.spi.framework.PhpModuleExtender;
 import org.netbeans.modules.php.spi.framework.PhpModuleIgnoredFilesExtender;
 import org.netbeans.modules.php.spi.framework.commands.FrameworkCommandSupport;
+import org.netbeans.modules.php.wordpress.editor.WordPressEditorExtender;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ImageUtilities;
@@ -156,6 +157,6 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
 
     @Override
     public EditorExtender getEditorExtender(PhpModule pm) {
-        return null;
+        return new WordPressEditorExtender();
     }
 }
