@@ -49,6 +49,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.AbstractDocument;
@@ -58,8 +59,14 @@ import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.FileUtils;
+import org.netbeans.modules.php.editor.api.ElementQuery;
+import org.netbeans.modules.php.editor.api.ElementQueryFactory;
+import org.netbeans.modules.php.editor.api.NameKind;
+import org.netbeans.modules.php.editor.api.QuerySupportFactory;
+import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.wordpress.util.Charset;
 import org.netbeans.spi.editor.completion.CompletionProvider;
@@ -93,6 +100,7 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
     private boolean isAction = false;
     private List<WordPressCompletionItem> filterItems;
     private List<WordPressCompletionItem> actionItems;
+    private String currentInput;
 
     public FilterAndActionCompletion() {
         refresh();
@@ -136,9 +144,10 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
                     if (substrLength > 1) {
                         filter = caretInput.substring(1, substrLength);
                     }
+                    currentInput = filter;
 
                     // set isAction and isFilter
-                    List<WordPressCompletionItem> completions = getCodeCompletionList();
+                    List<WordPressCompletionItem> completions = getCodeCompletionList(phpModule);
 
                     if (isAction || isFilter) {
                         for (WordPressCompletionItem completion : completions) {
@@ -205,13 +214,7 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
         return name.equals("add_action") || name.equals("remove_action"); // NOI18N
     }
 
-    private List<String> getCurrentFunctions(Document doc) {
-        // TODO implement
-        List<String> list = new ArrayList<String>();
-        return list;
-    }
-
-    private List<WordPressCompletionItem> getCodeCompletionList() {
+    private List<WordPressCompletionItem> getCodeCompletionList(PhpModule phpModule) {
         List<WordPressCompletionItem> list = new ArrayList<WordPressCompletionItem>();
         if (argCount == 1) {
             if (isFilter) {
@@ -220,8 +223,34 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
                 list = actionItems;
             }
         } else if (argCount == 2) {
-            // TODO implement
+            list = getFunctionsList(phpModule);
         }
+        return list;
+    }
+
+    private List<WordPressCompletionItem> getFunctionsList(PhpModule phpModule) {
+        List<WordPressCompletionItem> list = new ArrayList<WordPressCompletionItem>();
+        FileObject sourceDirectory = phpModule.getSourceDirectory();
+        String rootPath = ""; // NOI18N
+        if (sourceDirectory != null) {
+            rootPath = sourceDirectory.getPath();
+        }
+        ElementQuery.Index indexQuery = ElementQueryFactory.createIndexQuery(QuerySupportFactory.get(phpModule.getSourceDirectory()));
+        Set<FunctionElement> functionElements = indexQuery.getFunctions(NameKind.create(currentInput, QuerySupport.Kind.PREFIX));
+        for (FunctionElement element : functionElements) {
+            FileObject fileObject = element.getFileObject();
+            String description = ""; // NOI18N
+            if (fileObject != null) {
+                String path = fileObject.getPath();
+                if (path.matches("^" + rootPath + ".*$")) { // NOI18N
+                    description = path.replace(rootPath, "") + "<br />"; // NOI18N
+                } else {
+                    description = "PHP function"; // NOI18N
+                }
+            }
+            list.add(new WordPressCompletionItem(element.getName(), description));
+        }
+
         return list;
     }
 
