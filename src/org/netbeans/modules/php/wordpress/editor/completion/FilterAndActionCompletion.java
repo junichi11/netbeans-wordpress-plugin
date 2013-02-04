@@ -44,6 +44,7 @@ package org.netbeans.modules.php.wordpress.editor.completion;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
@@ -75,7 +76,6 @@ import org.netbeans.spi.editor.completion.CompletionTask;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -93,8 +93,8 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
     private static final Logger LOGGER = Logger.getLogger(FilterAndActionCompletion.class.getName());
     private static final String CUSTOM_FILTER_CODE_COMPLETION_XML = "nbproject/code-completion-filter.xml"; // NOI18N
     private static final String CUSTOM_ACTION_CODE_COMPLETION_XML = "nbproject/code-completion-action.xml"; // NOI18N
-    private static final String DEFAULT_FILTER_CODE_COMPLETION_XML = "org-netbeans-modules-php-wordpress/code-completion-filter.xml"; // NOI18N
-    private static final String DEFAULT_ACTION_CODE_COMPLETION_XML = "org-netbeans-modules-php-wordpress/code-completion-action.xml"; // NOI18N
+    private static final String DEFAULT_FILTER_CODE_COMPLETION_XML = "resources/code-completion-filter.xml"; // NOI18N
+    private static final String DEFAULT_ACTION_CODE_COMPLETION_XML = "resources/code-completion-action.xml"; // NOI18N
     private int argCount;
     private boolean isFilter = false;
     private boolean isAction = false;
@@ -106,6 +106,7 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
         refresh();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public CompletionTask createTask(int queryType, JTextComponent component, final PhpModule phpModule) {
         return new AsyncCompletionTask(new AsyncCompletionQuery() {
@@ -271,19 +272,32 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
                 actionXml = projectDirectory.getFileObject(CUSTOM_ACTION_CODE_COMPLETION_XML);
             }
         }
+        // TODO improve loop
+        InputStream filterInputStream = null;
+        InputStream actionInputStream = null;
         if (filterXml == null) {
-            filterXml = FileUtil.getConfigFile(DEFAULT_FILTER_CODE_COMPLETION_XML);
+            filterInputStream = FilterAndActionCompletion.class.getResourceAsStream(DEFAULT_FILTER_CODE_COMPLETION_XML);
+        } else {
+            try {
+                filterInputStream = filterXml.getInputStream();
+            } catch (FileNotFoundException ex) {
+                LOGGER.log(Level.WARNING, null, ex);
+            }
         }
         if (actionXml == null) {
-            actionXml = FileUtil.getConfigFile(DEFAULT_ACTION_CODE_COMPLETION_XML);
+            actionInputStream = FilterAndActionCompletion.class.getResourceAsStream(DEFAULT_ACTION_CODE_COMPLETION_XML);
+        } else {
+            try {
+                actionInputStream = actionXml.getInputStream();
+            } catch (FileNotFoundException ex) {
+                LOGGER.log(Level.WARNING, null, ex);
+            }
         }
         try {
-            Reader filterReader = new BufferedReader(new InputStreamReader(filterXml.getInputStream(), Charset.UTF8));
+            Reader filterReader = new BufferedReader(new InputStreamReader(filterInputStream, Charset.UTF8));
             WordPressCodeCompletionParser.parse(filterReader, filterItems);
-            Reader actionReader = new BufferedReader(new InputStreamReader(actionXml.getInputStream(), Charset.UTF8));
+            Reader actionReader = new BufferedReader(new InputStreamReader(actionInputStream, Charset.UTF8));
             WordPressCodeCompletionParser.parse(actionReader, actionItems);
-        } catch (FileNotFoundException ex) {
-            LOGGER.log(Level.WARNING, null, ex);
         } catch (UnsupportedEncodingException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }

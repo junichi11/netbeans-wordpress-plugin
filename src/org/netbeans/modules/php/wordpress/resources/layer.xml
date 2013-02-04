@@ -10,8 +10,4 @@
             </folder>
         </folder>
     </folder>
-    <folder name="org-netbeans-modules-php-wordpress">
-            <file name="code-completion-filter.xml" url="code-completion-filter.xml" />
-            <file name="code-completion-action.xml" url="code-completion-action.xml" />
-    </folder>
 </filesystem>
