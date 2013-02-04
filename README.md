@@ -48,7 +48,17 @@ You can create a pluign file and readme file with new file wizard.
 Right-click directory > New > Others > WordPress > (WordPress Plugin | WordPress Plugin Readme)
 
 ### Code Completion for Filter and Action
-Since this is not good yet, this feature have to be improved.
+This feature is available the followings:
+- add_filter, remove_filter
+- add_acttion, remove_action
+
+first parameter: action or filter name, second parameter: function name
+
+For example:
+``` php
+add_action('[Ctrl + Space]', 'function_name');
+add_filter('the_content', 'w[Ctrl + Space]'); // e.g. start with 'w'
+```
 
 ### Display And Change Debug Status
 WP_DEBUG value(wp-config.php) is displayed on bottome-right of IDE. 
