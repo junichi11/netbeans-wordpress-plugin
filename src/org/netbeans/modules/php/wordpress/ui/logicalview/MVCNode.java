@@ -84,7 +84,6 @@ public class MVCNode extends FilterNode {
 
     private static final String ICON_PATH = "org/netbeans/modules/php/wordpress/resources/wordpress_icon_8.png"; //NOI18N
     private static final Image WP_ICON = ImageUtilities.loadImage(ICON_PATH);
-    private final PhpProject project;
 
     /**
      * creates source root node based on specified DataFolder. Uses specified
@@ -97,7 +96,6 @@ public class MVCNode extends FilterNode {
     private MVCNode(PhpProject project, DataFolder folder, FilterNode node, String name) {
         super(node, new MVCNode.FolderChildren(project, node, false), new ProxyLookup(folder.getNodeDelegate().getLookup()));
 
-        this.project = project;
         disableDelegation(DELEGATE_GET_DISPLAY_NAME | DELEGATE_SET_DISPLAY_NAME | DELEGATE_GET_SHORT_DESCRIPTION | DELEGATE_GET_ACTIONS);
         setDisplayName(name);
     }
