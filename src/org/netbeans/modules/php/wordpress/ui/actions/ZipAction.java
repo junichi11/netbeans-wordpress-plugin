@@ -44,6 +44,7 @@ package org.netbeans.modules.php.wordpress.ui.actions;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import org.netbeans.modules.php.wordpress.WordPress;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -58,12 +59,13 @@ import org.openide.util.NbBundle.Messages;
         category = "File",
         id = "org.netbeans.modules.php.wordpress.ui.actions.ZipAction")
 @ActionRegistration(
+        iconBase = WordPress.WP_ICON_16,
         displayName = "#CTL_ZipAction")
 @ActionReferences({
     @ActionReference(path = "Menu/File", position = 2700),
     @ActionReference(path = "Loaders/folder/any/Actions", position = 1650)
 })
-@Messages("CTL_ZipAction=Zip compress")
+@Messages("CTL_ZipAction=WordPress Zip compress")
 public final class ZipAction implements ActionListener {
 
     private final DataObject context;
