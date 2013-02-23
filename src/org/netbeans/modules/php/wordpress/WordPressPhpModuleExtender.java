@@ -277,10 +277,10 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
         PrintWriter pw = null;
         List<String> lines = null;
         try {
-            lines = sample.asLines();
+            lines = sample.asLines(Charset.UTF8);
             FileObject parent = sample.getParent();
             OutputStream outpuStream = parent.createAndOpen(WP_CONFIG_PHP);
-            pw = new PrintWriter(new OutputStreamWriter(outpuStream, Charset.UTF8)); // NOI18N
+            pw = new PrintWriter(new OutputStreamWriter(outpuStream, Charset.UTF8));
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
