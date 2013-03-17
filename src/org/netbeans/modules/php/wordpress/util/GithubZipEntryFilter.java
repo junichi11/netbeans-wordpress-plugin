@@ -96,6 +96,9 @@ public class GithubZipEntryFilter implements ZipEntryFilter {
         String path = entry.getName();
         String[] splitPath = splitPath(path);
         String topDirectory = splitPath[0];
+        if (topDirectories == null) {
+            return path;
+        }
         if (splitPath.length == 1 || topDirectories.contains(topDirectory)) {
             return path;
         }
