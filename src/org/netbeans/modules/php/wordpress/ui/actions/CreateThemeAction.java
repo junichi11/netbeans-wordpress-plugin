@@ -41,191 +41,51 @@
  */
 package org.netbeans.modules.php.wordpress.ui.actions;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.MalformedURLException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.spi.framework.actions.BaseAction;
-import org.netbeans.modules.php.wordpress.ui.wizards.CreateThemePanel;
-import org.netbeans.modules.php.wordpress.util.Charset;
-import org.netbeans.modules.php.wordpress.util.UnderscoresUtils;
-import org.netbeans.modules.php.wordpress.util.UnderscoresZipEntryFilter;
-import org.netbeans.modules.php.wordpress.util.WPFileUtils;
-import org.openide.filesystems.FileAlreadyLockedException;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.util.Cancellable;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
-import org.openide.util.RequestProcessor;
+import org.openide.util.actions.Presenter;
 
 /**
- * Use underscores(_s) for creating theme.
  *
- * @see <a href="https://github.com/Automattic/_s">github:underscores</a>
- * @see <a href="http://underscores.me/">underscores.me</a>
  * @author junichi11
  */
-public class CreateThemeAction extends BaseAction {
+public class CreateThemeAction extends BaseAction implements Presenter.Menu {
 
-    private static final long serialVersionUID = -5290582852489607026L;
-    private static final Logger LOGGER = Logger.getLogger(CreateThemeAction.class.getName());
-    private static final String UNDERSCORES_ZIP_URL = "https://github.com/Automattic/_s/archive/master.zip"; // NOI18N
-    private String _s;
-    private String _s_;
-    private String themeName;
-    private String author;
-    private String authorUri;
-    private String description;
+    private static final long serialVersionUID = -1533566813298547558L;
+    private static final CreateThemeAction INSTANCE = new CreateThemeAction();
+
+    private CreateThemeAction() {
+    }
+
+    public static CreateThemeAction getInstance() {
+        return INSTANCE;
+    }
 
     @Override
     protected String getFullName() {
-        return Bundle.LBL_WordPressAction(getPureName());
+        return getPureName();
     }
 
-    @NbBundle.Messages("LBL_CreateThemeAction=Create Theme (_s)")
     @Override
+    @NbBundle.Messages("LBL_CreateThemeBaseAction=Create Theme")
     protected String getPureName() {
-        return Bundle.LBL_CreateThemeAction();
+        return Bundle.LBL_CreateThemeBaseAction();
     }
 
     @Override
     protected void actionPerformed(PhpModule pm) {
-        // create dialog
-        CreateThemePanel panel = new CreateThemePanel();
-        panel.showDialog();
-        if (!panel.isOK()) {
-            return;
-        }
-
-        // click OK
-        String name = panel.getThemeName().trim();
-        author = panel.getAuthor().trim();
-        authorUri = panel.getAuthorUri().trim();
-        description = panel.getDescription().trim();
-
-        // create folder name, function prefix, theme name
-        String themeFolerName = UnderscoresUtils.toFolderName(name);
-        _s = UnderscoresUtils.toTextDomain(name);
-        _s_ = UnderscoresUtils.toFunctionName(name);
-        themeName = name;
-
-        // create folder
-        FileObject themesDirectory = WPFileUtils.getThemesDirectory(pm);
-        if (themesDirectory == null) {
-            LOGGER.log(Level.WARNING, "themes directory don't exist!");
-            return;
-        }
-        FileObject themeFolder = null;
-        try {
-            themeFolder = themesDirectory.createFolder(themeFolerName);
-        } catch (IOException ex) {
-            LOGGER.log(Level.WARNING, null, ex);
-        }
-
-        if (themeFolder == null) {
-            return;
-        }
-        final FileObject theme = themeFolder;
-
-        // display progress bar
-        RequestProcessor.getDefault().post(new Runnable() {
-            @Override
-            public void run() {
-                ProgressHandle handle = ProgressHandleFactory.createHandle("Createing theme", new Cancellable() {
-                    @Override
-                    public boolean cancel() {
-                        return true;
-                    }
-                });
-                try {
-                    handle.start();
-                    if (!unzipAndReplace(theme)) {
-                        LOGGER.log(Level.WARNING, "fail: create wp theme");
-                    }
-
-                } finally {
-                    handle.finish();
-                }
-            }
-        });
     }
 
-    /**
-     * At first Unzip Underscores from github and replace some values.
-     *
-     * @param themeFolder
-     * @return
-     */
-    private boolean unzipAndReplace(FileObject themeFolder) {
-        // unzip
-        try {
-            WPFileUtils.unzip(UNDERSCORES_ZIP_URL, FileUtil.toFile(themeFolder), new UnderscoresZipEntryFilter());
-            themeFolder.refresh();
-        } catch (MalformedURLException ex) {
-            LOGGER.log(Level.WARNING, null, ex);
-        } catch (IOException ex) {
-            LOGGER.log(Level.WARNING, null, ex);
-        }
-        FileObject[] children = themeFolder.getChildren();
-        if (children.length == 0) {
-            return false;
-        }
-        // replace
-        replace(themeFolder);
-        return true;
-    }
-
-    /**
-     * Replace : theme name, function name, e.t.c.
-     *
-     * @param directory
-     */
-    private void replace(FileObject directory) {
-        FileObject[] children = directory.getChildren();
-        for (FileObject child : children) {
-            if (child.isFolder()) {
-                replace(child);
-                continue;
-            }
-            String ext = child.getExt();
-            if (ext.equals("md") || ext.equals("txt")) { // NOI18N
-                continue;
-            }
-            try {
-                List<String> lines = child.asLines();
-                PrintWriter pw = new PrintWriter(new OutputStreamWriter(child.getOutputStream(), Charset.UTF8));
-                try {
-                    for (String line : lines) {
-                        line = line.replaceAll("_s_", _s_); // NOI18N
-                        line = line.replaceAll(" _s", " " + themeName); // NOI18N
-                        line = line.replaceAll("'_s'", "'" + _s + "'"); // NOI18N
-                        if (child.getNameExt().equals("style.css")) { // NOI18N
-                            if (line.startsWith("Author:")) { // NOI18N
-                                line = "Author: " + author; // NOI18N
-                            } else if (line.startsWith("Author URI:")) { // NOI18N
-                                line = "Author URI: " + authorUri; // NOI18N
-                            } else if (line.startsWith("Description:")) { // NOI18N
-                                line = "Description: " + description; // NOI18N
-                            }
-                        }
-                        pw.println(line);
-                    }
-                } finally {
-                    pw.close();
-                }
-            } catch (FileAlreadyLockedException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-
-        }
+    @Override
+    public JMenuItem getMenuPresenter() {
+        JMenu menu = new JMenu(getPureName());
+        JMenuItem underscores = new JMenuItem(CreateUnderscoresThemeAction.getInstance());
+        JMenuItem barebones = new JMenuItem(CreateBarebonesThemeAction.getInstance());
+        menu.add(underscores);
+        menu.add(barebones);
+        return menu;
     }
 }

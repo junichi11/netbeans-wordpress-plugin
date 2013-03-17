@@ -39,33 +39,45 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress;
+package org.netbeans.modules.php.wordpress.ui.actions;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.Action;
-import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
-import org.netbeans.modules.php.wordpress.ui.actions.CodeCompletionRefreshAction;
-import org.netbeans.modules.php.wordpress.ui.actions.CreateThemeAction;
+import java.util.Collections;
+import org.netbeans.modules.php.wordpress.util.GithubZipEntryFilter;
+import org.netbeans.modules.php.wordpress.util.ZipEntryFilter;
 import org.openide.util.NbBundle;
 
 /**
+ * Create Barebones theme.
  *
+ * @see https://github.com/welcomebrand/Barebones
  * @author junichi11
  */
-public class WordPressActionsExtender extends PhpModuleActionsExtender {
+public class CreateBarebonesThemeAction extends CreateThemeBaseAction {
 
-    @NbBundle.Messages("LBL_MenuName=WordPress")
-    @Override
-    public String getMenuName() {
-        return Bundle.LBL_MenuName();
+    private static final long serialVersionUID = -2839579492132022777L;
+    private static final String BAREBONES_GITHUB_ZIP_URL = "https://github.com/welcomebrand/Barebones/archive/master.zip"; // NOI18N
+    private static final CreateBarebonesThemeAction INSTANCE = new CreateBarebonesThemeAction();
+
+    private CreateBarebonesThemeAction() {
+    }
+
+    public static CreateBarebonesThemeAction getInstance() {
+        return INSTANCE;
     }
 
     @Override
-    public List<? extends Action> getActions() {
-        List<Action> actions = new ArrayList<Action>();
-        actions.add(CreateThemeAction.getInstance());
-        actions.add(new CodeCompletionRefreshAction());
-        return actions;
+    @NbBundle.Messages("LBL_Barebones=Barebones")
+    protected String getName() {
+        return Bundle.LBL_Barebones();
+    }
+
+    @Override
+    protected String getUrl() {
+        return BAREBONES_GITHUB_ZIP_URL;
+    }
+
+    @Override
+    protected ZipEntryFilter getZipEntryFilter() {
+        return new GithubZipEntryFilter(Collections.singleton("assets")); // NOI18N
     }
 }
