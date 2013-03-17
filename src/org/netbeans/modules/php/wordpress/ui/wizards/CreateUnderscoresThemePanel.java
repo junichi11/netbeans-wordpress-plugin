@@ -53,7 +53,7 @@ import org.openide.DialogDisplayer;
  *
  * @author junichi11
  */
-public class CreateThemePanel extends javax.swing.JPanel implements ActionListener, DocumentListener {
+public class CreateUnderscoresThemePanel extends javax.swing.JPanel implements ActionListener, DocumentListener {
 
     private static final long serialVersionUID = -1760493304572967423L;
     private static final String WS = " "; // NOI18N
@@ -63,9 +63,9 @@ public class CreateThemePanel extends javax.swing.JPanel implements ActionListen
     private boolean isOK = false;
 
     /**
-     * Creates new form CreateThemePanel
+     * Creates new form CreateUnderscoresThemePanel
      */
-    public CreateThemePanel() {
+    public CreateUnderscoresThemePanel() {
         initComponents();
         descriptor = new DialogDescriptor(this, "Underscores", true, this); // NOI18N
         themeNameTextField.getDocument().addDocumentListener(this);
@@ -118,23 +118,23 @@ public class CreateThemePanel extends javax.swing.JPanel implements ActionListen
         descriptionTextField = new javax.swing.JTextField();
         messageLabel = new javax.swing.JLabel();
 
-        org.openide.awt.Mnemonics.setLocalizedText(themeNameLabel, org.openide.util.NbBundle.getMessage(CreateThemePanel.class, "CreateThemePanel.themeNameLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(themeNameLabel, org.openide.util.NbBundle.getMessage(CreateUnderscoresThemePanel.class, "CreateUnderscoresThemePanel.themeNameLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(authorLabel, org.openide.util.NbBundle.getMessage(CreateThemePanel.class, "CreateThemePanel.authorLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(authorLabel, org.openide.util.NbBundle.getMessage(CreateUnderscoresThemePanel.class, "CreateUnderscoresThemePanel.authorLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(authorUriLabel, org.openide.util.NbBundle.getMessage(CreateThemePanel.class, "CreateThemePanel.authorUriLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(authorUriLabel, org.openide.util.NbBundle.getMessage(CreateUnderscoresThemePanel.class, "CreateUnderscoresThemePanel.authorUriLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(descriptionLabel, org.openide.util.NbBundle.getMessage(CreateThemePanel.class, "CreateThemePanel.descriptionLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(descriptionLabel, org.openide.util.NbBundle.getMessage(CreateUnderscoresThemePanel.class, "CreateUnderscoresThemePanel.descriptionLabel.text")); // NOI18N
 
-        themeNameTextField.setText(org.openide.util.NbBundle.getMessage(CreateThemePanel.class, "CreateThemePanel.themeNameTextField.text")); // NOI18N
+        themeNameTextField.setText(org.openide.util.NbBundle.getMessage(CreateUnderscoresThemePanel.class, "CreateUnderscoresThemePanel.themeNameTextField.text")); // NOI18N
 
-        authorTextField.setText(org.openide.util.NbBundle.getMessage(CreateThemePanel.class, "CreateThemePanel.authorTextField.text")); // NOI18N
+        authorTextField.setText(org.openide.util.NbBundle.getMessage(CreateUnderscoresThemePanel.class, "CreateUnderscoresThemePanel.authorTextField.text")); // NOI18N
 
-        authorUriTextField.setText(org.openide.util.NbBundle.getMessage(CreateThemePanel.class, "CreateThemePanel.authorUriTextField.text")); // NOI18N
+        authorUriTextField.setText(org.openide.util.NbBundle.getMessage(CreateUnderscoresThemePanel.class, "CreateUnderscoresThemePanel.authorUriTextField.text")); // NOI18N
 
-        descriptionTextField.setText(org.openide.util.NbBundle.getMessage(CreateThemePanel.class, "CreateThemePanel.descriptionTextField.text")); // NOI18N
+        descriptionTextField.setText(org.openide.util.NbBundle.getMessage(CreateUnderscoresThemePanel.class, "CreateUnderscoresThemePanel.descriptionTextField.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(messageLabel, org.openide.util.NbBundle.getMessage(CreateThemePanel.class, "CreateThemePanel.messageLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(messageLabel, org.openide.util.NbBundle.getMessage(CreateUnderscoresThemePanel.class, "CreateUnderscoresThemePanel.messageLabel.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
