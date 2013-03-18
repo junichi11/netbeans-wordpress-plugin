@@ -45,7 +45,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
@@ -57,6 +59,7 @@ import org.netbeans.modules.php.wordpress.util.Charset;
 import org.netbeans.modules.php.wordpress.util.UnderscoresUtils;
 import org.netbeans.modules.php.wordpress.util.UnderscoresZipEntryFilter;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
+import org.netbeans.modules.php.wordpress.util.WPUtils;
 import org.openide.filesystems.FileAlreadyLockedException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -105,8 +108,22 @@ public class CreateUnderscoresThemeAction extends BaseAction {
 
     @Override
     protected void actionPerformed(PhpModule pm) {
+        // called via shortcut
+        if (!WPUtils.isWP(pm)) {
+            return;
+        }
+        // create folder
+        FileObject themesDirectory = WPFileUtils.getThemesDirectory(pm);
+        if (themesDirectory == null) {
+            LOGGER.log(Level.WARNING, "themes directory don't exist!");
+            return;
+        }
+
+        // get existing theme names
+        Set<String> existingThemeNames = getExistingThemeNames(themesDirectory);
+
         // create dialog
-        CreateUnderscoresThemePanel panel = new CreateUnderscoresThemePanel();
+        CreateUnderscoresThemePanel panel = new CreateUnderscoresThemePanel(existingThemeNames);
         panel.showDialog();
         if (!panel.isOK()) {
             return;
@@ -124,12 +141,6 @@ public class CreateUnderscoresThemeAction extends BaseAction {
         _s_ = UnderscoresUtils.toFunctionName(name);
         themeName = name;
 
-        // create folder
-        FileObject themesDirectory = WPFileUtils.getThemesDirectory(pm);
-        if (themesDirectory == null) {
-            LOGGER.log(Level.WARNING, "themes directory don't exist!");
-            return;
-        }
         FileObject themeFolder = null;
         try {
             themeFolder = themesDirectory.createFolder(themeFolerName);
@@ -235,5 +246,21 @@ public class CreateUnderscoresThemeAction extends BaseAction {
             }
 
         }
+    }
+
+    /**
+     * Get existing theme names.
+     *
+     * @param themesDirectory
+     * @return theme names
+     */
+    private Set<String> getExistingThemeNames(FileObject themesDirectory) {
+        Set<String> existingThemeNames = new HashSet<String>();
+        for (FileObject child : themesDirectory.getChildren()) {
+            if (child.isFolder()) {
+                existingThemeNames.add(child.getName());
+            }
+        }
+        return existingThemeNames;
     }
 }
