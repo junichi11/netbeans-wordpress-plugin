@@ -44,6 +44,7 @@ package org.netbeans.modules.php.wordpress.ui.wizards;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Set;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
@@ -61,15 +62,17 @@ public class CreateUnderscoresThemePanel extends javax.swing.JPanel implements A
     private DialogDescriptor descriptor;
     private Dialog dialog;
     private boolean isOK = false;
+    private Set<String> existingThemeNames;
 
     /**
      * Creates new form CreateUnderscoresThemePanel
      */
-    public CreateUnderscoresThemePanel() {
+    public CreateUnderscoresThemePanel(Set<String> existingThemeNames) {
         initComponents();
         descriptor = new DialogDescriptor(this, "Underscores", true, this); // NOI18N
         themeNameTextField.getDocument().addDocumentListener(this);
         descriptor.setValid(false);
+        this.existingThemeNames = existingThemeNames;
     }
 
     public void showDialog() {
@@ -212,6 +215,10 @@ public class CreateUnderscoresThemePanel extends javax.swing.JPanel implements A
             descriptor.setValid(false);
         } else {
             descriptor.setValid(true);
+        }
+        name = name.trim();
+        if (existingThemeNames.contains(name)) {
+            descriptor.setValid(false);
         }
     }
 

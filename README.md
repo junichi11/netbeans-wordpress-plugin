@@ -16,6 +16,7 @@ This is NetBeans plugin for WordPress.
 - code completion for filter and action
 - create new theme action
 - hyperlink navigate
+- create new plugin action
 
 ### Impotant Files
 It contains wp-config.php
@@ -65,12 +66,25 @@ WP_DEBUG value(wp-config.php) is displayed on bottome-right of IDE.
 If you click there, you can change WP_DEBUG value.
 
 ### Create New Theme Action
-Right-click Project > WordPress > Create Theme (_s)
+Right-click Project > WordPress > Create Theme
 
+#### Underscores
 Create theme from [Underscores | A Starter Theme for WordPress](http://underscores.me/). Underscores is awesome!
 This plugin uses [Automattic/_s · GitHub](https://github.com/automattic/_s).
 
 **Please notice that license of created theme is GPLv2**
+
+#### Barebones
+Create theme form [welcomebrand/Barebones · GitHub](https://github.com/welcomebrand/Barebones).
+
+### Create New Plugin Action
+Right-click Project > WordPress > Create Plugin
+
+This is very simple feature.
+- input plugin name(plugin_name)
+- create new plugin directory(plugins/plugin_name)
+- add main plugin file (plugins/plugin_name/plugin_name.php)
+- add readme file (plugins/plugin_name/readme.txt)
 
 ### Hyperlink Navigate
 This feature is available the followings:

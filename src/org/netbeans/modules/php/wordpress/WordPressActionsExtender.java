@@ -46,6 +46,7 @@ import java.util.List;
 import javax.swing.Action;
 import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
 import org.netbeans.modules.php.wordpress.ui.actions.CodeCompletionRefreshAction;
+import org.netbeans.modules.php.wordpress.ui.actions.CreatePluginAction;
 import org.netbeans.modules.php.wordpress.ui.actions.CreateThemeAction;
 import org.openide.util.NbBundle;
 
@@ -65,6 +66,7 @@ public class WordPressActionsExtender extends PhpModuleActionsExtender {
     public List<? extends Action> getActions() {
         List<Action> actions = new ArrayList<Action>();
         actions.add(CreateThemeAction.getInstance());
+        actions.add(CreatePluginAction.getInstance());
         actions.add(new CodeCompletionRefreshAction());
         return actions;
     }

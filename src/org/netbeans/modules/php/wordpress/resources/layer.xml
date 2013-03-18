@@ -10,4 +10,8 @@
             </folder>
         </folder>
     </folder>
+    <folder name="org-netbeans-modules-php-wordpress">
+        <file name="WpPlugin.php" url="WpPlugin.php" />
+        <file name="readme.txt" url="readme.txt" />
+    </folder>
 </filesystem>

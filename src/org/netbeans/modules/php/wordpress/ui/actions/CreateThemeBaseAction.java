@@ -59,6 +59,7 @@ import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.spi.framework.actions.BaseAction;
 import org.netbeans.modules.php.wordpress.util.GithubZipEntryFilter;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
+import org.netbeans.modules.php.wordpress.util.WPUtils;
 import org.netbeans.modules.php.wordpress.util.ZipEntryFilter;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -106,6 +107,11 @@ public abstract class CreateThemeBaseAction extends BaseAction {
     })
     @Override
     protected void actionPerformed(PhpModule phpModule) {
+        // called via shortcut
+        if (!WPUtils.isWP(phpModule)) {
+            return;
+        }
+
         // get Themes directory
         themesDirectory = WPFileUtils.getThemesDirectory(phpModule);
         if (themesDirectory == null) {
