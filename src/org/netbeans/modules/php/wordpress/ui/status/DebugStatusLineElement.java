@@ -283,7 +283,17 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
     //~ Inner class
     private class LookupListenerImpl implements LookupListener {
 
+        private final FileChangeAdapter fileChangeAdapter;
+
         public LookupListenerImpl() {
+            fileChangeAdapter = new FileChangeAdapter() {
+                @Override
+                public void fileChanged(FileEvent fe) {
+                    String level = getDebugLevel(fe.getFile());
+                    setLevel(level);
+                    setDebugLevelLabel(level);
+                }
+            };
         }
 
         @Override
@@ -313,6 +323,10 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
                 setDebugLevelLabel(getLevel());
                 return;
             } else {
+                if (pm != null) {
+                    // remove file change listener
+                    removeFileChangeListenerForConfig(pm);
+                }
                 pm = pmTemp;
                 setPhpModule(pm);
             }
@@ -322,18 +336,20 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             if (config == null) {
                 return;
             }
-            config.addFileChangeListener(new FileChangeAdapter() {
-                @Override
-                public void fileChanged(FileEvent fe) {
-                    String level = getDebugLevel(fe.getFile());
-                    setLevel(level);
-                    setDebugLevelLabel(level);
-                }
-            });
+
+            // add file change listener
+            config.addFileChangeListener(fileChangeAdapter);
 
             String level = getDebugLevel(config);
             setLevel(level);
             setDebugLevelLabel(level);
+        }
+
+        private void removeFileChangeListenerForConfig(PhpModule pm) {
+            FileObject config = WPFileUtils.getDirectory(pm, WP_CONFIG_PHP);
+            if (config != null) {
+                config.removeFileChangeListener(fileChangeAdapter);
+            }
         }
     }
 
