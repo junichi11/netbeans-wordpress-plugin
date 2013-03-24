@@ -176,7 +176,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             return;
         }
         try {
-            List<String> lines = config.asLines();
+            List<String> lines = config.asLines(Charset.UTF8);
             Pattern pattern = Pattern.compile(DEBUG_REGEX);
             PrintWriter pw = new PrintWriter(new OutputStreamWriter(config.getOutputStream(), Charset.UTF8));
             try {
