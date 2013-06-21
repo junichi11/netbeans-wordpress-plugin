@@ -89,7 +89,7 @@ This is very simple feature.
 ### Hyperlink Navigate
 This feature is available the followings:
 - add_filter, remove_filter
-- add_acttion, remove_action
+- add_action, remove_action
 
 Hold down Ctrl key on first or second parameter. If text color is changed to blue, Click there.  
 Then caret position go to function. (first parameter is available when there are the same function names as parameter name : in this case, caret doesn't necessarily go to right position)
