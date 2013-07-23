@@ -53,7 +53,7 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.modules.csl.api.UiUtils;
-import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.editor.api.ElementQuery;
@@ -65,6 +65,7 @@ import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.nav.NavUtils;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
+import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -91,8 +92,11 @@ public class WordPressHyperlinkProviderExt implements HyperlinkProviderExt {
 
     @Override
     public boolean isHyperlinkPoint(Document doc, int offset, HyperlinkType ht) {
-        Source source = Source.create(doc);
-        phpModule = PhpModule.forFileObject(source.getFileObject());
+        FileObject fileObject = NbEditorUtilities.getFileObject(doc);
+        if (fileObject == null) {
+            return false;
+        }
+        phpModule = PhpModule.forFileObject(fileObject);
         if (phpModule == null || !WPUtils.isWP(phpModule)) {
             return false;
         }
