@@ -43,7 +43,7 @@ package org.netbeans.modules.php.wordpress.editor.completion;
 
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
-import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
 import org.netbeans.spi.editor.completion.CompletionProvider;
@@ -74,8 +74,10 @@ public abstract class WordPressCompletionProvider implements CompletionProvider 
 
     private PhpModule getPhpModule(JTextComponent component) {
         Document doc = component.getDocument();
-        Source source = Source.create(doc);
-        FileObject fo = source.getFileObject();
-        return PhpModule.forFileObject(fo);
+        FileObject fileObject = NbEditorUtilities.getFileObject(doc);
+        if (fileObject == null) {
+            return null;
+        }
+        return PhpModule.forFileObject(fileObject);
     }
 }
