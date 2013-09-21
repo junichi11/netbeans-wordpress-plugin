@@ -67,7 +67,7 @@ import org.openide.util.NbBundle;
  */
 public class WordPressPhpProvider extends PhpFrameworkProvider {
 
-    private static WordPressPhpProvider INSTANCE = new WordPressPhpProvider();
+    private static final WordPressPhpProvider INSTANCE = new WordPressPhpProvider();
     private static final String ICON_PATH = "org/netbeans/modules/php/wordpress/resources/wordpress_badge_8.png"; // NOI18N
     private final BadgeIcon badgeIcon;
     private static final Set<String> WP_DIRS = new HashSet<String>();
