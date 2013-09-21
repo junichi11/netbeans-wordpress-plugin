@@ -17,6 +17,7 @@ This is NetBeans plugin for WordPress.
 - create new theme action
 - hyperlink navigate
 - create new plugin action
+- custom content name
 
 ### Impotant Files
 It contains wp-config.php
@@ -28,6 +29,11 @@ You can create a new WordPress project with Wizard.
 2. check New Project > PHP > PHP Application > ... > Framework > WordPress PHP Web Blog/CMS
 3. choose options
 4. finish
+
+### Custome Content Name
+
+If you want to use custom content name(default is `wp-content`), please set your content name to the project properties.
+(project properties > Framework > WordPress)
 
 #### options
 - Set format to project : set format option to project.properties
