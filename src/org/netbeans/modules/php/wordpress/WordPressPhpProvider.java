@@ -56,6 +56,7 @@ import org.netbeans.modules.php.spi.framework.PhpModuleCustomizerExtender;
 import org.netbeans.modules.php.spi.framework.PhpModuleExtender;
 import org.netbeans.modules.php.spi.framework.PhpModuleIgnoredFilesExtender;
 import org.netbeans.modules.php.spi.framework.commands.FrameworkCommandSupport;
+import org.netbeans.modules.php.wordpress.commands.WordPressCommandSupport;
 import org.netbeans.modules.php.wordpress.customizer.WordPressCustomizerExtender;
 import org.netbeans.modules.php.wordpress.editor.WordPressEditorExtender;
 import org.netbeans.modules.php.wordpress.preferences.WordPressPreferences;
@@ -160,7 +161,7 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
 
     @Override
     public FrameworkCommandSupport getFrameworkCommandSupport(PhpModule pm) {
-        return null;
+        return new WordPressCommandSupport(pm);
     }
 
     @Override

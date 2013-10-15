@@ -39,24 +39,71 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress.util;
+package org.netbeans.modules.php.wordpress.commands;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
-import org.netbeans.modules.php.wordpress.WordPressPhpProvider;
+import org.netbeans.modules.php.api.util.UiUtils;
+import org.netbeans.modules.php.spi.framework.commands.FrameworkCommand;
+import org.netbeans.modules.php.spi.framework.commands.FrameworkCommandSupport;
+import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author junichi11
  */
-public final class WPUtils {
+public class WordPressCommandSupport extends FrameworkCommandSupport {
 
-    private WPUtils() {
+    public WordPressCommandSupport(PhpModule phpModule) {
+        super(phpModule);
     }
 
-    public static boolean isWP(PhpModule phpModule) {
-        if (phpModule == null) {
-            return false;
+    @NbBundle.Messages("WordPressCommandSupport.name=WordPress")
+    @Override
+    public String getFrameworkName() {
+        return Bundle.WordPressCommandSupport_name();
+    }
+
+    @Override
+    public void runCommand(CommandDescriptor commandDescriptor, Runnable postExecution) {
+        String[] commands = commandDescriptor.getFrameworkCommand().getCommands();
+        String[] commandParams = commandDescriptor.getCommandParams();
+        List<String> params = new ArrayList<String>(commands.length + commandParams.length);
+        params.addAll(Arrays.asList(commands));
+        params.addAll(Arrays.asList(commandParams));
+        try {
+            WordPressCli.getDefault(false).runCommand(phpModule, params, postExecution);
+        } catch (InvalidPhpExecutableException ex) {
+            UiUtils.invalidScriptProvided(ex.getLocalizedMessage(), WordPressOptions.OPTIONS_SUBPATH);
         }
-        return WordPressPhpProvider.getInstance().isInPhpModule(phpModule);
     }
+
+    @Override
+    protected String getOptionsPath() {
+        return WordPressOptions.getOptionsPath();
+    }
+
+    @Override
+    protected File getPluginsDirectory() {
+        return null;
+    }
+
+    @Override
+    protected List<FrameworkCommand> getFrameworkCommandsInternal() {
+        try {
+            WordPressCli wpCli = WordPressCli.getDefault(true);
+            return wpCli.getCommands(phpModule);
+        } catch (InvalidPhpExecutableException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return Collections.emptyList();
+    }
+
 }

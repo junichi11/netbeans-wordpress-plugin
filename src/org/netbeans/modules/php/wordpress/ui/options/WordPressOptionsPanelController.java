@@ -44,21 +44,24 @@ package org.netbeans.modules.php.wordpress.ui.options;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.swing.JComponent;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
 @OptionsPanelController.SubRegistration(
+        id = WordPressOptions.OPTIONS_SUBPATH,
         location = "org-netbeans-modules-php-project-ui-options-PHPOptionsCategory",
         displayName = "#AdvancedOption_DisplayName_WordPress",
         keywords = "#AdvancedOption_Keywords_WordPress",
         keywordsCategory = "org-netbeans-modules-php-project-ui-options-PHPOptionsCategory/WordPress")
 @org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_WordPress=WordPress", "AdvancedOption_Keywords_WordPress=WordPress"})
-public final class WordPressOptionsPanelController extends OptionsPanelController {
+public final class WordPressOptionsPanelController extends OptionsPanelController implements ChangeListener {
 
     private WordPressOptionsPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private boolean changed;
+    private boolean changed = false;
 
     @Override
     public void update() {
@@ -109,12 +112,14 @@ public final class WordPressOptionsPanelController extends OptionsPanelControlle
 
     private WordPressOptionsPanel getPanel() {
         if (panel == null) {
-            panel = new WordPressOptionsPanel(this);
+            panel = new WordPressOptionsPanel();
+            panel.addChangeListener(this);
         }
         return panel;
     }
 
-    void changed() {
+    @Override
+    public void stateChanged(ChangeEvent e) {
         if (!changed) {
             changed = true;
             pcs.firePropertyChange(OptionsPanelController.PROP_CHANGED, false, true);

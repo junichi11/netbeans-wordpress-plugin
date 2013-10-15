@@ -39,24 +39,44 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress.util;
+package org.netbeans.modules.php.wordpress.ui.actions;
 
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.spi.framework.actions.RunCommandAction;
 import org.netbeans.modules.php.wordpress.WordPressPhpProvider;
+import org.netbeans.modules.php.wordpress.util.WPUtils;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author junichi11
  */
-public final class WPUtils {
+public class WordPressRunCommandAction extends RunCommandAction {
 
-    private WPUtils() {
+    private static final WordPressRunCommandAction INSTANCE = new WordPressRunCommandAction();
+
+    private WordPressRunCommandAction() {
     }
 
-    public static boolean isWP(PhpModule phpModule) {
-        if (phpModule == null) {
-            return false;
+    public static WordPressRunCommandAction getInstance() {
+        return INSTANCE;
+    }
+
+    @Override
+    public void actionPerformed(PhpModule phpModule) {
+        if (!WPUtils.isWP(phpModule)) {
+            return;
         }
-        return WordPressPhpProvider.getInstance().isInPhpModule(phpModule);
+        WordPressPhpProvider.getInstance().getFrameworkCommandSupport(phpModule).openPanel();
     }
+
+    @NbBundle.Messages({
+        "# {0} - action name",
+        "WordPressRunCommandAction.name=WordPress: {0}"
+    })
+    @Override
+    protected String getFullName() {
+        return Bundle.WordPressRunCommandAction_name(getPureName());
+    }
+
 }

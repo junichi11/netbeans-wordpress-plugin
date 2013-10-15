@@ -39,24 +39,32 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress.util;
+package org.netbeans.modules.php.wordpress.ui.options;
 
-import org.netbeans.modules.php.api.phpmodule.PhpModule;
-import org.netbeans.modules.php.wordpress.WordPressPhpProvider;
+import org.netbeans.modules.php.api.validation.ValidationResult;
+import org.netbeans.modules.php.wordpress.commands.WordPressCli;
 
 /**
  *
  * @author junichi11
  */
-public final class WPUtils {
+public final class WordPressOptionsValidator {
 
-    private WPUtils() {
+    private final ValidationResult result;
+
+    public WordPressOptionsValidator() {
+        this.result = new ValidationResult();
     }
 
-    public static boolean isWP(PhpModule phpModule) {
-        if (phpModule == null) {
-            return false;
+    public WordPressOptionsValidator validate(String wpCliPath) {
+        String error = WordPressCli.validate(wpCliPath);
+        if (error != null) {
+            result.addWarning(new ValidationResult.Message("wp-cli.path", error)); // NOI18N
         }
-        return WordPressPhpProvider.getInstance().isInPhpModule(phpModule);
+        return this;
+    }
+
+    public ValidationResult getResult() {
+        return result;
     }
 }
