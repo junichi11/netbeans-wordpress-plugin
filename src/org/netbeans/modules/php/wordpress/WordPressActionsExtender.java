@@ -44,10 +44,15 @@ package org.netbeans.modules.php.wordpress;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
+import org.netbeans.modules.php.spi.framework.actions.RunCommandAction;
+import org.netbeans.modules.php.wordpress.commands.WordPressCli;
 import org.netbeans.modules.php.wordpress.ui.actions.CodeCompletionRefreshAction;
 import org.netbeans.modules.php.wordpress.ui.actions.CreatePluginAction;
 import org.netbeans.modules.php.wordpress.ui.actions.CreateThemeAction;
+import org.netbeans.modules.php.wordpress.ui.actions.WordPressRunCommandAction;
+import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -60,6 +65,20 @@ public class WordPressActionsExtender extends PhpModuleActionsExtender {
     @Override
     public String getMenuName() {
         return Bundle.LBL_MenuName();
+    }
+
+    @Override
+    public RunCommandAction getRunCommandAction() {
+        // If wp-cli path is invalid, run command action is not added to context menu.
+        String wpCliPath = WordPressOptions.getInstance().getWpCliPath();
+        if (StringUtils.isEmpty(wpCliPath)) {
+            return null;
+        }
+        String error = WordPressCli.validate(wpCliPath);
+        if (error != null) {
+            return null;
+        }
+        return WordPressRunCommandAction.getInstance();
     }
 
     @Override

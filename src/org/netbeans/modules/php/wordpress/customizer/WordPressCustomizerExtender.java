@@ -39,91 +39,88 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress.ui.options;
+package org.netbeans.modules.php.wordpress.customizer;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import java.util.EnumSet;
 import javax.swing.JComponent;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.netbeans.spi.options.OptionsPanelController;
+import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.modules.php.spi.framework.PhpModuleCustomizerExtender;
+import org.netbeans.modules.php.wordpress.preferences.WordPressPreferences;
 import org.openide.util.HelpCtx;
-import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
-@OptionsPanelController.SubRegistration(
-        id = WordPressOptions.OPTIONS_SUBPATH,
-        location = "org-netbeans-modules-php-project-ui-options-PHPOptionsCategory",
-        displayName = "#AdvancedOption_DisplayName_WordPress",
-        keywords = "#AdvancedOption_Keywords_WordPress",
-        keywordsCategory = "org-netbeans-modules-php-project-ui-options-PHPOptionsCategory/WordPress")
-@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_WordPress=WordPress", "AdvancedOption_Keywords_WordPress=WordPress"})
-public final class WordPressOptionsPanelController extends OptionsPanelController implements ChangeListener {
+/**
+ *
+ * @author junichi11
+ */
+public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
 
-    private WordPressOptionsPanel panel;
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private boolean changed = false;
+    private WordPressCustomizerExtenderPanel panel;
+    private final PhpModule phpModule;
+    private String originalCustomeContentName;
 
+    public WordPressCustomizerExtender(PhpModule phpModule) {
+        this.phpModule = phpModule;
+    }
+
+    @NbBundle.Messages("WordPressCustomizerExtender.displayname=WordPress")
     @Override
-    public void update() {
-        getPanel().load();
-        changed = false;
+    public String getDisplayName() {
+        return Bundle.WordPressCustomizerExtender_displayname();
     }
 
     @Override
-    public void applyChanges() {
-        getPanel().store();
-        changed = false;
+    public void addChangeListener(ChangeListener cl) {
     }
 
     @Override
-    public void cancel() {
-        // need not do anything special, if no changes have been persisted yet
+    public void removeChangeListener(ChangeListener cl) {
     }
 
     @Override
-    public boolean isValid() {
-        return getPanel().valid();
-    }
-
-    @Override
-    public boolean isChanged() {
-        return changed;
-    }
-
-    @Override
-    public HelpCtx getHelpCtx() {
-        return null; // new HelpCtx("...ID") if you have a help set
-    }
-
-    @Override
-    public JComponent getComponent(Lookup masterLookup) {
+    public JComponent getComponent() {
         return getPanel();
     }
 
     @Override
-    public void addPropertyChangeListener(PropertyChangeListener l) {
-        pcs.addPropertyChangeListener(l);
+    public HelpCtx getHelp() {
+        return null;
     }
 
     @Override
-    public void removePropertyChangeListener(PropertyChangeListener l) {
-        pcs.removePropertyChangeListener(l);
+    public boolean isValid() {
+        return true;
     }
 
-    private WordPressOptionsPanel getPanel() {
-        if (panel == null) {
-            panel = new WordPressOptionsPanel();
-            panel.addChangeListener(this);
+    @Override
+    public String getErrorMessage() {
+        return null;
+    }
+
+    @Override
+    public EnumSet<Change> save(PhpModule pm) {
+        String customContentName = getPanel().getCustomContentName();
+        if (StringUtils.isEmpty(customContentName)) {
+            return null;
         }
+
+        if (!originalCustomeContentName.equals(customContentName)) {
+            WordPressPreferences.setCustomContentName(phpModule, customContentName);
+        }
+
+        return EnumSet.of(Change.FRAMEWORK_CHANGE);
+    }
+
+    private WordPressCustomizerExtenderPanel getPanel() {
+        if (panel == null) {
+            panel = new WordPressCustomizerExtenderPanel();
+            originalCustomeContentName = WordPressPreferences.getCustomContentName(phpModule);
+            panel.setCustomContentName(originalCustomeContentName);
+        }
+
         return panel;
     }
 
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        if (!changed) {
-            changed = true;
-            pcs.firePropertyChange(OptionsPanelController.PROP_CHANGED, false, true);
-        }
-        pcs.firePropertyChange(OptionsPanelController.PROP_VALID, null, null);
-    }
 }

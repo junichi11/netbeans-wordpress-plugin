@@ -52,10 +52,14 @@ import org.netbeans.modules.php.api.phpmodule.PhpModuleProperties;
 import org.netbeans.modules.php.spi.editor.EditorExtender;
 import org.netbeans.modules.php.spi.framework.PhpFrameworkProvider;
 import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
+import org.netbeans.modules.php.spi.framework.PhpModuleCustomizerExtender;
 import org.netbeans.modules.php.spi.framework.PhpModuleExtender;
 import org.netbeans.modules.php.spi.framework.PhpModuleIgnoredFilesExtender;
 import org.netbeans.modules.php.spi.framework.commands.FrameworkCommandSupport;
+import org.netbeans.modules.php.wordpress.commands.WordPressCommandSupport;
+import org.netbeans.modules.php.wordpress.customizer.WordPressCustomizerExtender;
 import org.netbeans.modules.php.wordpress.editor.WordPressEditorExtender;
+import org.netbeans.modules.php.wordpress.preferences.WordPressPreferences;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ImageUtilities;
@@ -67,14 +71,13 @@ import org.openide.util.NbBundle;
  */
 public class WordPressPhpProvider extends PhpFrameworkProvider {
 
-    private static WordPressPhpProvider INSTANCE = new WordPressPhpProvider();
+    private static final WordPressPhpProvider INSTANCE = new WordPressPhpProvider();
     private static final String ICON_PATH = "org/netbeans/modules/php/wordpress/resources/wordpress_badge_8.png"; // NOI18N
     private final BadgeIcon badgeIcon;
     private static final Set<String> WP_DIRS = new HashSet<String>();
 
     static {
         WP_DIRS.add("wp-admin"); // NOI18N
-        WP_DIRS.add("wp-content"); // NOI18N
         WP_DIRS.add("wp-includes"); // NOI18N
     }
 
@@ -109,6 +112,12 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
                 if (fileObject == null) {
                     return false;
                 }
+            }
+
+            // content name
+            FileObject content = sourceDirectory.getFileObject(WordPressPreferences.getCustomContentName(pm));
+            if (content == null) {
+                return false;
             }
         }
         return true;
@@ -152,7 +161,12 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
 
     @Override
     public FrameworkCommandSupport getFrameworkCommandSupport(PhpModule pm) {
-        return null;
+        return new WordPressCommandSupport(pm);
+    }
+
+    @Override
+    public PhpModuleCustomizerExtender createPhpModuleCustomizerExtender(PhpModule phpModule) {
+        return new WordPressCustomizerExtender(phpModule);
     }
 
     @Override

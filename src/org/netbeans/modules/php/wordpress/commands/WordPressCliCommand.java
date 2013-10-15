@@ -39,24 +39,32 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress.util;
+package org.netbeans.modules.php.wordpress.commands;
 
-import org.netbeans.modules.php.api.phpmodule.PhpModule;
-import org.netbeans.modules.php.wordpress.WordPressPhpProvider;
+import java.util.Arrays;
+import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.modules.php.spi.framework.commands.FrameworkCommand;
 
 /**
  *
  * @author junichi11
  */
-public final class WPUtils {
+public final class WordPressCliCommand extends FrameworkCommand {
 
-    private WPUtils() {
+    private final String help;
+
+    public WordPressCliCommand(String command, String description, String help) {
+        super(command, description, command);
+        this.help = help;
     }
 
-    public static boolean isWP(PhpModule phpModule) {
-        if (phpModule == null) {
-            return false;
-        }
-        return WordPressPhpProvider.getInstance().isInPhpModule(phpModule);
+    public WordPressCliCommand(String[] commands, String description, String help) {
+        super(commands, description, StringUtils.implode(Arrays.asList(commands), " "));
+        this.help = help;
+    }
+
+    @Override
+    protected String getHelpInternal() {
+        return help;
     }
 }

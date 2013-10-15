@@ -54,6 +54,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.wordpress.preferences.WordPressPreferences;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -64,17 +65,17 @@ import org.openide.filesystems.FileUtil;
 public class WPFileUtils {
 
     public static final String WP_CONTENT = "wp-content"; // NOI18N
-    public static final String WP_PLUGINS = WP_CONTENT + "/plugins"; // NOI18N
-    public static final String WP_THEMES = WP_CONTENT + "/themes"; // NOI18N
+    public static final String WP_PLUGINS = "%s/plugins"; // NOI18N
+    public static final String WP_THEMES = "%s/themes"; // NOI18N
     public static final String WP_INCLUDES = "wp-includes"; // NOI18N
     public static final String WP_ADMIN = "wp-admin"; // NOI18N
 
     public static FileObject getPluginsDirectory(PhpModule phpModule) {
-        return getDirectory(phpModule, WP_PLUGINS);
+        return getDirectory(phpModule, String.format(WP_PLUGINS, WordPressPreferences.getCustomContentName(phpModule)));
     }
 
     public static FileObject getThemesDirectory(PhpModule phpModule) {
-        return getDirectory(phpModule, WP_THEMES);
+        return getDirectory(phpModule, String.format(WP_THEMES, WordPressPreferences.getCustomContentName(phpModule)));
     }
 
     public static FileObject getIncludesDirectory(PhpModule phpModule) {

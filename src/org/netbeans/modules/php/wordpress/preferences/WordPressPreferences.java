@@ -55,7 +55,24 @@ import org.netbeans.modules.php.editor.indent.FmtOptions;
 public class WordPressPreferences {
 
     private static final List<String> WITHIN_OPTIONS = new ArrayList<String>();
+    private static final String CUSTOM_CONTENT_NAME = "custom-content-name"; // NOI18N
 
+    private WordPressPreferences() {
+    }
+
+    public static String getCustomContentName(PhpModule phpModule) {
+        return getPreferences(phpModule).get(CUSTOM_CONTENT_NAME, "wp-content"); // NOI18N
+    }
+
+    public static void setCustomContentName(PhpModule phpModule, String name) {
+        getPreferences(phpModule).put(CUSTOM_CONTENT_NAME, name);
+    }
+
+    private static Preferences getPreferences(PhpModule phpModule) {
+        return phpModule.getPreferences(WordPressPreferences.class, true);
+    }
+
+    // formatting
     static {
         WITHIN_OPTIONS.add(FmtOptions.SPACE_WITHIN_ARRAY_DECL_PARENS);
         WITHIN_OPTIONS.add(FmtOptions.SPACE_WITHIN_CATCH_PARENS);

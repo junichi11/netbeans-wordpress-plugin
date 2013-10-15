@@ -42,6 +42,7 @@
 package org.netbeans.modules.php.wordpress.ui.options;
 
 import java.util.prefs.Preferences;
+import org.netbeans.modules.php.api.util.UiUtils;
 import org.openide.util.NbPreferences;
 
 /**
@@ -50,12 +51,20 @@ import org.openide.util.NbPreferences;
  */
 public class WordPressOptions {
 
-    private static WordPressOptions INSTANCE = new WordPressOptions();
+    public static final String OPTIONS_SUBPATH = "WordPress"; // NOI18N
+    private static final WordPressOptions INSTANCE = new WordPressOptions();
     private static final String PREFERENCES_PATH = "wordpress"; // NOI18N
     private static final String DOWNLOAD_URL = "download.url"; // NOI18N
     private static final String LOCAL_FILE_PATH = "local.file.path"; // NOI18N
+    private static final String WP_CLI_PATH = "wp-cli.path"; // NOI18N
+    private static final String WP_CLI_DOWNLOAD_LOCALE = "wp-cli.download.locale"; // NOI18N
+    private static final String WP_CLI_DOWNLOAD_VERSION = "wp-cli.download.version"; // NOI18N
 
     private WordPressOptions() {
+    }
+
+    public static String getOptionsPath() {
+        return UiUtils.OPTIONS_PATH + "/" + WordPressOptions.OPTIONS_SUBPATH; // NOI18N
     }
 
     public static WordPressOptions getInstance() {
@@ -78,7 +87,32 @@ public class WordPressOptions {
         getPreferences().put(LOCAL_FILE_PATH, path);
     }
 
+    public String getWpCliPath() {
+        return getPreferences().get(WP_CLI_PATH, ""); // NOI18N
+    }
+
+    public void setWpCliPath(String path) {
+        getPreferences().put(WP_CLI_PATH, path);
+    }
+
+    public String getWpCliDownloadLocale() {
+        return getPreferences().get(WP_CLI_DOWNLOAD_LOCALE, ""); // NOI18N
+    }
+
+    public void setWpCliDownloadLocale(String locale) {
+        getPreferences().put(WP_CLI_DOWNLOAD_LOCALE, locale);
+    }
+
+    public String getWpCliDownloadVersion() {
+        return getPreferences().get(WP_CLI_DOWNLOAD_VERSION, ""); // NOI18N
+    }
+
+    public void setWpCliDownloadVersion(String version) {
+        getPreferences().put(WP_CLI_DOWNLOAD_VERSION, version);
+    }
+
     private Preferences getPreferences() {
         return NbPreferences.forModule(WordPressOptions.class).node(PREFERENCES_PATH);
     }
+
 }

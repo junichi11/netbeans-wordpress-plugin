@@ -17,6 +17,8 @@ This is NetBeans plugin for WordPress.
 - create new theme action
 - hyperlink navigate
 - create new plugin action
+- custom content name
+- run command (wp-cli)
 
 ### Impotant Files
 It contains wp-config.php
@@ -26,8 +28,13 @@ You can create a new WordPress project with Wizard.
 
 1. set Tools > Options > PHP > WordPress > download url(e.g. http://wordpress.org/latest.zip) or local file path(e.g. /path/to/wordpress.zip)
 2. check New Project > PHP > PHP Application > ... > Framework > WordPress PHP Web Blog/CMS
-3. choose options
+3. select options (url / local file / wp-cli)
 4. finish
+
+### Custome Content Name
+
+If you want to use custom content name(default is `wp-content`), please set your content name to the project properties.
+(project properties > Framework > WordPress)
 
 #### options
 - Set format to project : set format option to project.properties
@@ -86,13 +93,28 @@ This is very simple feature.
 - add main plugin file (plugins/plugin_name/plugin_name.php)
 - add readme file (plugins/plugin_name/readme.txt)
 
-### Hyperlink Navigate
+### Hyperlink Navigation
 This feature is available the followings:
 - add_filter, remove_filter
 - add_action, remove_action
 
 Hold down Ctrl key on first or second parameter. If text color is changed to blue, Click there.  
 Then caret position go to function. (first parameter is available when there are the same function names as parameter name : in this case, caret doesn't necessarily go to right position)
+
+### Run Command
+
+We can run wp-cli commands. *Please notice that this action needs so much time to get command list at first time.*
+
+1. Set wp-cli script path to Options. Tools > Options > PHP > WordPress
+2. Select WordPress Project node
+3. Right-click > WordPress > RunCommand...
+
+#### wp-cli
+
+Please see the followings:
+
+- https://github.com/wp-cli/wp-cli
+- http://wp-cli.org/
 
 ## License
 [Common Development and Distribution License (CDDL) v1.0 and GNU General Public License (GPL) v2](http://netbeans.org/cddl-gplv2.html)

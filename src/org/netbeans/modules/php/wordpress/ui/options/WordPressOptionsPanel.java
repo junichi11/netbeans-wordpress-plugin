@@ -41,20 +41,144 @@
  */
 package org.netbeans.modules.php.wordpress.ui.options;
 
+import java.awt.Cursor;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import javax.swing.UIManager;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
+import org.netbeans.modules.php.api.util.FileUtils;
+import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.modules.php.api.util.UiUtils;
+import org.netbeans.modules.php.api.validation.ValidationResult;
+import org.netbeans.modules.php.wordpress.commands.WordPressCli;
+import org.openide.awt.HtmlBrowser;
 import org.openide.filesystems.FileChooserBuilder;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.ChangeSupport;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 final class WordPressOptionsPanel extends javax.swing.JPanel {
 
     private static final long serialVersionUID = -4504251144555676048L;
     private static final String ZIP = ".zip"; // NOI18N
-    private final WordPressOptionsPanelController controller;
+    private static final String WP_CLI_LAST_FOLDER_SUFFIX = ".wp-cli"; // NOI18N
+    private final ChangeSupport changeSupport = new ChangeSupport(this);
 
-    WordPressOptionsPanel(WordPressOptionsPanelController controller) {
-        this.controller = controller;
+    WordPressOptionsPanel() {
         initComponents();
-        // TODO listen to changes in form fields and call controller.changed()
+        init();
+    }
+
+    @NbBundle.Messages({
+        "# {0} - short script name",
+        "# {1} - long script name",
+        "WordPressOptionsPanel.hint=Full path of wp-cli script (typically {0} or {1})"})
+    private void init() {
+        wpCliVersionLabel.setText(""); // NOI18N
+        errorLabel.setText(" "); // NOI18N
+        hintLabel.setText(Bundle.WordPressOptionsPanel_hint(WordPressCli.NAME, WordPressCli.LONG_NAME));
+        // listener
+        wpCliPathTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                processUpdate();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                processUpdate();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                processUpdate();
+            }
+
+            private void processUpdate() {
+                fireChange();
+            }
+        });
+    }
+
+    public String getWpCliPath() {
+        return wpCliPathTextField.getText().trim();
+    }
+
+    public String getWpCliLocale() {
+        return wpCliDownloadLocaleTextField.getText().trim();
+    }
+
+    public String getWpCliVersion() {
+        return wpCliDownloadVersionTextField.getText().trim();
+    }
+
+    public void setLocalPath(String path) {
+        localFileTextField.setText(path);
+    }
+
+    public void setUrl(String url) {
+        downloadUrlTextField.setText(url);
+    }
+
+    public void setWpCliPath(String path) {
+        wpCliPathTextField.setText(path);
+    }
+
+    public void setWpCliDownloadLocale(String locale) {
+        wpCliDownloadLocaleTextField.setText(locale);
+    }
+
+    public void setWpCliDownloadVersion(String locale) {
+        wpCliDownloadVersionTextField.setText(locale);
+    }
+
+    private WordPressOptions getOptions() {
+        return WordPressOptions.getInstance();
+    }
+
+    public void setError(String message) {
+        errorLabel.setText(" "); // NOI18N
+        errorLabel.setForeground(UIManager.getColor("nb.errorForeground")); // NOI18N
+        errorLabel.setText(message);
+    }
+
+    public void setWarning(String message) {
+        errorLabel.setText(" "); // NOI18N
+        errorLabel.setForeground(UIManager.getColor("nb.warningForeground")); // NOI18N
+        errorLabel.setText(message);
+    }
+
+    private void setWpCliVersoin() {
+        if (!StringUtils.isEmpty(getWpCliPath())) {
+            try {
+                WordPressCli wpCli = WordPressCli.getDefault(true);
+                String version = wpCli.getVersion();
+                wpCliVersionLabel.setText(version);
+            } catch (InvalidPhpExecutableException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } else {
+            wpCliVersionLabel.setText(""); // NOI18N
+        }
+    }
+
+    public void addChangeListener(ChangeListener listener) {
+        changeSupport.addChangeListener(listener);
+    }
+
+    public void removeChangeListener(ChangeListener listener) {
+        changeSupport.removeChangeListener(listener);
+    }
+
+    void fireChange() {
+        changeSupport.fireChange();
     }
 
     /**
@@ -65,15 +189,35 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        newProjectLabel = new javax.swing.JLabel();
+        newProjectSeparator = new javax.swing.JSeparator();
         downloadUrlLabel = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        localFilePathLabel = new javax.swing.JLabel();
         downloadUrlTextField = new javax.swing.JTextField();
         localFileTextField = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
+        wpCliLabel = new javax.swing.JLabel();
+        wpCliVersionLabel = new javax.swing.JLabel();
+        wpCliSeparator = new javax.swing.JSeparator();
+        wpCliPathLabel = new javax.swing.JLabel();
+        wpCliPathTextField = new javax.swing.JTextField();
+        hintLabel = new javax.swing.JLabel();
+        wpCliSearchButton = new javax.swing.JButton();
+        wpCliBrowseButton = new javax.swing.JButton();
+        noteLabel = new javax.swing.JLabel();
+        learnMoreWpCliLabel = new javax.swing.JLabel();
+        wpCliDownloadLabel = new javax.swing.JLabel();
+        wpCliDownloadLocaleLabel = new javax.swing.JLabel();
+        wpCliDownloadLocaleTextField = new javax.swing.JTextField();
+        wpCliDownloadVersionLabel = new javax.swing.JLabel();
+        wpCliDownloadVersionTextField = new javax.swing.JTextField();
+        errorLabel = new javax.swing.JLabel();
+
+        org.openide.awt.Mnemonics.setLocalizedText(newProjectLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.newProjectLabel.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(downloadUrlLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.downloadUrlLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.jLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(localFilePathLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.localFilePathLabel.text")); // NOI18N
 
         downloadUrlTextField.setText(org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.downloadUrlTextField.text")); // NOI18N
 
@@ -86,43 +230,170 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(wpCliLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.wpCliLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(wpCliVersionLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.wpCliVersionLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(wpCliPathLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.wpCliPathLabel.text")); // NOI18N
+
+        wpCliPathTextField.setText(org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.wpCliPathTextField.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(hintLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.hintLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(wpCliSearchButton, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.wpCliSearchButton.text")); // NOI18N
+        wpCliSearchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wpCliSearchButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(wpCliBrowseButton, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.wpCliBrowseButton.text")); // NOI18N
+        wpCliBrowseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wpCliBrowseButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(noteLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.noteLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(learnMoreWpCliLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.learnMoreWpCliLabel.text")); // NOI18N
+        learnMoreWpCliLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                learnMoreWpCliLabelMouseEntered(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                learnMoreWpCliLabelMousePressed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(wpCliDownloadLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.wpCliDownloadLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(wpCliDownloadLocaleLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.wpCliDownloadLocaleLabel.text")); // NOI18N
+
+        wpCliDownloadLocaleTextField.setText(org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.wpCliDownloadLocaleTextField.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(wpCliDownloadVersionLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.wpCliDownloadVersionLabel.text")); // NOI18N
+
+        wpCliDownloadVersionTextField.setText(org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.wpCliDownloadVersionTextField.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(errorLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.errorLabel.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(downloadUrlLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(localFileTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(downloadUrlLabel)
+                                        .addComponent(localFilePathLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(wpCliPathLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(downloadUrlTextField)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(wpCliPathTextField)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(wpCliBrowseButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(wpCliSearchButton))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(hintLabel)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(localFileTextField)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(browseButton))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(wpCliDownloadLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(wpCliDownloadLocaleLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(wpCliDownloadLocaleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(wpCliDownloadVersionLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(wpCliDownloadVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 22, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(newProjectLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(newProjectSeparator))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(12, 12, 12)
+                                        .addComponent(learnMoreWpCliLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(noteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(errorLabel))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(12, 12, 12))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(wpCliLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(downloadUrlTextField))
-                .addContainerGap())
+                        .addComponent(wpCliVersionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(wpCliSeparator)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(downloadUrlLabel)
-                    .addComponent(downloadUrlTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(newProjectLabel)
+                            .addComponent(newProjectSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(downloadUrlLabel)
+                            .addComponent(downloadUrlTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(localFilePathLabel)
+                            .addComponent(localFileTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(browseButton))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(wpCliLabel)
+                            .addComponent(wpCliVersionLabel)))
+                    .addComponent(wpCliSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(localFileTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(browseButton))
-                .addContainerGap(74, Short.MAX_VALUE))
+                    .addComponent(wpCliPathLabel)
+                    .addComponent(wpCliPathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(wpCliBrowseButton)
+                    .addComponent(wpCliSearchButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(hintLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(wpCliDownloadLabel)
+                    .addComponent(wpCliDownloadLocaleLabel)
+                    .addComponent(wpCliDownloadLocaleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(wpCliDownloadVersionLabel)
+                    .addComponent(wpCliDownloadVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(noteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(learnMoreWpCliLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(errorLabel))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     @NbBundle.Messages("LBL_LocalFilePath=Local file path")
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-
         File localFile = new FileChooserBuilder(WordPressOptionsPanel.class.getName())
                 .setTitle(Bundle.LBL_LocalFilePath())
                 .setFilesOnly(true)
@@ -132,38 +403,82 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_browseButtonActionPerformed
 
-    public void setLocalPath(String path) {
-        localFileTextField.setText(path);
-    }
+    @NbBundle.Messages({
+        "WordPressOptionsPanel.search.scripts.title=wp-cli scripts",
+        "WordPressOptionsPanel.search.scripts=&wp-cli scripts:",
+        "WordPressOptionsPanel.search.scripts.pleaseWaitPart=wp-cli scripts",
+        "WordPressOptionsPanel.search.scripts.notFound=No wp-cli scripts found."
+    })
+    private void wpCliSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wpCliSearchButtonActionPerformed
+        String script = UiUtils.SearchWindow.search(new UiUtils.SearchWindow.SearchWindowSupport() {
+            @Override
+            public List<String> detect() {
+                return FileUtils.findFileOnUsersPath(WordPressCli.NAME, WordPressCli.LONG_NAME);
+            }
 
-    public void setUrl(String url) {
-        downloadUrlTextField.setText(url);
-    }
+            @Override
+            public String getWindowTitle() {
+                return Bundle.WordPressOptionsPanel_search_scripts_title();
+            }
 
-    private WordPressOptions getOptions() {
-        return WordPressOptions.getInstance();
-    }
+            @Override
+            public String getListTitle() {
+                return Bundle.WordPressOptionsPanel_search_scripts();
+            }
+
+            @Override
+            public String getPleaseWaitPart() {
+                return Bundle.WordPressOptionsPanel_search_scripts_pleaseWaitPart();
+            }
+
+            @Override
+            public String getNoItemsFound() {
+                return Bundle.WordPressOptionsPanel_search_scripts_notFound();
+            }
+        });
+        if (script != null) {
+            wpCliPathTextField.setText(script);
+            store();
+        }
+    }//GEN-LAST:event_wpCliSearchButtonActionPerformed
+
+    @NbBundle.Messages("WordPressOptionsPanel.browse.title=Select wp-cli script")
+    private void wpCliBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wpCliBrowseButtonActionPerformed
+        File wp = new FileChooserBuilder(WordPressOptionsPanel.class.getName() + WP_CLI_LAST_FOLDER_SUFFIX)
+                .setTitle(Bundle.WordPressOptionsPanel_browse_title())
+                .setFilesOnly(true)
+                .showOpenDialog();
+        if (wp != null) {
+            wp = FileUtil.normalizeFile(wp);
+            String wpPath = wp.getAbsolutePath();
+            wpCliPathTextField.setText(wpPath);
+            store();
+        }
+    }//GEN-LAST:event_wpCliBrowseButtonActionPerformed
+
+    private void learnMoreWpCliLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_learnMoreWpCliLabelMousePressed
+        try {
+            URL url = new URL("http://wp-cli.org/"); // NOI18N
+            HtmlBrowser.URLDisplayer.getDefault().showURL(url);
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }//GEN-LAST:event_learnMoreWpCliLabelMousePressed
+
+    private void learnMoreWpCliLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_learnMoreWpCliLabelMouseEntered
+        evt.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_learnMoreWpCliLabelMouseEntered
 
     void load() {
-        // TODO read settings and initialize GUI
-        // Example:
-        // someCheckBox.setSelected(Preferences.userNodeForPackage(WordPressOptionsPanel.class).getBoolean("someFlag", false));
-        // or for org.openide.util with API spec. version >= 7.4:
-        // someCheckBox.setSelected(NbPreferences.forModule(WordPressOptionsPanel.class).getBoolean("someFlag", false));
-        // or:
-        // someTextField.setText(SomeSystemOption.getDefault().getSomeStringProperty());
         setUrl(getOptions().getDownloadUrl());
         setLocalPath(getOptions().getLocalFilePath());
+        setWpCliPath(getOptions().getWpCliPath());
+        setWpCliDownloadLocale(getOptions().getWpCliDownloadLocale());
+        setWpCliDownloadVersion(getOptions().getWpCliDownloadVersion());
+        setWpCliVersoin();
     }
 
     void store() {
-        // TODO store modified settings
-        // Example:
-        // Preferences.userNodeForPackage(WordPressOptionsPanel.class).putBoolean("someFlag", someCheckBox.isSelected());
-        // or for org.openide.util with API spec. version >= 7.4:
-        // NbPreferences.forModule(WordPressOptionsPanel.class).putBoolean("someFlag", someCheckBox.isSelected());
-        // or:
-        // SomeSystemOption.getDefault().setSomeStringProperty(someTextField.getText());
         String url = downloadUrlTextField.getText();
         String localFile = localFileTextField.getText();
 
@@ -182,16 +497,56 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
             getOptions().setLocalFilePath(localFile);
         }
 
+        // wp-cli
+        getOptions().setWpCliPath(getWpCliPath());
+        getOptions().setWpCliDownloadLocale(getWpCliLocale());
+        getOptions().setWpCliDownloadVersion(getWpCliVersion());
+        setWpCliVersoin();
     }
 
     boolean valid() {
+        ValidationResult result = new WordPressOptionsValidator()
+                .validate(getWpCliPath())
+                .getResult();
+        // errors
+        if (result.hasErrors()) {
+            setError(result.getErrors().get(0).getMessage());
+            return false;
+        }
+
+        // warnings
+        if (result.hasWarnings()) {
+            setWarning(result.getWarnings().get(0).getMessage());
+            return true;
+        }
+
+        // everything ok
+        setError(" "); // NOI18N
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
     private javax.swing.JLabel downloadUrlLabel;
     private javax.swing.JTextField downloadUrlTextField;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel errorLabel;
+    private javax.swing.JLabel hintLabel;
+    private javax.swing.JLabel learnMoreWpCliLabel;
+    private javax.swing.JLabel localFilePathLabel;
     private javax.swing.JTextField localFileTextField;
+    private javax.swing.JLabel newProjectLabel;
+    private javax.swing.JSeparator newProjectSeparator;
+    private javax.swing.JLabel noteLabel;
+    private javax.swing.JButton wpCliBrowseButton;
+    private javax.swing.JLabel wpCliDownloadLabel;
+    private javax.swing.JLabel wpCliDownloadLocaleLabel;
+    private javax.swing.JTextField wpCliDownloadLocaleTextField;
+    private javax.swing.JLabel wpCliDownloadVersionLabel;
+    private javax.swing.JTextField wpCliDownloadVersionTextField;
+    private javax.swing.JLabel wpCliLabel;
+    private javax.swing.JLabel wpCliPathLabel;
+    private javax.swing.JTextField wpCliPathTextField;
+    private javax.swing.JButton wpCliSearchButton;
+    private javax.swing.JSeparator wpCliSeparator;
+    private javax.swing.JLabel wpCliVersionLabel;
     // End of variables declaration//GEN-END:variables
 }

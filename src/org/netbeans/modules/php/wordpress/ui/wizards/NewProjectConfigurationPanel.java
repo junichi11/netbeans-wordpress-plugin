@@ -44,6 +44,8 @@ package org.netbeans.modules.php.wordpress.ui.wizards;
 import java.awt.Component;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
 import org.netbeans.modules.php.wordpress.util.NetUtils;
 
 /**
@@ -60,6 +62,21 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
     public NewProjectConfigurationPanel() {
         initComponents();
         useURLRadioButton.setSelected(true);
+        init();
+    }
+
+    private void init() {
+        WordPressOptions options = WordPressOptions.getInstance();
+        if (StringUtils.isEmpty(options.getWpCliPath())) {
+            useWpCliRadioButton.setEnabled(false);
+            useWpCliRadioButton.setVisible(false);
+        }
+
+        if (StringUtils.isEmpty(options.getLocalFilePath())) {
+            useLocalFileRadioButton.setEnabled(false);
+            useLocalFileRadioButton.setVisible(false);
+        }
+
     }
 
     public JTextField getUnzipStatusTextField() {
@@ -92,6 +109,10 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
 
     public boolean useLocalFile() {
         return useLocalFileRadioButton.isSelected();
+    }
+
+    public boolean useWpCli() {
+        return useWpCliRadioButton.isSelected();
     }
 
     public boolean useFormatOption() {
@@ -158,6 +179,7 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
         unzipStatusTextField = new javax.swing.JTextField();
         useURLRadioButton = new javax.swing.JRadioButton();
         useLocalFileRadioButton = new javax.swing.JRadioButton();
+        useWpCliRadioButton = new javax.swing.JRadioButton();
         urlLabel = new javax.swing.JLabel();
         localFileLabel = new javax.swing.JLabel();
         formatCheckBox = new javax.swing.JCheckBox();
@@ -196,6 +218,9 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
                 useLocalFileRadioButtonActionPerformed(evt);
             }
         });
+
+        buttonGroup1.add(useWpCliRadioButton);
+        org.openide.awt.Mnemonics.setLocalizedText(useWpCliRadioButton, org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.useWpCliRadioButton.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(urlLabel, org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.urlLabel.text")); // NOI18N
 
@@ -320,7 +345,8 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(formatCheckBox)
-                            .addComponent(createConfigCheckBox))
+                            .addComponent(createConfigCheckBox)
+                            .addComponent(useWpCliRadioButton))
                         .addGap(0, 223, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(wpConfigPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -341,6 +367,8 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(useLocalFileRadioButton)
                     .addComponent(localFileLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(useWpCliRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(formatCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -379,6 +407,7 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
             setAllEnabled(wpConfigPanel, true);
         }
     }//GEN-LAST:event_createConfigCheckBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox createConfigCheckBox;
@@ -401,6 +430,7 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
     private javax.swing.JLabel urlLabel;
     private javax.swing.JRadioButton useLocalFileRadioButton;
     private javax.swing.JRadioButton useURLRadioButton;
+    private javax.swing.JRadioButton useWpCliRadioButton;
     private javax.swing.JPanel wpConfigPanel;
     // End of variables declaration//GEN-END:variables
 }
