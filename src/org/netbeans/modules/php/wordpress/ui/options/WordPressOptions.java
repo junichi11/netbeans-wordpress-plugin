@@ -95,7 +95,7 @@ public class WordPressOptions {
         getPreferences().put(WP_CLI_PATH, path);
     }
 
-    public String getWpCliDownlaodLocale() {
+    public String getWpCliDownloadLocale() {
         return getPreferences().get(WP_CLI_DOWNLOAD_LOCALE, ""); // NOI18N
     }
 

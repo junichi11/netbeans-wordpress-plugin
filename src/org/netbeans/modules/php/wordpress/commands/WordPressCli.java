@@ -88,6 +88,8 @@ public final class WordPressCli {
 
     // params
     private static final String HELP_PARAM = "--help"; // NOI18N
+    public static final String LOCALE_PARAM = "--locale=%s"; // NOI18N
+    public static final String VERSION_PARAM = "--version=%s"; // NOI18N
 
     // XXX default?
     private final List<String> DEFAULT_PARAMS = Collections.emptyList();
@@ -127,12 +129,12 @@ public final class WordPressCli {
      * @param phpModule
      * @param options (--locale, --version)
      */
-    public void download(PhpModule phpModule, List<String> options) {
+    public Future<Integer> download(PhpModule phpModule, List<String> options) {
         ArrayList<String> allCommands = new ArrayList<String>(options.size() + 1);
         allCommands.add(CORE_COMMAND);
         allCommands.add(DOWNLOAD_COMMAND);
         allCommands.addAll(options);
-        runCommand(phpModule, allCommands, null);
+        return runCommand(phpModule, allCommands);
     }
 
     /**
@@ -275,6 +277,23 @@ public final class WordPressCli {
         executable.displayName(getDisplayName(phpModule, parameters.get(0)))
                 .additionalParameters(getAllParameters(parameters))
                 .run(getExecutionDescriptor(postExecution));
+    }
+
+    /**
+     * Run Command.
+     *
+     * @param phpModule
+     * @param parameters
+     * @param postExecution
+     */
+    public Future<Integer> runCommand(PhpModule phpModule, List<String> parameters) {
+        PhpExecutable executable = getExecutable(phpModule);
+        if (executable == null) {
+            return null;
+        }
+        return executable.displayName(getDisplayName(phpModule, parameters.get(0)))
+                .additionalParameters(getAllParameters(parameters))
+                .run(getExecutionDescriptor(null));
     }
 
     /**

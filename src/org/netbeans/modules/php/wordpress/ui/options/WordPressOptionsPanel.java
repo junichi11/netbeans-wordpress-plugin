@@ -473,8 +473,8 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         setUrl(getOptions().getDownloadUrl());
         setLocalPath(getOptions().getLocalFilePath());
         setWpCliPath(getOptions().getWpCliPath());
-        setWpCliDownloadLocale(getOptions().getWpCliDownlaodLocale());
-        setWpCliDownloadLocale(getOptions().getWpCliDownloadVersion());
+        setWpCliDownloadLocale(getOptions().getWpCliDownloadLocale());
+        setWpCliDownloadVersion(getOptions().getWpCliDownloadVersion());
         setWpCliVersoin();
     }
 
