@@ -48,8 +48,6 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -70,15 +68,19 @@ import javax.swing.PopupFactory;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.StyledDocument;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.wordpress.WordPress;
 import org.netbeans.modules.php.wordpress.util.Charset;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
 import org.openide.awt.StatusLineElementProvider;
+import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -98,7 +100,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
     private static final String DEBUG_TRUE = "true"; // NOI18N
     private static final String DEBUG_FALSE = "false"; // NOI18N
     private static final String WP_DEBUG_FORMAT = "define('WP_DEBUG', %s);"; // NOI18N
-    private static final String DEBUG_REGEX = "^define\\('WP_DEBUG', *(true|false)\\);$"; // NOI18N
+    private static final String DEBUG_REGEX = "^define\\(\\s*'WP_DEBUG',\\s*(true|false)\\s*\\);$"; // NOI18N
     private static final Map<String, String> debugLevel = new HashMap<String, String>();
     private static final String WP_CONFIG_PHP = "wp-config.php"; // NOI18N
     private final ImageIcon icon = ImageUtilities.loadImageIcon(WordPress.WP_ICON_16, true);
@@ -169,27 +171,47 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      *
      * @param debugLv true or false
      */
-    private void writeConfig(String debugLv) {
+    private void writeConfig(final String debugLv) {
         FileObject config = WPFileUtils.getDirectory(phpModule, WP_CONFIG_PHP);
         if (config == null) {
             LOGGER.log(Level.WARNING, "Not found wp-config.php");
             return;
         }
         try {
+            Lookup lookup = config.getLookup();
+            EditorCookie ec = lookup.lookup(EditorCookie.class);
+            if (ec == null) {
+                return;
+            }
+            final StyledDocument docment = ec.openDocument();
+            if (docment == null) {
+                return;
+            }
             List<String> lines = config.asLines(Charset.UTF8);
             Pattern pattern = Pattern.compile(DEBUG_REGEX);
-            PrintWriter pw = new PrintWriter(new OutputStreamWriter(config.getOutputStream(), Charset.UTF8));
-            try {
-                for (String line : lines) {
-                    Matcher matcher = pattern.matcher(line);
-                    if (matcher.find()) {
-                        line = String.format(WP_DEBUG_FORMAT, debugLv);
-                    }
-                    pw.println(line);
+            int lineNumber = 0;
+            for (String line : lines) {
+                Matcher matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    // change
+                    final int startOffset = NbDocument.findLineOffset(docment, lineNumber);
+                    final int removeLength = line.length();
+
+                    NbDocument.runAtomic(docment, new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                docment.remove(startOffset, removeLength);
+                                docment.insertString(startOffset, String.format(WP_DEBUG_FORMAT, debugLv), null);
+                            } catch (BadLocationException ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
+                        }
+                    });
                 }
-            } finally {
-                pw.close();
+                lineNumber++;
             }
+            ec.saveDocument();
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
