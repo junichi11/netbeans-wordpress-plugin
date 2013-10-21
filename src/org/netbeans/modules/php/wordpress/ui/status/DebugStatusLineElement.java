@@ -48,8 +48,6 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -70,15 +68,19 @@ import javax.swing.PopupFactory;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.StyledDocument;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.wordpress.WordPress;
 import org.netbeans.modules.php.wordpress.util.Charset;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
 import org.openide.awt.StatusLineElementProvider;
+import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -98,12 +100,15 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
     private static final String DEBUG_TRUE = "true"; // NOI18N
     private static final String DEBUG_FALSE = "false"; // NOI18N
     private static final String WP_DEBUG_FORMAT = "define('WP_DEBUG', %s);"; // NOI18N
-    private static final String DEBUG_REGEX = "^define\\('WP_DEBUG', *(true|false)\\);$"; // NOI18N
+    private static final String DEBUG_REGEX = "^define\\(\\s*'WP_DEBUG',\\s*(true|false)\\s*\\);$"; // NOI18N
+    private static final String VERSION_REGEX = "^\\$wp_version\\s*=\\s*'(.+)';$"; // NOI18N
     private static final Map<String, String> debugLevel = new HashMap<String, String>();
     private static final String WP_CONFIG_PHP = "wp-config.php"; // NOI18N
+    private static final String WP_VERSION_PHP = "wp-includes/version.php"; // NOI18N
     private final ImageIcon icon = ImageUtilities.loadImageIcon(WordPress.WP_ICON_16, true);
     private final Lookup.Result<FileObject> result;
     private final JLabel debugLabel = new JLabel(""); // NOI18N
+    private final JLabel versionLabel = new JLabel(""); // NOI18N
     private final DefaultListModel model;
     private PhpModule phpModule;
     private JList list;
@@ -135,7 +140,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
                 int x = Math.min(labelStart.x, labelStart.x + debugLabel.getSize().width - list.getPreferredSize().width);
                 int y = labelStart.y - list.getPreferredSize().height;
                 if (popup == null) {
-                    popup = PopupFactory.getSharedInstance().getPopup(debugLabel, list, x + 16, y);
+                    popup = PopupFactory.getSharedInstance().getPopup(debugLabel, list, x, y);
                 }
                 list.addListSelectionListener(new ListSelectionListener() {
                     @Override
@@ -169,27 +174,47 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      *
      * @param debugLv true or false
      */
-    private void writeConfig(String debugLv) {
+    private void writeConfig(final String debugLv) {
         FileObject config = WPFileUtils.getDirectory(phpModule, WP_CONFIG_PHP);
         if (config == null) {
             LOGGER.log(Level.WARNING, "Not found wp-config.php");
             return;
         }
         try {
+            Lookup lookup = config.getLookup();
+            EditorCookie ec = lookup.lookup(EditorCookie.class);
+            if (ec == null) {
+                return;
+            }
+            final StyledDocument docment = ec.openDocument();
+            if (docment == null) {
+                return;
+            }
             List<String> lines = config.asLines(Charset.UTF8);
             Pattern pattern = Pattern.compile(DEBUG_REGEX);
-            PrintWriter pw = new PrintWriter(new OutputStreamWriter(config.getOutputStream(), Charset.UTF8));
-            try {
-                for (String line : lines) {
-                    Matcher matcher = pattern.matcher(line);
-                    if (matcher.find()) {
-                        line = String.format(WP_DEBUG_FORMAT, debugLv);
-                    }
-                    pw.println(line);
+            int lineNumber = 0;
+            for (String line : lines) {
+                Matcher matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    // change
+                    final int startOffset = NbDocument.findLineOffset(docment, lineNumber);
+                    final int removeLength = line.length();
+
+                    NbDocument.runAtomic(docment, new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                docment.remove(startOffset, removeLength);
+                                docment.insertString(startOffset, String.format(WP_DEBUG_FORMAT, debugLv), null);
+                            } catch (BadLocationException ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
+                        }
+                    });
                 }
-            } finally {
-                pw.close();
+                lineNumber++;
             }
+            ec.saveDocument();
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
@@ -212,8 +237,35 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(separator, BorderLayout.WEST);
-        panel.add(cell);
+        panel.add(versionLabel, BorderLayout.CENTER);
+        panel.add(cell, BorderLayout.EAST);
         return panel;
+    }
+
+    /**
+     * Get WordPress version
+     *
+     * @param version version.php
+     * @return version
+     */
+    public String getVersion(FileObject version) {
+        String versionNumber = ""; // NOI18N
+        Pattern pattern = Pattern.compile(VERSION_REGEX);
+
+        try {
+            List<String> lines = version.asLines();
+            for (String line : lines) {
+                Matcher matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    versionNumber = matcher.group(1);
+                    break;
+                }
+            }
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        return versionNumber;
     }
 
     /**
@@ -223,7 +275,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      * @return debug level
      */
     public String getDebugLevel(FileObject config) {
-        String debubLv = ""; // NOI18N
+        String debugLv = ""; // NOI18N
         Pattern pattern = Pattern.compile(DEBUG_REGEX);
 
         try {
@@ -231,7 +283,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             for (String line : lines) {
                 Matcher matcher = pattern.matcher(line);
                 if (matcher.find()) {
-                    debubLv = matcher.group(1);
+                    debugLv = matcher.group(1);
                     break;
                 }
             }
@@ -239,7 +291,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             Exceptions.printStackTrace(ex);
         }
 
-        return debubLv;
+        return debugLv;
     }
 
     /**
@@ -253,7 +305,16 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
         } else {
             debugLabel.setText(debugLv);
         }
-        debugLabel.setIcon(icon);
+    }
+
+    /**
+     * Set version versionLv.
+     *
+     * @param versionNumber
+     */
+    private void setVersionLabel(String versionNumber) {
+        versionLabel.setText(versionNumber);
+        versionLabel.setIcon(icon);
     }
 
     /**
@@ -261,7 +322,8 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      */
     private void clearLabel() {
         debugLabel.setText(""); //NOI18N
-        debugLabel.setIcon(null);
+        versionLabel.setText(""); // NOI18N
+        versionLabel.setIcon(null);
     }
 
     public void setLevel(String level) {
@@ -342,7 +404,16 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
 
             String level = getDebugLevel(config);
             setLevel(level);
+            list.setSelectedValue(level, true);
             setDebugLevelLabel(level);
+
+            // version
+            FileObject version = WPFileUtils.getDirectory(phpModule, WP_VERSION_PHP);
+            String versionNumber = ""; // NOI18N
+            if (version != null) {
+                versionNumber = getVersion(version) + ":"; // NOI18N
+            }
+            setVersionLabel(versionNumber);
         }
 
         private void removeFileChangeListenerForConfig(PhpModule pm) {

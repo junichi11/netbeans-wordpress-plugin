@@ -46,10 +46,14 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.StringUtils;
@@ -62,6 +66,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 final class WordPressOptionsPanel extends javax.swing.JPanel {
 
@@ -69,6 +74,8 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
     private static final String ZIP = ".zip"; // NOI18N
     private static final String WP_CLI_LAST_FOLDER_SUFFIX = ".wp-cli"; // NOI18N
     private final ChangeSupport changeSupport = new ChangeSupport(this);
+    private String wpCliPath;
+    private static final Logger LOGGER = Logger.getLogger(WordPressOptionsPanel.class.getName());
 
     WordPressOptionsPanel() {
         initComponents();
@@ -119,6 +126,10 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         return wpCliDownloadVersionTextField.getText().trim();
     }
 
+    public boolean isWpCliGetCommandsOnBoot() {
+        return wpCliGetCommandsOnBootCheckBox.isSelected();
+    }
+
     public void setLocalPath(String path) {
         localFileTextField.setText(path);
     }
@@ -137,6 +148,10 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
 
     public void setWpCliDownloadVersion(String locale) {
         wpCliDownloadVersionTextField.setText(locale);
+    }
+
+    public void setWpCliGetCommandsOnBoot(boolean get) {
+        wpCliGetCommandsOnBootCheckBox.setSelected(get);
     }
 
     private WordPressOptions getOptions() {
@@ -212,6 +227,7 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         wpCliDownloadVersionLabel = new javax.swing.JLabel();
         wpCliDownloadVersionTextField = new javax.swing.JTextField();
         errorLabel = new javax.swing.JLabel();
+        wpCliGetCommandsOnBootCheckBox = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(newProjectLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.newProjectLabel.text")); // NOI18N
 
@@ -278,6 +294,8 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(errorLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.errorLabel.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(wpCliGetCommandsOnBootCheckBox, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.wpCliGetCommandsOnBootCheckBox.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -285,6 +303,28 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(newProjectLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(newProjectSeparator))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(12, 12, 12)
+                                        .addComponent(learnMoreWpCliLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(noteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(errorLabel))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(12, 12, 12))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(wpCliLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(wpCliVersionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(wpCliSeparator)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -311,38 +351,19 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(browseButton))))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(wpCliDownloadLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(wpCliDownloadLocaleLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(wpCliDownloadLocaleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(wpCliDownloadVersionLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(wpCliDownloadVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 22, Short.MAX_VALUE)))
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(newProjectLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(newProjectSeparator))
-                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(wpCliGetCommandsOnBootCheckBox)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(12, 12, 12)
-                                        .addComponent(learnMoreWpCliLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(noteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(errorLabel))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(12, 12, 12))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(wpCliLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(wpCliVersionLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(wpCliSeparator)
+                                        .addComponent(wpCliDownloadLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(wpCliDownloadLocaleLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(wpCliDownloadLocaleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(wpCliDownloadVersionLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(wpCliDownloadVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 22, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -383,6 +404,8 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
                     .addComponent(wpCliDownloadLocaleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(wpCliDownloadVersionLabel)
                     .addComponent(wpCliDownloadVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(wpCliGetCommandsOnBootCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(noteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -472,9 +495,11 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
     void load() {
         setUrl(getOptions().getDownloadUrl());
         setLocalPath(getOptions().getLocalFilePath());
-        setWpCliPath(getOptions().getWpCliPath());
+        wpCliPath = getOptions().getWpCliPath();
+        setWpCliPath(wpCliPath);
         setWpCliDownloadLocale(getOptions().getWpCliDownloadLocale());
         setWpCliDownloadVersion(getOptions().getWpCliDownloadVersion());
+        setWpCliGetCommandsOnBoot(getOptions().getWpCliGetCommandsOnBoot());
         setWpCliVersoin();
     }
 
@@ -496,12 +521,44 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
             }
             getOptions().setLocalFilePath(localFile);
         }
-
         // wp-cli
         getOptions().setWpCliPath(getWpCliPath());
         getOptions().setWpCliDownloadLocale(getWpCliLocale());
         getOptions().setWpCliDownloadVersion(getWpCliVersion());
+        getOptions().setWpCliGetCommandsOnBoot(isWpCliGetCommandsOnBoot());
         setWpCliVersoin();
+        // update command list
+        String newWpCliPath = getWpCliPath();
+        if (StringUtils.isEmpty(newWpCliPath)) {
+            getOptions().setWpCliCommandList(""); // NOI18N
+        }
+        if (!StringUtils.isEmpty(newWpCliPath) && !newWpCliPath.equals(wpCliPath)) {
+            wpCliPath = newWpCliPath;
+            updateCommandListXml();
+        }
+    }
+
+    @NbBundle.Messages("WordPressOptionsPanel.update.command.progress=Updating wp-cli command list")
+    private void updateCommandListXml() {
+        RequestProcessor.getDefault().post(new Runnable() {
+
+            @Override
+            public void run() {
+                ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.WordPressOptionsPanel_update_command_progress());
+                try {
+                    handle.start();
+                    try {
+                        WordPressCli wpCli = WordPressCli.getDefault(false);
+                        wpCli.updateCommands();
+                    } catch (InvalidPhpExecutableException ex) {
+                        LOGGER.log(Level.WARNING, ex.getLocalizedMessage());
+                    }
+
+                } finally {
+                    handle.finish();
+                }
+            }
+        });
     }
 
     boolean valid() {
@@ -542,6 +599,7 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JTextField wpCliDownloadLocaleTextField;
     private javax.swing.JLabel wpCliDownloadVersionLabel;
     private javax.swing.JTextField wpCliDownloadVersionTextField;
+    private javax.swing.JCheckBox wpCliGetCommandsOnBootCheckBox;
     private javax.swing.JLabel wpCliLabel;
     private javax.swing.JLabel wpCliPathLabel;
     private javax.swing.JTextField wpCliPathTextField;
