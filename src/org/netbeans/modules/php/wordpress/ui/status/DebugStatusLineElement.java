@@ -101,11 +101,14 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
     private static final String DEBUG_FALSE = "false"; // NOI18N
     private static final String WP_DEBUG_FORMAT = "define('WP_DEBUG', %s);"; // NOI18N
     private static final String DEBUG_REGEX = "^define\\(\\s*'WP_DEBUG',\\s*(true|false)\\s*\\);$"; // NOI18N
+    private static final String VERSION_REGEX = "^\\$wp_version\\s*=\\s*'(.+)';$"; // NOI18N
     private static final Map<String, String> debugLevel = new HashMap<String, String>();
     private static final String WP_CONFIG_PHP = "wp-config.php"; // NOI18N
+    private static final String WP_VERSION_PHP = "wp-includes/version.php"; // NOI18N
     private final ImageIcon icon = ImageUtilities.loadImageIcon(WordPress.WP_ICON_16, true);
     private final Lookup.Result<FileObject> result;
     private final JLabel debugLabel = new JLabel(""); // NOI18N
+    private final JLabel versionLabel = new JLabel(""); // NOI18N
     private final DefaultListModel model;
     private PhpModule phpModule;
     private JList list;
@@ -137,7 +140,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
                 int x = Math.min(labelStart.x, labelStart.x + debugLabel.getSize().width - list.getPreferredSize().width);
                 int y = labelStart.y - list.getPreferredSize().height;
                 if (popup == null) {
-                    popup = PopupFactory.getSharedInstance().getPopup(debugLabel, list, x + 16, y);
+                    popup = PopupFactory.getSharedInstance().getPopup(debugLabel, list, x, y);
                 }
                 list.addListSelectionListener(new ListSelectionListener() {
                     @Override
@@ -234,8 +237,35 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(separator, BorderLayout.WEST);
-        panel.add(cell);
+        panel.add(versionLabel, BorderLayout.CENTER);
+        panel.add(cell, BorderLayout.EAST);
         return panel;
+    }
+
+    /**
+     * Get WordPress version
+     *
+     * @param version version.php
+     * @return version
+     */
+    public String getVersion(FileObject version) {
+        String versionNumber = ""; // NOI18N
+        Pattern pattern = Pattern.compile(VERSION_REGEX);
+
+        try {
+            List<String> lines = version.asLines();
+            for (String line : lines) {
+                Matcher matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    versionNumber = matcher.group(1);
+                    break;
+                }
+            }
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        return versionNumber;
     }
 
     /**
@@ -275,7 +305,16 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
         } else {
             debugLabel.setText(debugLv);
         }
-        debugLabel.setIcon(icon);
+    }
+
+    /**
+     * Set version versionLv.
+     *
+     * @param versionNumber
+     */
+    private void setVersionLabel(String versionNumber) {
+        versionLabel.setText(versionNumber);
+        versionLabel.setIcon(icon);
     }
 
     /**
@@ -283,7 +322,8 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      */
     private void clearLabel() {
         debugLabel.setText(""); //NOI18N
-        debugLabel.setIcon(null);
+        versionLabel.setText(""); // NOI18N
+        versionLabel.setIcon(null);
     }
 
     public void setLevel(String level) {
@@ -364,7 +404,16 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
 
             String level = getDebugLevel(config);
             setLevel(level);
+            list.setSelectedValue(level, true);
             setDebugLevelLabel(level);
+
+            // version
+            FileObject version = WPFileUtils.getDirectory(phpModule, WP_VERSION_PHP);
+            String versionNumber = ""; // NOI18N
+            if (version != null) {
+                versionNumber = getVersion(version) + ":"; // NOI18N
+            }
+            setVersionLabel(versionNumber);
         }
 
         private void removeFileChangeListenerForConfig(PhpModule pm) {
