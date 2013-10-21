@@ -41,6 +41,13 @@
  */
 package org.netbeans.modules.php.wordpress.commands;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -93,6 +100,7 @@ public final class WordPressCli {
 
     // XXX default?
     private final List<String> DEFAULT_PARAMS = Collections.emptyList();
+    private static final List<FrameworkCommand> commandsCache = new ArrayList<FrameworkCommand>();
 
     private WordPressCli(String wpCliPath) {
         this.wpCliPath = wpCliPath;
@@ -162,18 +170,17 @@ public final class WordPressCli {
     /**
      * Get help.
      *
-     * @param phpModule
      * @param commands
      * @return help for command
      */
-    public String getHelp(PhpModule phpModule, List<String> commands) {
+    public String getHelp(List<String> commands) {
         List<String> params = new ArrayList<String>(commands.size() + 1);
         params.addAll(commands);
         params.add(HELP_PARAM);
 
         HelpLineProcessor helpLineProcessor = new HelpLineProcessor();
 
-        Future<Integer> result = getExecutable(phpModule)
+        Future<Integer> result = createExecutable()
                 .additionalParameters(params)
                 .run(getSilentDescriptor(), getOutputProcessorFactory(helpLineProcessor));
         try {
@@ -191,27 +198,74 @@ public final class WordPressCli {
     /**
      * Get commands from help. Also get subcommands, so, take a little time.
      *
-     * @param phpModule
+     * @param isForce clear cache
      * @return commands
      */
     @NbBundle.Messages("WordPressCli.commands.empty=Please check whether config file and DB settings exist.")
-    public List<FrameworkCommand> getCommands(PhpModule phpModule) {
-        List<FrameworkCommand> commands = new ArrayList<FrameworkCommand>();
-        getCommands(phpModule, Collections.<String>emptyList(), commands);
-        if (commands.isEmpty()) {
+    public List<FrameworkCommand> getCommands(boolean isForce) {
+        if (!isForce && !commandsCache.isEmpty()) {
+            return commandsCache;
+        }
+        commandsCache.clear();
+        if (!isForce) {
+            // exists xml?
+            String commandList = WordPressOptions.getInstance().getWpCliCommandList();
+            if (!StringUtils.isEmpty(commandList)) {
+                try {
+                    File temp = File.createTempFile("nb-wpcli-tmp", ".xml"); // NOI18N
+                    try {
+                        FileOutputStream outputStream = new FileOutputStream(temp);
+                        PrintWriter pw = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8")); // NOI18N
+                        try {
+                            pw.println(commandList);
+                        } finally {
+                            pw.close();
+                        }
+
+                        // parse
+                        FileInputStream fileInputStream = new FileInputStream(temp);
+                        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8"); // NOI18N
+                        WordPressCliCommandsXmlParser.parse(inputStreamReader, commandsCache);
+                    } finally {
+                        temp.deleteOnExit();
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                if (!commandsCache.isEmpty()) {
+                    return commandsCache;
+                }
+            }
+        }
+
+        // update
+        updateCommands();
+
+        return commandsCache;
+    }
+
+    public void updateCommands() {
+        getCommands(Collections.<String>emptyList(), commandsCache);
+        if (commandsCache.isEmpty()) {
             NotifyDescriptor.Message message = new NotifyDescriptor.Message(Bundle.WordPressCli_commands_empty(), NotifyDescriptor.WARNING_MESSAGE);
             DialogDisplayer.getDefault().notify(message);
+        } else {
+            WordPressCliCommandListXmlBuilder builder = new WordPressCliCommandListXmlBuilder();
+            builder.build(commandsCache);
+            String commadlist = builder.asText();
+            if (!StringUtils.isEmpty(commadlist)) {
+                WordPressOptions.getInstance().setWpCliCommandList(commadlist);
+            }
         }
-        return commands;
     }
 
     // XXX get help later?
-    private void getCommands(PhpModule phpModule, List<String> subcommands, List<FrameworkCommand> commands) {
+    private void getCommands(List<String> subcommands, List<FrameworkCommand> commands) {
         ArrayList<String> params = new ArrayList<String>(subcommands.size() + 1);
         params.add(HELP_COMMAND);
         params.addAll(subcommands);
         HelpLineProcessor helpLineProcessor = new HelpLineProcessor();
-        Future<Integer> result = getExecutable(phpModule)
+        Future<Integer> result = createExecutable()
                 .additionalParameters(params)
                 .run(getSilentDescriptor(), getOutputProcessorFactory(helpLineProcessor));
         try {
@@ -249,11 +303,11 @@ public final class WordPressCli {
                 ArrayList<String> nextSubcommands = new ArrayList<String>(subcommands.size() + 1);
                 nextSubcommands.addAll(subcommands);
                 nextSubcommands.add(subcommand);
-                String help = getHelp(phpModule, nextSubcommands);
+                String help = getHelp(nextSubcommands);
                 commands.add(new WordPressCliCommand(nextSubcommands.toArray(new String[]{}), description, help)); // NOI18N
 
                 // recursive
-                getCommands(phpModule, nextSubcommands, commands);
+                getCommands(nextSubcommands, commands);
             }
 
             if (line.toLowerCase().startsWith("subcommands")) { // NOI18N

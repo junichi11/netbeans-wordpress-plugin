@@ -41,76 +41,17 @@
  */
 package org.netbeans.modules.php.wordpress.commands;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
-import org.netbeans.modules.php.api.phpmodule.PhpModule;
-import org.netbeans.modules.php.api.util.UiUtils;
 import org.netbeans.modules.php.spi.framework.commands.FrameworkCommand;
-import org.netbeans.modules.php.spi.framework.commands.FrameworkCommandSupport;
-import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
-import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
 
 /**
  *
  * @author junichi11
  */
-public class WordPressCommandSupport extends FrameworkCommandSupport {
+public interface WordPressCliCommandListBuilder {
 
-    private boolean isFirst = true;
+    public void build(List<FrameworkCommand> commands);
 
-    public WordPressCommandSupport(PhpModule phpModule) {
-        super(phpModule);
-    }
-
-    @NbBundle.Messages("WordPressCommandSupport.name=WordPress")
-    @Override
-    public String getFrameworkName() {
-        return Bundle.WordPressCommandSupport_name();
-    }
-
-    @Override
-    public void runCommand(CommandDescriptor commandDescriptor, Runnable postExecution) {
-        String[] commands = commandDescriptor.getFrameworkCommand().getCommands();
-        String[] commandParams = commandDescriptor.getCommandParams();
-        List<String> params = new ArrayList<String>(commands.length + commandParams.length);
-        params.addAll(Arrays.asList(commands));
-        params.addAll(Arrays.asList(commandParams));
-        try {
-            WordPressCli.getDefault(false).runCommand(phpModule, params, postExecution);
-        } catch (InvalidPhpExecutableException ex) {
-            UiUtils.invalidScriptProvided(ex.getLocalizedMessage(), WordPressOptions.OPTIONS_SUBPATH);
-        }
-    }
-
-    @Override
-    protected String getOptionsPath() {
-        return WordPressOptions.getOptionsPath();
-    }
-
-    @Override
-    protected File getPluginsDirectory() {
-        return null;
-    }
-
-    @Override
-    protected List<FrameworkCommand> getFrameworkCommandsInternal() {
-        try {
-            WordPressCli wpCli = WordPressCli.getDefault(true);
-            if (isFirst) {
-                isFirst = false;
-                return wpCli.getCommands(false);
-            }
-            return wpCli.getCommands(true);
-
-        } catch (InvalidPhpExecutableException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return Collections.emptyList();
-    }
+    public String asText();
 
 }

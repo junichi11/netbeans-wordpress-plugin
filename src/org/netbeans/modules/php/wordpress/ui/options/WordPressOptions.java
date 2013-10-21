@@ -59,6 +59,8 @@ public class WordPressOptions {
     private static final String WP_CLI_PATH = "wp-cli.path"; // NOI18N
     private static final String WP_CLI_DOWNLOAD_LOCALE = "wp-cli.download.locale"; // NOI18N
     private static final String WP_CLI_DOWNLOAD_VERSION = "wp-cli.download.version"; // NOI18N
+    private static final String WP_CLI_GET_COMMANDS_ON_BOOT = "wp-cli.get.commands.on.boot"; // NOI18N
+    private static final String WP_CLI_COMMAND_LIST = "wp-cli.command.list"; // NOI18N
 
     private WordPressOptions() {
     }
@@ -109,6 +111,22 @@ public class WordPressOptions {
 
     public void setWpCliDownloadVersion(String version) {
         getPreferences().put(WP_CLI_DOWNLOAD_VERSION, version);
+    }
+
+    public boolean getWpCliGetCommandsOnBoot() {
+        return getPreferences().getBoolean(WP_CLI_GET_COMMANDS_ON_BOOT, true);
+    }
+
+    public void setWpCliGetCommandsOnBoot(boolean get) {
+        getPreferences().putBoolean(WP_CLI_GET_COMMANDS_ON_BOOT, get);
+    }
+
+    public String getWpCliCommandList() {
+        return getPreferences().get(WP_CLI_COMMAND_LIST, null);
+    }
+
+    public void setWpCliCommandList(String text) {
+        getPreferences().put(WP_CLI_COMMAND_LIST, text);
     }
 
     private Preferences getPreferences() {

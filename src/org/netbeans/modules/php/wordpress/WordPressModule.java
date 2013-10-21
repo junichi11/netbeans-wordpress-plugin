@@ -39,78 +39,55 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress.commands;
+package org.netbeans.modules.php.wordpress;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
-import org.netbeans.modules.php.api.phpmodule.PhpModule;
-import org.netbeans.modules.php.api.util.UiUtils;
-import org.netbeans.modules.php.spi.framework.commands.FrameworkCommand;
-import org.netbeans.modules.php.spi.framework.commands.FrameworkCommandSupport;
+import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.modules.php.wordpress.commands.WordPressCli;
 import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
-import org.openide.util.Exceptions;
+import org.openide.modules.ModuleInstall;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 /**
  *
  * @author junichi11
  */
-public class WordPressCommandSupport extends FrameworkCommandSupport {
+public class WordPressModule extends ModuleInstall {
 
-    private boolean isFirst = true;
+    private static final Logger LOGGER = Logger.getLogger(WordPressModule.class.getName());
 
-    public WordPressCommandSupport(PhpModule phpModule) {
-        super(phpModule);
-    }
-
-    @NbBundle.Messages("WordPressCommandSupport.name=WordPress")
+    @NbBundle.Messages("WordPressModule.get.commands=Getting wp-cli commands...")
     @Override
-    public String getFrameworkName() {
-        return Bundle.WordPressCommandSupport_name();
-    }
+    public void restored() {
+        super.restored();
+        WordPressOptions options = WordPressOptions.getInstance();
+        String wpCliPath = options.getWpCliPath();
+        if (!StringUtils.isEmpty(wpCliPath) && options.getWpCliGetCommandsOnBoot()) {
+            RequestProcessor.getDefault().post(new Runnable() {
 
-    @Override
-    public void runCommand(CommandDescriptor commandDescriptor, Runnable postExecution) {
-        String[] commands = commandDescriptor.getFrameworkCommand().getCommands();
-        String[] commandParams = commandDescriptor.getCommandParams();
-        List<String> params = new ArrayList<String>(commands.length + commandParams.length);
-        params.addAll(Arrays.asList(commands));
-        params.addAll(Arrays.asList(commandParams));
-        try {
-            WordPressCli.getDefault(false).runCommand(phpModule, params, postExecution);
-        } catch (InvalidPhpExecutableException ex) {
-            UiUtils.invalidScriptProvided(ex.getLocalizedMessage(), WordPressOptions.OPTIONS_SUBPATH);
+                @Override
+                public void run() {
+                    ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.WordPressModule_get_commands());
+                    try {
+                        handle.start();
+                        try {
+                            WordPressCli wpCli = WordPressCli.getDefault(false);
+                            wpCli.getCommands(false);
+                        } catch (InvalidPhpExecutableException ex) {
+                            LOGGER.log(Level.WARNING, ex.getLocalizedMessage());
+                        }
+
+                    } finally {
+                        handle.finish();
+                    }
+                }
+            });
         }
-    }
-
-    @Override
-    protected String getOptionsPath() {
-        return WordPressOptions.getOptionsPath();
-    }
-
-    @Override
-    protected File getPluginsDirectory() {
-        return null;
-    }
-
-    @Override
-    protected List<FrameworkCommand> getFrameworkCommandsInternal() {
-        try {
-            WordPressCli wpCli = WordPressCli.getDefault(true);
-            if (isFirst) {
-                isFirst = false;
-                return wpCli.getCommands(false);
-            }
-            return wpCli.getCommands(true);
-
-        } catch (InvalidPhpExecutableException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return Collections.emptyList();
     }
 
 }
