@@ -275,7 +275,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      * @return debug level
      */
     public String getDebugLevel(FileObject config) {
-        String debubLv = ""; // NOI18N
+        String debugLv = ""; // NOI18N
         Pattern pattern = Pattern.compile(DEBUG_REGEX);
 
         try {
@@ -283,7 +283,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             for (String line : lines) {
                 Matcher matcher = pattern.matcher(line);
                 if (matcher.find()) {
-                    debubLv = matcher.group(1);
+                    debugLv = matcher.group(1);
                     break;
                 }
             }
@@ -291,7 +291,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             Exceptions.printStackTrace(ex);
         }
 
-        return debubLv;
+        return debugLv;
     }
 
     /**
