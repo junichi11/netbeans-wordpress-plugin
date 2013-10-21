@@ -240,6 +240,8 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
             } catch (ExecutionException ex) {
                 throw new ExtendingException(ex.getLocalizedMessage());
             }
+            // #18
+            sourceDirectory.refresh(true);
         } else {
             // do nothing
             return Collections.emptySet();
