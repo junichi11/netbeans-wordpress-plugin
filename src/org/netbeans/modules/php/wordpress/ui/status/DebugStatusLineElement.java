@@ -114,6 +114,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
     private JList list;
     private Popup popup;
     private String level = ""; // NOI18N
+    private String version = "";  // NOI18N
     private boolean popupFlg = false;
 
     static {
@@ -334,6 +335,14 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
         return level;
     }
 
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
     public void setPhpModule(PhpModule phpModule) {
         this.phpModule = phpModule;
     }
@@ -383,6 +392,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             PhpModule pm = getPhpModule();
             if (pm == pmTemp) {
                 setDebugLevelLabel(getLevel());
+                setVersionLabel(getVersion());
                 return;
             } else {
                 if (pm != null) {
@@ -413,6 +423,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             if (version != null) {
                 versionNumber = getVersion(version) + ":"; // NOI18N
             }
+            setVersion(versionNumber);
             setVersionLabel(versionNumber);
         }
 
