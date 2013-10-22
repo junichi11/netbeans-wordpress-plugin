@@ -245,6 +245,7 @@ public final class WordPressCli {
     }
 
     public void updateCommands() {
+        commandsCache.clear();
         getCommands(Collections.<String>emptyList(), commandsCache);
         if (commandsCache.isEmpty()) {
             NotifyDescriptor.Message message = new NotifyDescriptor.Message(Bundle.WordPressCli_commands_empty(), NotifyDescriptor.WARNING_MESSAGE);
