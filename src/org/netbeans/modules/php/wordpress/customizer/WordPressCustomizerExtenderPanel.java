@@ -41,17 +41,30 @@
  */
 package org.netbeans.modules.php.wordpress.customizer;
 
+import javax.swing.JPanel;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import org.openide.util.ChangeSupport;
+
 /**
  *
  * @author junichi11
  */
-public class WordPressCustomizerExtenderPanel extends javax.swing.JPanel {
+public class WordPressCustomizerExtenderPanel extends JPanel {
+
+    private final ChangeSupport changeSupport = new ChangeSupport(this);
 
     /**
      * Creates new form WordPressCustomizerExtenderPanel
      */
     public WordPressCustomizerExtenderPanel() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+        customContentNameTextField.getDocument().addDocumentListener(new DefaultDocumentListener());
     }
 
     public String getCustomContentName() {
@@ -60,6 +73,18 @@ public class WordPressCustomizerExtenderPanel extends javax.swing.JPanel {
 
     public void setCustomContentName(String name) {
         customContentNameTextField.setText(name);
+    }
+
+    public void addChangeListener(ChangeListener cl) {
+        changeSupport.addChangeListener(cl);
+    }
+
+    public void removeChangeListener(ChangeListener cl) {
+        changeSupport.removeChangeListener(cl);
+    }
+
+    public void fireChange() {
+        changeSupport.fireChange();
     }
 
     /**
@@ -104,4 +129,29 @@ public class WordPressCustomizerExtenderPanel extends javax.swing.JPanel {
     private javax.swing.JLabel customContentNameLabel;
     private javax.swing.JTextField customContentNameTextField;
     // End of variables declaration//GEN-END:variables
+
+    private class DefaultDocumentListener implements DocumentListener {
+
+        public DefaultDocumentListener() {
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            processUpdate();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            processUpdate();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            processUpdate();
+        }
+
+        private void processUpdate() {
+            fireChange();
+        }
+    }
 }
