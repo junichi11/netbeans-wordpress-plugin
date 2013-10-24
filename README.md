@@ -15,10 +15,11 @@ This is NetBeans plugin for WordPress.
 - display and change debug status
 - code completion for filter and action
 - create new theme action
-- hyperlink navigate
+- hyperlink navigation
 - create new plugin action
 - custom content name
 - run command (wp-cli)
+- upgrade notification
 
 ### Impotant Files
 It contains wp-config.php
@@ -71,6 +72,7 @@ add_filter('the_content', 'w[Ctrl + Space]'); // e.g. start with 'w'
 ### Display And Change Debug Status
 WP_DEBUG value(wp-config.php) is displayed on bottome-right of IDE. 
 If you click there, you can change WP_DEBUG value.
+WordPress version number is also displayed.
 
 ### Create New Theme Action
 Right-click Project > WordPress > Create Theme
@@ -115,6 +117,32 @@ Please see the followings:
 
 - https://github.com/wp-cli/wp-cli
 - http://wp-cli.org/
+
+### Upgrade Notification
+
+Check current and latest version number when WordPress project is opened.
+Furthermore, we can upgrade(run core update, core update-db) WordPress with notification window if we are setting wp-cli.
+
+If you don't want to check that, please uncheck `Check new version when project is opened` at Options.
+
+## Version Number
+
+|       |stable |dev      |
+|:------|:-----:|:-------:|
+|pattern| n.n.n | n.n.n.n |
+|e.g.   | 1.0.1 | 1.0.1.2 |
+
+### Stable version
+
+Available on [Plugin Portal](http://plugins.netbeans.org/plugin/46542/php-wordpress-blog-cms).
+
+### Development version
+
+If development version exists, it will be available in the same archive as stable version.
+
+### Archive
+
+[github releases](https://github.com/junichi11/netbeans-wordpress-plugin/releases)
 
 ## License
 [Common Development and Distribution License (CDDL) v1.0 and GNU General Public License (GPL) v2](http://netbeans.org/cddl-gplv2.html)
