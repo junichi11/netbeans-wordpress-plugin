@@ -41,14 +41,18 @@
  */
 package org.netbeans.modules.php.wordpress;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.wordpress.ui.status.DebugStatusLineElement;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
+import org.openide.awt.StatusLineElementProvider;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -96,6 +100,16 @@ public final class WordPressVersion {
             public void fileChanged(FileEvent fe) {
                 FileObject versionFile = fe.getFile();
                 initVersion(WPUtils.getVersion(versionFile));
+
+                // reset status bar
+                Collection<? extends StatusLineElementProvider> elements = Lookup.getDefault().lookupAll(StatusLineElementProvider.class);
+                for (StatusLineElementProvider element : elements) {
+                    if (element instanceof DebugStatusLineElement) {
+                        DebugStatusLineElement debugElement = (DebugStatusLineElement) element;
+                        debugElement.setPhpModule(null);
+                        break;
+                    }
+                }
             }
         });
     }

@@ -84,6 +84,7 @@ public final class WordPressCli {
     public static String LONG_NAME = "wp-cli.phar"; // NOI18N
 
     private final String wpCliPath;
+    private boolean noReset = false;
     private static final Logger LOGGER = Logger.getLogger(WordPressCli.class.getName());
 
     // commands
@@ -93,6 +94,7 @@ public final class WordPressCli {
     private static final String CORE_COMMAND = "core"; // NOI18N
     private static final String DOWNLOAD_COMMAND = "download"; // NOI18N
     private static final String UPDATE_COMMAND = "update"; // NOI18N
+    private static final String UPDATE_DB_COMMAND = "update-db"; // NOI18N
 
     // params
     private static final String HELP_PARAM = "--help"; // NOI18N
@@ -158,6 +160,19 @@ public final class WordPressCli {
         allCommands.add(CORE_COMMAND);
         allCommands.add(UPDATE_COMMAND);
         allCommands.addAll(options);
+        return runCommand(phpModule, allCommands);
+    }
+
+    /**
+     * Core update-db.
+     *
+     * @param phpModule
+     * @return
+     */
+    public Future<Integer> coreUpdateDb(PhpModule phpModule) {
+        ArrayList<String> allCommands = new ArrayList<String>(2);
+        allCommands.add(CORE_COMMAND);
+        allCommands.add(UPDATE_DB_COMMAND);
         return runCommand(phpModule, allCommands);
     }
 
@@ -362,7 +377,7 @@ public final class WordPressCli {
         if (executable == null) {
             return null;
         }
-        return executable.displayName(getDisplayName(phpModule, parameters.get(0)))
+        return executable.displayName(getDisplayName(phpModule, StringUtils.implode(parameters, " "))) // NOI18N
                 .additionalParameters(getAllParameters(parameters))
                 .run(getExecutionDescriptor(null));
     }

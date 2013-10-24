@@ -46,14 +46,16 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collections;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
-import org.netbeans.modules.php.wordpress.wpapis.WordPressVersionCheckApi;
 import org.netbeans.modules.php.wordpress.commands.WordPressCli;
 import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
+import org.netbeans.modules.php.wordpress.wpapis.WordPressVersionCheckApi;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.NotificationDisplayer;
@@ -161,7 +163,7 @@ public final class WordPressCoreUpgradeChecker implements WordPressUpgradeChecke
             this.phpModule = phpModule;
         }
 
-        @NbBundle.Messages("CoreUpdateActionListener.comfirmation=Do you want to update? (run wp core update)")
+        @NbBundle.Messages("CoreUpdateActionListener.comfirmation=Do you want to update? (run wp core update, update-db)")
         @Override
         public void actionPerformed(ActionEvent e) {
             if (StringUtils.isEmpty(WordPressOptions.getInstance().getWpCliPath())) {
@@ -176,12 +178,31 @@ public final class WordPressCoreUpgradeChecker implements WordPressUpgradeChecke
             if (DialogDisplayer.getDefault().notify(comfirmation) != NotifyDescriptor.OK_OPTION) {
                 return;
             }
-            try {
-                WordPressCli wpCli = WordPressCli.getDefault(true);
-                wpCli.coreUpdate(phpModule, Collections.<String>emptyList());
-            } catch (InvalidPhpExecutableException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        // core update, update-db
+                        WordPressCli wpCli = WordPressCli.getDefault(true);
+                        Future<Integer> result = wpCli.coreUpdate(phpModule, Collections.<String>emptyList());
+                        if (result != null) {
+                            result.get();
+                        }
+                        result = wpCli.coreUpdateDb(phpModule);
+                        if (result != null) {
+                            result.get();
+                        }
+                    } catch (InvalidPhpExecutableException ex) {
+                        Exceptions.printStackTrace(ex);
+                    } catch (InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
+                    } catch (ExecutionException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }).start();
         }
     }
 
