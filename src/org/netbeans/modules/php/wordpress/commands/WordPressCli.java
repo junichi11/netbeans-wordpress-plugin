@@ -92,6 +92,7 @@ public final class WordPressCli {
     private static final String VERSION_COMMAND = "version"; // NOI18N
     private static final String CORE_COMMAND = "core"; // NOI18N
     private static final String DOWNLOAD_COMMAND = "download"; // NOI18N
+    private static final String UPDATE_COMMAND = "update"; // NOI18N
 
     // params
     private static final String HELP_PARAM = "--help"; // NOI18N
@@ -138,9 +139,24 @@ public final class WordPressCli {
      * @param options (--locale, --version)
      */
     public Future<Integer> download(PhpModule phpModule, List<String> options) {
-        ArrayList<String> allCommands = new ArrayList<String>(options.size() + 1);
+        ArrayList<String> allCommands = new ArrayList<String>(options.size() + 2);
         allCommands.add(CORE_COMMAND);
         allCommands.add(DOWNLOAD_COMMAND);
+        allCommands.addAll(options);
+        return runCommand(phpModule, allCommands);
+    }
+
+    /**
+     * Core update.
+     *
+     * @param phpModule
+     * @param options --zip, --version
+     * @return
+     */
+    public Future<Integer> coreUpdate(PhpModule phpModule, List<String> options) {
+        ArrayList<String> allCommands = new ArrayList<String>(options.size() + 2);
+        allCommands.add(CORE_COMMAND);
+        allCommands.add(UPDATE_COMMAND);
         allCommands.addAll(options);
         return runCommand(phpModule, allCommands);
     }

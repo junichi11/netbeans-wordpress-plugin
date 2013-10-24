@@ -114,6 +114,22 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         });
     }
 
+    public String getWpLocale() {
+        return localeTextField.getText().trim();
+    }
+
+    public void setWpLocale(String locale) {
+        localeTextField.setText(locale);
+    }
+
+    public boolean isCheckNewVersion() {
+        return checkNewVersionCheckBox.isSelected();
+    }
+
+    public void setCheckNewVersion(boolean check) {
+        checkNewVersionCheckBox.setSelected(check);
+    }
+
     public String getWpCliPath() {
         return wpCliPathTextField.getText().trim();
     }
@@ -228,6 +244,11 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         wpCliDownloadVersionTextField = new javax.swing.JTextField();
         errorLabel = new javax.swing.JLabel();
         wpCliGetCommandsOnBootCheckBox = new javax.swing.JCheckBox();
+        generalLabel = new javax.swing.JLabel();
+        localeLabel = new javax.swing.JLabel();
+        localeTextField = new javax.swing.JTextField();
+        newProjectSeparator1 = new javax.swing.JSeparator();
+        checkNewVersionCheckBox = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(newProjectLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.newProjectLabel.text")); // NOI18N
 
@@ -295,6 +316,14 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(errorLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.errorLabel.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(wpCliGetCommandsOnBootCheckBox, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.wpCliGetCommandsOnBootCheckBox.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(generalLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.generalLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(localeLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.localeLabel.text")); // NOI18N
+
+        localeTextField.setText(org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.localeTextField.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(checkNewVersionCheckBox, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.checkNewVersionCheckBox.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -364,12 +393,38 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(wpCliDownloadVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 22, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(generalLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(newProjectSeparator1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(checkNewVersionCheckBox)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(localeLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(localeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(generalLabel)
+                    .addComponent(newProjectSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(localeLabel)
+                    .addComponent(localeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(checkNewVersionCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -493,6 +548,8 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_learnMoreWpCliLabelMouseEntered
 
     void load() {
+        setWpLocale(getOptions().getWpLocale());
+        setCheckNewVersion(getOptions().isCheckNewVersion());
         setUrl(getOptions().getDownloadUrl());
         setLocalPath(getOptions().getLocalFilePath());
         wpCliPath = getOptions().getWpCliPath();
@@ -504,6 +561,8 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
     }
 
     void store() {
+        getOptions().setWpLocale(getWpLocale());
+        getOptions().setCheckNewVersion(isCheckNewVersion());
         String url = downloadUrlTextField.getText();
         String localFile = localFileTextField.getText();
 
@@ -583,15 +642,20 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
+    private javax.swing.JCheckBox checkNewVersionCheckBox;
     private javax.swing.JLabel downloadUrlLabel;
     private javax.swing.JTextField downloadUrlTextField;
     private javax.swing.JLabel errorLabel;
+    private javax.swing.JLabel generalLabel;
     private javax.swing.JLabel hintLabel;
     private javax.swing.JLabel learnMoreWpCliLabel;
     private javax.swing.JLabel localFilePathLabel;
     private javax.swing.JTextField localFileTextField;
+    private javax.swing.JLabel localeLabel;
+    private javax.swing.JTextField localeTextField;
     private javax.swing.JLabel newProjectLabel;
     private javax.swing.JSeparator newProjectSeparator;
+    private javax.swing.JSeparator newProjectSeparator1;
     private javax.swing.JLabel noteLabel;
     private javax.swing.JButton wpCliBrowseButton;
     private javax.swing.JLabel wpCliDownloadLabel;

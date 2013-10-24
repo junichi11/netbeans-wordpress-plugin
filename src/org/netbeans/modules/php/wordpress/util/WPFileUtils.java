@@ -69,6 +69,7 @@ public class WPFileUtils {
     public static final String WP_THEMES = "%s/themes"; // NOI18N
     public static final String WP_INCLUDES = "wp-includes"; // NOI18N
     public static final String WP_ADMIN = "wp-admin"; // NOI18N
+    private static final String WP_VERSION_PHP = "wp-includes/version.php"; // NOI18N
 
     public static FileObject getPluginsDirectory(PhpModule phpModule) {
         return getDirectory(phpModule, String.format(WP_PLUGINS, WordPressPreferences.getCustomContentName(phpModule)));
@@ -101,6 +102,10 @@ public class WPFileUtils {
         }
         return fileObject;
 
+    }
+
+    public static FileObject getVersionFile(PhpModule phpModule) {
+        return getDirectory(phpModule, WP_VERSION_PHP);
     }
 
     /**
