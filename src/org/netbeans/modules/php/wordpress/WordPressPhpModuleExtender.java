@@ -41,7 +41,6 @@
  */
 package org.netbeans.modules.php.wordpress;
 
-import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -83,10 +82,12 @@ import org.netbeans.modules.php.wordpress.util.Charset;
 import org.netbeans.modules.php.wordpress.util.NetUtils;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.netbeans.modules.php.wordpress.util.WPZipEntryFilter;
+import org.netbeans.modules.php.wordpress.wpapis.WordPressVersionCheckApi;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -112,6 +113,7 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
     private static final Set<String> CONFIG_KEYS = new HashSet<String>();
     private static final Map<String, String> CONFIG_MAP = new HashMap<String, String>();
     private boolean isInternetReachable = true;
+    private String errorMessage;
     private static final Logger LOGGER = Logger.getLogger(WordPressPhpModuleExtender.class.getName());
 
     static {
@@ -150,31 +152,32 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
         return null;
     }
 
+    @NbBundle.Messages("WordPressPhpModuleExtender.no.installation=There is no available installation method.")
     @Override
     public boolean isValid() {
         String url = panel.getUrlLabel();
         String localFile = panel.getLocalFileLabel();
         if (!isInternetReachable || url.isEmpty()) {
             if (localFile.isEmpty()) {
-                Component[] components = panel.getComponents();
-                for (Component component : components) {
-                    component.setEnabled(false);
-                }
+                // disable all field
+                panel.setAllEnabled(panel, false);
+                panel.setAllEnabled(panel.getWpConfigPanel(), false);
+                errorMessage = Bundle.WordPressPhpModuleExtender_no_installation();
                 return false;
-
             }
         }
+        errorMessage = null;
         return true;
     }
 
     @Override
     public String getErrorMessage() {
-        return null;
+        return errorMessage;
     }
 
     @Override
     public String getWarningMessage() {
-        return null;
+        return errorMessage;
     }
 
     /**
@@ -282,27 +285,31 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
      */
     private String getDownloadUrl() {
         String downloadUrl = WordPressOptions.getInstance().getDownloadUrl();
-        if (downloadUrl != null && !downloadUrl.isEmpty()) {
+        if (!StringUtils.isEmpty(downloadUrl)) {
             return downloadUrl;
         }
-        Locale locale = Locale.getDefault();
-        String language = locale.getLanguage();
-        String urlPath = WP_DL_URL_DEFAULT;
-        if (language != null && !language.isEmpty()) {
-            if (!language.equals("en")) { // NOI18N
-                urlPath = String.format(WP_DL_URL_FORMAT, language, language);
+
+        // get url from version check api
+        String wpLocale = WordPressOptions.getInstance().getWpLocale();
+        if (StringUtils.isEmpty(wpLocale)) {
+            Locale locale = Locale.getDefault();
+            wpLocale = locale.getLanguage();
+        }
+        if (!StringUtils.isEmpty(wpLocale)) {
+            WordPressVersionCheckApi versionCheckApi = new WordPressVersionCheckApi(wpLocale);
+            try {
+                versionCheckApi.parse();
+                downloadUrl = versionCheckApi.getDownload();
+            } catch (IOException ex) {
+                downloadUrl = WP_DL_URL_DEFAULT;
             }
         }
-        try {
-            URL check = new URL(urlPath);
-            URLConnection connection = check.openConnection();
-            connection.connect();
-        } catch (MalformedURLException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IOException ex) {
-            urlPath = WP_DL_URL_DEFAULT;
+        if (!StringUtils.isEmpty(downloadUrl)) {
+            return downloadUrl;
         }
-        return urlPath;
+
+        // default url
+        return WP_DL_URL_DEFAULT;
     }
 
     private void createWpConfig(FileObject sample) {
@@ -379,7 +386,7 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
                 HttpsURLConnection httpsConnection = (HttpsURLConnection) connection;
                 BufferedReader reader = new BufferedReader(new InputStreamReader(httpsConnection.getInputStream(), Charset.UTF8)); // NOI18N
                 try {
-                    String line = null;
+                    String line;
                     while ((line = reader.readLine()) != null) {
                         keys.add(line);
                     }

@@ -86,24 +86,28 @@ public class WordPressVersionCheckApi extends WordPressApi {
     public void parse() throws IOException {
         // get json
         InputStream inputStream = openStream();
-        JSONObject jsonObject = (JSONObject) JSONValue.parse(new InputStreamReader(inputStream, Charset.UTF8));
-        JSONArray offers = (JSONArray) jsonObject.get("offers"); // NOI18N
+        try {
+            JSONObject jsonObject = (JSONObject) JSONValue.parse(new InputStreamReader(inputStream, Charset.UTF8));
+            JSONArray offers = (JSONArray) jsonObject.get("offers"); // NOI18N
 
-        // get version and locale
-        String upgradeLocale;
-        for (Object offer : offers) {
-            JSONObject object = (JSONObject) offer;
-            upgradeLocale = object.get("locale").toString(); // NOI18N
-            version = object.get("version").toString(); // NOI18N
-            download = object.get("download").toString(); // NOI18N
-            phpVersion = object.get("php_version").toString(); // NOI18N
-            mysqlVersion = object.get("mysql_version").toString(); // NOI18N
-            if (StringUtils.isEmpty(this.locale)) {
-                return;
+            // get version and locale
+            String upgradeLocale;
+            for (Object offer : offers) {
+                JSONObject object = (JSONObject) offer;
+                upgradeLocale = object.get("locale").toString(); // NOI18N
+                version = object.get("version").toString(); // NOI18N
+                download = object.get("download").toString(); // NOI18N
+                phpVersion = object.get("php_version").toString(); // NOI18N
+                mysqlVersion = object.get("mysql_version").toString(); // NOI18N
+                if (StringUtils.isEmpty(this.locale)) {
+                    return;
+                }
+                if (upgradeLocale.equals(this.locale)) {
+                    return;
+                }
             }
-            if (upgradeLocale.equals(this.locale)) {
-                return;
-            }
+        } finally {
+            inputStream.close();
         }
 
         // not found locale
