@@ -79,6 +79,10 @@ public final class WordPressCoreUpgradeChecker implements WordPressUpgradeChecke
 
     @Override
     public boolean hasUpgrade(PhpModule phpModule) {
+        if (!WordPressOptions.getInstance().isCheckCoreNewVersion()) {
+            return false;
+        }
+
         try {
             if (StringUtils.isEmpty(upgradeVersionNumber)) {
                 WordPressVersionCheckApi versionCheckApi = new WordPressVersionCheckApi();
