@@ -56,7 +56,7 @@ import org.openide.util.NbBundle;
  *
  * @author junichi11
  */
-public class CodeCompletionRefreshAction extends BaseAction {
+public class RefreshCodeCompletionAction extends BaseAction {
 
     private static final long serialVersionUID = -1446444622440007833L;
 
@@ -69,7 +69,7 @@ public class CodeCompletionRefreshAction extends BaseAction {
         return Bundle.LBL_WordPressAction(getPureName());
     }
 
-    @NbBundle.Messages("LBL_ActionName=Code Completion Refresh")
+    @NbBundle.Messages("LBL_ActionName=Refresh Code Completion")
     @Override
     protected String getPureName() {
         return Bundle.LBL_ActionName();

@@ -48,7 +48,7 @@ import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
 import org.netbeans.modules.php.spi.framework.actions.RunCommandAction;
 import org.netbeans.modules.php.wordpress.commands.WordPressCli;
-import org.netbeans.modules.php.wordpress.ui.actions.CodeCompletionRefreshAction;
+import org.netbeans.modules.php.wordpress.ui.actions.RefreshCodeCompletionAction;
 import org.netbeans.modules.php.wordpress.ui.actions.CreatePluginAction;
 import org.netbeans.modules.php.wordpress.ui.actions.CreateThemeAction;
 import org.netbeans.modules.php.wordpress.ui.actions.WordPressRunCommandAction;
@@ -86,7 +86,7 @@ public class WordPressActionsExtender extends PhpModuleActionsExtender {
         List<Action> actions = new ArrayList<Action>();
         actions.add(CreateThemeAction.getInstance());
         actions.add(CreatePluginAction.getInstance());
-        actions.add(new CodeCompletionRefreshAction());
+        actions.add(new RefreshCodeCompletionAction());
         return actions;
     }
 }
