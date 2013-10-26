@@ -41,7 +41,9 @@
  */
 package org.netbeans.modules.php.wordpress;
 
+import org.netbeans.modules.php.wordpress.update.WordPressUpgradeChecker;
 import java.io.File;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,6 +65,7 @@ import org.netbeans.modules.php.wordpress.preferences.WordPressPreferences;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
@@ -173,4 +176,16 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
     public EditorExtender getEditorExtender(PhpModule pm) {
         return new WordPressEditorExtender();
     }
+
+    @Override
+    public void phpModuleOpened(PhpModule phpModule) {
+        // check new version
+        Collection<? extends WordPressUpgradeChecker> checkers = Lookup.getDefault().lookupAll(WordPressUpgradeChecker.class);
+        for (WordPressUpgradeChecker checker : checkers) {
+            if (checker.hasUpgrade(phpModule)) {
+                checker.notifyUpgrade(phpModule);
+            }
+        }
+    }
+
 }

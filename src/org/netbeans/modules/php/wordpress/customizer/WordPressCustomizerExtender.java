@@ -46,6 +46,7 @@ import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.netbeans.modules.php.spi.framework.PhpModuleCustomizerExtender;
 import org.netbeans.modules.php.wordpress.preferences.WordPressPreferences;
 import org.openide.util.HelpCtx;
@@ -60,6 +61,8 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
     private WordPressCustomizerExtenderPanel panel;
     private final PhpModule phpModule;
     private String originalCustomeContentName;
+    private boolean isValid;
+    private String errorMessage;
 
     public WordPressCustomizerExtender(PhpModule phpModule) {
         this.phpModule = phpModule;
@@ -73,10 +76,12 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
 
     @Override
     public void addChangeListener(ChangeListener cl) {
+        getPanel().addChangeListener(cl);
     }
 
     @Override
     public void removeChangeListener(ChangeListener cl) {
+        getPanel().removeChangeListener(cl);
     }
 
     @Override
@@ -91,12 +96,38 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
 
     @Override
     public boolean isValid() {
-        return true;
+        validate();
+        return isValid;
     }
 
     @Override
     public String getErrorMessage() {
-        return null;
+        validate();
+        return errorMessage;
+    }
+
+    private void validate() {
+        String contentName = getPanel().getCustomContentName();
+        ValidationResult result = new WordPressCustomizerValidator()
+                .validateWpContent(phpModule, contentName)
+                .getResult();
+        // error
+        if (result.hasErrors()) {
+            isValid = false;
+            errorMessage = result.getErrors().get(0).getMessage();
+            return;
+        }
+
+        // warning
+        if (result.hasWarnings()) {
+            isValid = false;
+            errorMessage = result.getWarnings().get(0).getMessage();
+            return;
+        }
+
+        // everything ok
+        errorMessage = null;
+        isValid = true;
     }
 
     @Override

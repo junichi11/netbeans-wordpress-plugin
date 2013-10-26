@@ -39,54 +39,52 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress;
+package org.netbeans.modules.php.wordpress.customizer;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.Action;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
-import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
-import org.netbeans.modules.php.spi.framework.actions.RunCommandAction;
-import org.netbeans.modules.php.wordpress.commands.WordPressCli;
-import org.netbeans.modules.php.wordpress.ui.actions.RefreshCodeCompletionAction;
-import org.netbeans.modules.php.wordpress.ui.actions.CreatePluginAction;
-import org.netbeans.modules.php.wordpress.ui.actions.CreateThemeAction;
-import org.netbeans.modules.php.wordpress.ui.actions.WordPressRunCommandAction;
-import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
+import org.netbeans.modules.php.api.validation.ValidationResult;
+import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
 /**
  *
  * @author junichi11
  */
-public class WordPressActionsExtender extends PhpModuleActionsExtender {
+public final class WordPressCustomizerValidator {
 
-    @NbBundle.Messages("LBL_MenuName=WordPress")
-    @Override
-    public String getMenuName() {
-        return Bundle.LBL_MenuName();
+    private final ValidationResult result = new ValidationResult();
+
+    @NbBundle.Messages({
+        "WordPressCustomizerValidator.wordpress.dir.invalid=Project might be broken...",
+        "WordPressCustomizerValidator.wordpress.content.name.invalid=Existing directory name must be set.",
+        "WordPressCustomizerValidator.wordpress.content.name.contains.shash=The name must not contain slash."
+    })
+    public WordPressCustomizerValidator validateWpContent(@NonNull PhpModule phpModule, String name) {
+        FileObject sourceDirectory = phpModule.getSourceDirectory();
+        if (sourceDirectory == null) {
+            result.addWarning(new ValidationResult.Message("wordpress.dir", Bundle.WordPressCustomizerValidator_wordpress_dir_invalid())); // NOI18N
+            return this;
+        }
+
+        FileObject wpContent = sourceDirectory.getFileObject(name);
+        if (wpContent == null
+                || !wpContent.isFolder()
+                || StringUtils.isEmpty(name)) {
+            result.addWarning(new ValidationResult.Message("wordpress.content.name", Bundle.WordPressCustomizerValidator_wordpress_content_name_invalid())); // NOI18N
+            return this;
+        }
+
+        if (name.contains("/")) { // NOI18N
+            result.addWarning(new ValidationResult.Message("wordpress.content.name.slash", Bundle.WordPressCustomizerValidator_wordpress_content_name_contains_shash())); // NOI18N
+            return this;
+        }
+
+        return this;
     }
 
-    @Override
-    public RunCommandAction getRunCommandAction() {
-        // If wp-cli path is invalid, run command action is not added to context menu.
-        String wpCliPath = WordPressOptions.getInstance().getWpCliPath();
-        if (StringUtils.isEmpty(wpCliPath)) {
-            return null;
-        }
-        String error = WordPressCli.validate(wpCliPath);
-        if (error != null) {
-            return null;
-        }
-        return WordPressRunCommandAction.getInstance();
-    }
-
-    @Override
-    public List<? extends Action> getActions() {
-        List<Action> actions = new ArrayList<Action>();
-        actions.add(CreateThemeAction.getInstance());
-        actions.add(CreatePluginAction.getInstance());
-        actions.add(new RefreshCodeCompletionAction());
-        return actions;
+    public ValidationResult getResult() {
+        return result;
     }
 }

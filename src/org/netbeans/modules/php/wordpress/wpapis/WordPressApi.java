@@ -39,55 +39,25 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress.ui.actions;
+package org.netbeans.modules.php.wordpress.wpapis;
 
-import java.util.Collection;
-import org.netbeans.api.editor.mimelookup.MimeLookup;
-import org.netbeans.api.editor.mimelookup.MimePath;
-import org.netbeans.modules.php.api.phpmodule.PhpModule;
-import org.netbeans.modules.php.api.util.FileUtils;
-import org.netbeans.modules.php.spi.framework.actions.BaseAction;
-import org.netbeans.modules.php.wordpress.editor.completion.FilterAndActionCompletion;
-import org.netbeans.modules.php.wordpress.util.WPUtils;
-import org.netbeans.spi.editor.completion.CompletionProvider;
-import org.openide.util.NbBundle;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 /**
  *
  * @author junichi11
  */
-public class CodeCompletionRefreshAction extends BaseAction {
+public abstract class WordPressApi {
 
-    private static final long serialVersionUID = -1446444622440007833L;
+    public abstract void parse() throws IOException;
 
-    @NbBundle.Messages({
-        "# {0} - name",
-        "LBL_WordPressAction=WordPress Action: {0}"
-    })
-    @Override
-    protected String getFullName() {
-        return Bundle.LBL_WordPressAction(getPureName());
+    public abstract String getUrl();
+
+    public InputStream openStream() throws IOException {
+        URL url = new URL(getUrl());
+        return url.openStream();
     }
 
-    @NbBundle.Messages("LBL_ActionName=Code Completion Refresh")
-    @Override
-    protected String getPureName() {
-        return Bundle.LBL_ActionName();
-    }
-
-    @Override
-    protected void actionPerformed(PhpModule pm) {
-        if (!WPUtils.isWP(pm)) {
-            // called via shortcut
-            return;
-        }
-        MimePath mimePath = MimePath.parse(FileUtils.PHP_MIME_TYPE);
-        Collection<? extends CompletionProvider> providers = MimeLookup.getLookup(mimePath).lookupAll(CompletionProvider.class);
-        for (CompletionProvider provider : providers) {
-            if (provider instanceof FilterAndActionCompletion) {
-                FilterAndActionCompletion completion = (FilterAndActionCompletion) provider;
-                completion.refresh();
-            }
-        }
-    }
 }

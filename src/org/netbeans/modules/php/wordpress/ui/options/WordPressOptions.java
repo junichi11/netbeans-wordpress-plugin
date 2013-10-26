@@ -54,6 +54,10 @@ public class WordPressOptions {
     public static final String OPTIONS_SUBPATH = "WordPress"; // NOI18N
     private static final WordPressOptions INSTANCE = new WordPressOptions();
     private static final String PREFERENCES_PATH = "wordpress"; // NOI18N
+    private static final String LOCALE = "locale"; // NOI18N
+    private static final String CHECK_CORE_NEW_VERSION = "check.core.new.version"; // NOI18N
+    private static final String CHECK_PLUGIN_NEW_VERSION = "check.plugin.new.version"; // NOI18N
+    private static final String CHECK_THEME_NEW_VERSION = "check.theme.new.version"; // NOI18N
     private static final String DOWNLOAD_URL = "download.url"; // NOI18N
     private static final String LOCAL_FILE_PATH = "local.file.path"; // NOI18N
     private static final String WP_CLI_PATH = "wp-cli.path"; // NOI18N
@@ -71,6 +75,38 @@ public class WordPressOptions {
 
     public static WordPressOptions getInstance() {
         return INSTANCE;
+    }
+
+    public String getWpLocale() {
+        return getPreferences().get(LOCALE, ""); // NOI18N
+    }
+
+    public void setWpLocale(String locale) {
+        getPreferences().put(LOCALE, locale);
+    }
+
+    public boolean isCheckCoreNewVersion() {
+        return getPreferences().getBoolean(CHECK_CORE_NEW_VERSION, true);
+    }
+
+    public void setCheckCoreNewVersion(boolean check) {
+        getPreferences().putBoolean(CHECK_CORE_NEW_VERSION, check);
+    }
+
+    public boolean isCheckPluginNewVersion() {
+        return getPreferences().getBoolean(CHECK_PLUGIN_NEW_VERSION, false);
+    }
+
+    public void setCheckPluginNewVersion(boolean check) {
+        getPreferences().putBoolean(CHECK_PLUGIN_NEW_VERSION, check);
+    }
+
+    public boolean isCheckThemeNewVersion() {
+        return getPreferences().getBoolean(CHECK_THEME_NEW_VERSION, false);
+    }
+
+    public void setCheckThemeNewVersion(boolean check) {
+        getPreferences().putBoolean(CHECK_THEME_NEW_VERSION, check);
     }
 
     public synchronized String getDownloadUrl() {

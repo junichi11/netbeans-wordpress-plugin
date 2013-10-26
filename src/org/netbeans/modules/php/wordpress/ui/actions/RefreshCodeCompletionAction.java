@@ -39,54 +39,55 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress;
+package org.netbeans.modules.php.wordpress.ui.actions;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.Action;
-import org.netbeans.modules.php.api.util.StringUtils;
-import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
-import org.netbeans.modules.php.spi.framework.actions.RunCommandAction;
-import org.netbeans.modules.php.wordpress.commands.WordPressCli;
-import org.netbeans.modules.php.wordpress.ui.actions.RefreshCodeCompletionAction;
-import org.netbeans.modules.php.wordpress.ui.actions.CreatePluginAction;
-import org.netbeans.modules.php.wordpress.ui.actions.CreateThemeAction;
-import org.netbeans.modules.php.wordpress.ui.actions.WordPressRunCommandAction;
-import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
+import java.util.Collection;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.api.editor.mimelookup.MimePath;
+import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.api.util.FileUtils;
+import org.netbeans.modules.php.spi.framework.actions.BaseAction;
+import org.netbeans.modules.php.wordpress.editor.completion.FilterAndActionCompletion;
+import org.netbeans.modules.php.wordpress.util.WPUtils;
+import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.openide.util.NbBundle;
 
 /**
  *
  * @author junichi11
  */
-public class WordPressActionsExtender extends PhpModuleActionsExtender {
+public class RefreshCodeCompletionAction extends BaseAction {
 
-    @NbBundle.Messages("LBL_MenuName=WordPress")
+    private static final long serialVersionUID = -1446444622440007833L;
+
+    @NbBundle.Messages({
+        "# {0} - name",
+        "LBL_WordPressAction=WordPress Action: {0}"
+    })
     @Override
-    public String getMenuName() {
-        return Bundle.LBL_MenuName();
+    protected String getFullName() {
+        return Bundle.LBL_WordPressAction(getPureName());
+    }
+
+    @NbBundle.Messages("LBL_ActionName=Refresh Code Completion")
+    @Override
+    protected String getPureName() {
+        return Bundle.LBL_ActionName();
     }
 
     @Override
-    public RunCommandAction getRunCommandAction() {
-        // If wp-cli path is invalid, run command action is not added to context menu.
-        String wpCliPath = WordPressOptions.getInstance().getWpCliPath();
-        if (StringUtils.isEmpty(wpCliPath)) {
-            return null;
+    protected void actionPerformed(PhpModule pm) {
+        if (!WPUtils.isWP(pm)) {
+            // called via shortcut
+            return;
         }
-        String error = WordPressCli.validate(wpCliPath);
-        if (error != null) {
-            return null;
+        MimePath mimePath = MimePath.parse(FileUtils.PHP_MIME_TYPE);
+        Collection<? extends CompletionProvider> providers = MimeLookup.getLookup(mimePath).lookupAll(CompletionProvider.class);
+        for (CompletionProvider provider : providers) {
+            if (provider instanceof FilterAndActionCompletion) {
+                FilterAndActionCompletion completion = (FilterAndActionCompletion) provider;
+                completion.refresh();
+            }
         }
-        return WordPressRunCommandAction.getInstance();
-    }
-
-    @Override
-    public List<? extends Action> getActions() {
-        List<Action> actions = new ArrayList<Action>();
-        actions.add(CreateThemeAction.getInstance());
-        actions.add(CreatePluginAction.getInstance());
-        actions.add(new RefreshCodeCompletionAction());
-        return actions;
     }
 }

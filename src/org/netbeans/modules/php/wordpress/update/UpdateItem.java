@@ -39,54 +39,57 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress;
-
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.Action;
-import org.netbeans.modules.php.api.util.StringUtils;
-import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
-import org.netbeans.modules.php.spi.framework.actions.RunCommandAction;
-import org.netbeans.modules.php.wordpress.commands.WordPressCli;
-import org.netbeans.modules.php.wordpress.ui.actions.RefreshCodeCompletionAction;
-import org.netbeans.modules.php.wordpress.ui.actions.CreatePluginAction;
-import org.netbeans.modules.php.wordpress.ui.actions.CreateThemeAction;
-import org.netbeans.modules.php.wordpress.ui.actions.WordPressRunCommandAction;
-import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
-import org.openide.util.NbBundle;
+package org.netbeans.modules.php.wordpress.update;
 
 /**
+ * depend on wp-cli.
  *
  * @author junichi11
  */
-public class WordPressActionsExtender extends PhpModuleActionsExtender {
+public class UpdateItem {
 
-    @NbBundle.Messages("LBL_MenuName=WordPress")
-    @Override
-    public String getMenuName() {
-        return Bundle.LBL_MenuName();
+    private final String status;
+    private final String name;
+    private final String version;
+
+    public UpdateItem(String status, String name, String version) {
+        this.status = status;
+        this.name = name;
+        this.version = version;
     }
 
-    @Override
-    public RunCommandAction getRunCommandAction() {
-        // If wp-cli path is invalid, run command action is not added to context menu.
-        String wpCliPath = WordPressOptions.getInstance().getWpCliPath();
-        if (StringUtils.isEmpty(wpCliPath)) {
-            return null;
-        }
-        String error = WordPressCli.validate(wpCliPath);
-        if (error != null) {
-            return null;
-        }
-        return WordPressRunCommandAction.getInstance();
+    public String getStatus() {
+        return status;
     }
 
-    @Override
-    public List<? extends Action> getActions() {
-        List<Action> actions = new ArrayList<Action>();
-        actions.add(CreateThemeAction.getInstance());
-        actions.add(CreatePluginAction.getInstance());
-        actions.add(new RefreshCodeCompletionAction());
-        return actions;
+    public String getName() {
+        return name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public boolean isUpdate() {
+        if (status == null) {
+            return false;
+        }
+        return status.startsWith("U"); // NOI18N
+    }
+
+    public static class Factory {
+
+        public Factory() {
+        }
+
+        public static UpdateItem create(String data) {
+            data = data.trim();
+            data = data.replaceAll("\\s +", " "); // NOI18N
+            String[] splitData = data.split(" "); // NOI18N
+            if (splitData.length != 3) {
+                return null;
+            }
+            return new UpdateItem(splitData[0], splitData[1], splitData[2]);
+        }
     }
 }

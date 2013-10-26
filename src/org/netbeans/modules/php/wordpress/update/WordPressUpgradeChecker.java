@@ -39,54 +39,18 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress;
+package org.netbeans.modules.php.wordpress.update;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.Action;
-import org.netbeans.modules.php.api.util.StringUtils;
-import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
-import org.netbeans.modules.php.spi.framework.actions.RunCommandAction;
-import org.netbeans.modules.php.wordpress.commands.WordPressCli;
-import org.netbeans.modules.php.wordpress.ui.actions.RefreshCodeCompletionAction;
-import org.netbeans.modules.php.wordpress.ui.actions.CreatePluginAction;
-import org.netbeans.modules.php.wordpress.ui.actions.CreateThemeAction;
-import org.netbeans.modules.php.wordpress.ui.actions.WordPressRunCommandAction;
-import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
-import org.openide.util.NbBundle;
+import org.netbeans.modules.php.api.phpmodule.PhpModule;
 
 /**
  *
  * @author junichi11
  */
-public class WordPressActionsExtender extends PhpModuleActionsExtender {
+public interface WordPressUpgradeChecker {
 
-    @NbBundle.Messages("LBL_MenuName=WordPress")
-    @Override
-    public String getMenuName() {
-        return Bundle.LBL_MenuName();
-    }
+    public boolean hasUpgrade(PhpModule phpModule);
 
-    @Override
-    public RunCommandAction getRunCommandAction() {
-        // If wp-cli path is invalid, run command action is not added to context menu.
-        String wpCliPath = WordPressOptions.getInstance().getWpCliPath();
-        if (StringUtils.isEmpty(wpCliPath)) {
-            return null;
-        }
-        String error = WordPressCli.validate(wpCliPath);
-        if (error != null) {
-            return null;
-        }
-        return WordPressRunCommandAction.getInstance();
-    }
+    public void notifyUpgrade(PhpModule phpModule);
 
-    @Override
-    public List<? extends Action> getActions() {
-        List<Action> actions = new ArrayList<Action>();
-        actions.add(CreateThemeAction.getInstance());
-        actions.add(CreatePluginAction.getInstance());
-        actions.add(new RefreshCodeCompletionAction());
-        return actions;
-    }
 }
