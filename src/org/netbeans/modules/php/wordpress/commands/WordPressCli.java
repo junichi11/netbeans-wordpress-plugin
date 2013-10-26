@@ -95,11 +95,15 @@ public final class WordPressCli {
     private static final String DOWNLOAD_COMMAND = "download"; // NOI18N
     private static final String UPDATE_COMMAND = "update"; // NOI18N
     private static final String UPDATE_DB_COMMAND = "update-db"; // NOI18N
+    private static final String PLUGIN_COMMAND = "plugin"; // NOI18N
+    private static final String THEME_COMMAND = "theme"; // NOI18N
+    private static final String STATUS_COMMAND = "status"; // NOI18N
 
     // params
     private static final String HELP_PARAM = "--help"; // NOI18N
     public static final String LOCALE_PARAM = "--locale=%s"; // NOI18N
     public static final String VERSION_PARAM = "--version=%s"; // NOI18N
+    public static final String ALL_PARAM = "--all"; // NOI18N
 
     // XXX default?
     private final List<String> DEFAULT_PARAMS = Collections.emptyList();
@@ -177,6 +181,36 @@ public final class WordPressCli {
     }
 
     /**
+     * Plugin update.
+     *
+     * @param phpModule
+     * @param options --all, --version --dry-run
+     * @return
+     */
+    public Future<Integer> pluginUpdate(PhpModule phpModule, List<String> options) {
+        ArrayList<String> allCommands = new ArrayList<String>(options.size() + 2);
+        allCommands.add(PLUGIN_COMMAND);
+        allCommands.add(UPDATE_COMMAND);
+        allCommands.addAll(options);
+        return runCommand(phpModule, allCommands);
+    }
+
+    /**
+     * Theme update.
+     *
+     * @param phpModule
+     * @param options --all, --version --dry-run
+     * @return
+     */
+    public Future<Integer> themeUpdate(PhpModule phpModule, List<String> options) {
+        ArrayList<String> allCommands = new ArrayList<String>(options.size() + 2);
+        allCommands.add(THEME_COMMAND);
+        allCommands.add(UPDATE_COMMAND);
+        allCommands.addAll(options);
+        return runCommand(phpModule, allCommands);
+    }
+
+    /**
      * Get wp-cli version.
      *
      * @return version
@@ -196,6 +230,48 @@ public final class WordPressCli {
             Exceptions.printStackTrace(ex);
         }
         return helpLineProcessor.getHelp();
+    }
+
+    /**
+     * Get plugin status.
+     *
+     * @return result
+     */
+    public List<String> getPluginStatus(PhpModule phpModule) {
+        return getStatus(PLUGIN_COMMAND, phpModule);
+    }
+
+    /**
+     * Get theme status.
+     *
+     * @return result
+     */
+    public List<String> getThemeStatus(PhpModule phpModule) {
+        return getStatus(THEME_COMMAND, phpModule);
+    }
+
+    /**
+     * Get status.
+     *
+     * @param command command name
+     * @return result
+     */
+    private List<String> getStatus(String command, PhpModule phpModule) {
+        HelpLineProcessor lineProcessor = new HelpLineProcessor();
+        Future<Integer> result = createExecutable()
+                .workDir(FileUtil.toFile(phpModule.getSourceDirectory()))
+                .additionalParameters(Arrays.asList(command, STATUS_COMMAND))
+                .run(getSilentDescriptor(), getOutputProcessorFactory(lineProcessor));
+        try {
+            if (result != null) {
+                result.get();
+            }
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return lineProcessor.asLines();
     }
 
     /**

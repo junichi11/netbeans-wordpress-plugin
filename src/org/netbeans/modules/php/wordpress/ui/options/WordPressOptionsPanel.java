@@ -42,6 +42,8 @@
 package org.netbeans.modules.php.wordpress.ui.options;
 
 import java.awt.Cursor;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -112,6 +114,15 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
                 fireChange();
             }
         });
+        wpCliVersionLabel.addPropertyChangeListener(new PropertyChangeListener() {
+
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                boolean isEnabled = !wpCliVersionLabel.getText().isEmpty();
+                checkPluginNewVersionCheckBox.setEnabled(isEnabled);
+                checkThemeNewVersionCheckBox.setEnabled(isEnabled);
+            }
+        });
     }
 
     public String getWpLocale() {
@@ -128,6 +139,22 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
 
     public void setCheckCoreNewVersion(boolean check) {
         checkCoreNewVersionCheckBox.setSelected(check);
+    }
+
+    public boolean isCheckPluginNewVersion() {
+        return checkPluginNewVersionCheckBox.isSelected();
+    }
+
+    public void setCheckPluginNewVersion(boolean check) {
+        checkPluginNewVersionCheckBox.setSelected(check);
+    }
+
+    public boolean isCheckThemeNewVersion() {
+        return checkThemeNewVersionCheckBox.isSelected();
+    }
+
+    public void setCheckThemeNewVersion(boolean check) {
+        checkThemeNewVersionCheckBox.setSelected(check);
     }
 
     public String getWpCliPath() {
@@ -250,6 +277,8 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         newProjectSeparator1 = new javax.swing.JSeparator();
         checkCoreNewVersionCheckBox = new javax.swing.JCheckBox();
         checkNewVersionLabel = new javax.swing.JLabel();
+        checkPluginNewVersionCheckBox = new javax.swing.JCheckBox();
+        checkThemeNewVersionCheckBox = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(newProjectLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.newProjectLabel.text")); // NOI18N
 
@@ -328,6 +357,10 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(checkNewVersionLabel, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.checkNewVersionLabel.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(checkPluginNewVersionCheckBox, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.checkPluginNewVersionCheckBox.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(checkThemeNewVersionCheckBox, org.openide.util.NbBundle.getMessage(WordPressOptionsPanel.class, "WordPressOptionsPanel.checkThemeNewVersionCheckBox.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -395,7 +428,7 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
                                         .addComponent(wpCliDownloadVersionLabel)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(wpCliDownloadVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 66, Short.MAX_VALUE)))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -407,14 +440,17 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
                                 .addGap(12, 12, 12)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(checkNewVersionLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(checkCoreNewVersionCheckBox))
-                                    .addGroup(layout.createSequentialGroup()
                                         .addComponent(localeLabel)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(localeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                                        .addComponent(localeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(checkNewVersionLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(checkCoreNewVersionCheckBox)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(checkPluginNewVersionCheckBox)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(checkThemeNewVersionCheckBox)))))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -431,7 +467,9 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(checkCoreNewVersionCheckBox)
-                    .addComponent(checkNewVersionLabel))
+                    .addComponent(checkNewVersionLabel)
+                    .addComponent(checkPluginNewVersionCheckBox)
+                    .addComponent(checkThemeNewVersionCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -558,6 +596,8 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
     void load() {
         setWpLocale(getOptions().getWpLocale());
         setCheckCoreNewVersion(getOptions().isCheckCoreNewVersion());
+        setCheckPluginNewVersion(getOptions().isCheckPluginNewVersion());
+        setCheckThemeNewVersion(getOptions().isCheckThemeNewVersion());
         setUrl(getOptions().getDownloadUrl());
         setLocalPath(getOptions().getLocalFilePath());
         wpCliPath = getOptions().getWpCliPath();
@@ -571,6 +611,8 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
     void store() {
         getOptions().setWpLocale(getWpLocale());
         getOptions().setCheckCoreNewVersion(isCheckCoreNewVersion());
+        getOptions().setCheckPluginNewVersion(isCheckPluginNewVersion());
+        getOptions().setCheckThemeNewVersion(isCheckThemeNewVersion());
         String url = downloadUrlTextField.getText();
         String localFile = localFileTextField.getText();
 
@@ -598,6 +640,8 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         String newWpCliPath = getWpCliPath();
         if (StringUtils.isEmpty(newWpCliPath)) {
             getOptions().setWpCliCommandList(""); // NOI18N
+            getOptions().setCheckPluginNewVersion(false);
+            getOptions().setCheckThemeNewVersion(false);
         }
         if (!StringUtils.isEmpty(newWpCliPath) && !newWpCliPath.equals(wpCliPath)) {
             wpCliPath = newWpCliPath;
@@ -652,6 +696,8 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JButton browseButton;
     private javax.swing.JCheckBox checkCoreNewVersionCheckBox;
     private javax.swing.JLabel checkNewVersionLabel;
+    private javax.swing.JCheckBox checkPluginNewVersionCheckBox;
+    private javax.swing.JCheckBox checkThemeNewVersionCheckBox;
     private javax.swing.JLabel downloadUrlLabel;
     private javax.swing.JTextField downloadUrlTextField;
     private javax.swing.JLabel errorLabel;
