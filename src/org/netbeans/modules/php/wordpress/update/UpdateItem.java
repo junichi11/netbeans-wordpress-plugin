@@ -39,18 +39,57 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress;
-
-import org.netbeans.modules.php.api.phpmodule.PhpModule;
+package org.netbeans.modules.php.wordpress.update;
 
 /**
+ * depend on wp-cli.
  *
  * @author junichi11
  */
-public interface WordPressUpgradeChecker {
+public class UpdateItem {
 
-    public boolean hasUpgrade(PhpModule phpModule);
+    private final String status;
+    private final String name;
+    private final String version;
 
-    public void notifyUpgrade(PhpModule phpModule);
+    public UpdateItem(String status, String name, String version) {
+        this.status = status;
+        this.name = name;
+        this.version = version;
+    }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public boolean isUpdate() {
+        if (status == null) {
+            return false;
+        }
+        return status.startsWith("U"); // NOI18N
+    }
+
+    public static class Factory {
+
+        public Factory() {
+        }
+
+        public static UpdateItem create(String data) {
+            data = data.trim();
+            data = data.replaceAll("\\s +", " "); // NOI18N
+            String[] splitData = data.split(" "); // NOI18N
+            if (splitData.length != 3) {
+                return null;
+            }
+            return new UpdateItem(splitData[0], splitData[1], splitData[2]);
+        }
+    }
 }

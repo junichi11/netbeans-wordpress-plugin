@@ -39,7 +39,7 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress;
+package org.netbeans.modules.php.wordpress.update;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,6 +49,7 @@ import java.util.List;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.modules.php.wordpress.WordPress;
 import org.netbeans.modules.php.wordpress.commands.WordPressCli;
 import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
 import org.openide.DialogDisplayer;
@@ -60,7 +61,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = WordPressUpgradeChecker.class)
-public class WordPressPluginUpgradeChecker implements WordPressUpgradeChecker {
+public class WordPressThemeUpgradeChecker implements WordPressUpgradeChecker {
 
     private boolean hasUpgrade = false;
     private ArrayList<UpdateItem> items;
@@ -68,7 +69,7 @@ public class WordPressPluginUpgradeChecker implements WordPressUpgradeChecker {
     @Override
     public boolean hasUpgrade(PhpModule phpModule) {
         WordPressOptions options = WordPressOptions.getInstance();
-        if (StringUtils.isEmpty(options.getWpCliPath()) || !options.isCheckPluginNewVersion()) {
+        if (StringUtils.isEmpty(options.getWpCliPath()) || !options.isCheckThemeNewVersion()) {
             return false;
         }
         for (UpdateItem item : getUpdateItems(phpModule)) {
@@ -82,10 +83,10 @@ public class WordPressPluginUpgradeChecker implements WordPressUpgradeChecker {
     }
 
     @NbBundle.Messages({
-        "WordPressPluginUpgradeChecker.notify.title=Notification: New plugin version is available",
+        "WordPressThemeUpgradeChecker.notify.title=Notification: New theme version is available",
         "# {0} - status",
         "# {1} - project",
-        "WordPressPluginUpgradeChecker.notify.detail={0} ({1})",})
+        "WordPressThemeUpgradeChecker.notify.detail={0} ({1})",})
     @Override
     public void notifyUpgrade(PhpModule phpModule) {
         if (!hasUpgrade) {
@@ -99,10 +100,10 @@ public class WordPressPluginUpgradeChecker implements WordPressUpgradeChecker {
             sb.append(String.format(" %s:%s", item.getName(), item.getVersion())); // NOI18N
         }
         NotificationDisplayer.getDefault().notify(
-                Bundle.WordPressPluginUpgradeChecker_notify_title(),
+                Bundle.WordPressThemeUpgradeChecker_notify_title(),
                 ImageUtilities.loadImageIcon(WordPress.WP_ICON_16, false),
-                Bundle.WordPressPluginUpgradeChecker_notify_detail(sb.toString(), phpModule.getDisplayName()),
-                new PluginUpdateActionListener(phpModule)
+                Bundle.WordPressThemeUpgradeChecker_notify_detail(sb.toString(), phpModule.getDisplayName()),
+                new ThemeUpdateActionListener(phpModule)
         );
     }
 
@@ -111,7 +112,7 @@ public class WordPressPluginUpgradeChecker implements WordPressUpgradeChecker {
         try {
             // get result
             WordPressCli wpCli = WordPressCli.getDefault(false);
-            List<String> lines = wpCli.getPluginStatus(phpModule);
+            List<String> lines = wpCli.getThemeStatus(phpModule);
             boolean isStart = false;
             for (String line : lines) {
                 if (line.isEmpty()) {
@@ -136,15 +137,15 @@ public class WordPressPluginUpgradeChecker implements WordPressUpgradeChecker {
     }
 
     //~ Inner classes
-    private static class PluginUpdateActionListener implements ActionListener {
+    private static class ThemeUpdateActionListener implements ActionListener {
 
         private final PhpModule phpModule;
 
-        public PluginUpdateActionListener(PhpModule phpModule) {
+        public ThemeUpdateActionListener(PhpModule phpModule) {
             this.phpModule = phpModule;
         }
 
-        @NbBundle.Messages("PluginUpdateActionListener.comfirmation=Do you want to update? (run wp plugin update --all)")
+        @NbBundle.Messages("ThemeUpdateActionListener.comfirmation=Do you want to update? (run wp theme update --all)")
         @Override
         public void actionPerformed(ActionEvent e) {
             if (StringUtils.isEmpty(WordPressOptions.getInstance().getWpCliPath())) {
@@ -153,16 +154,16 @@ public class WordPressPluginUpgradeChecker implements WordPressUpgradeChecker {
 
             // confirmation
             NotifyDescriptor.Confirmation comfirmation = new NotifyDescriptor.Confirmation(
-                    Bundle.PluginUpdateActionListener_comfirmation(),
+                    Bundle.ThemeUpdateActionListener_comfirmation(),
                     NotifyDescriptor.OK_CANCEL_OPTION
             );
             if (DialogDisplayer.getDefault().notify(comfirmation) != NotifyDescriptor.OK_OPTION) {
                 return;
             }
             try {
-                // plugin update --all
+                // theme update --all
                 WordPressCli wpCli = WordPressCli.getDefault(true);
-                wpCli.pluginUpdate(phpModule, Arrays.asList(WordPressCli.ALL_PARAM));
+                wpCli.themeUpdate(phpModule, Arrays.asList(WordPressCli.ALL_PARAM));
             } catch (InvalidPhpExecutableException ex) {
                 Exceptions.printStackTrace(ex);
             }

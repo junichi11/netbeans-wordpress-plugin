@@ -39,7 +39,7 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress;
+package org.netbeans.modules.php.wordpress.update;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -53,6 +53,8 @@ import java.util.logging.Logger;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.modules.php.wordpress.WordPress;
+import org.netbeans.modules.php.wordpress.WordPressVersion;
 import org.netbeans.modules.php.wordpress.commands.WordPressCli;
 import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
 import org.netbeans.modules.php.wordpress.wpapis.WordPressVersionCheckApi;
@@ -137,19 +139,19 @@ public final class WordPressCoreUpgradeChecker implements WordPressUpgradeChecke
     }
 
     @NbBundle.Messages({
-        "WordPressUpgradeChecker.core.notify.title=Notification: New version is available",
+        "WordPressCoreUpgradeChecker.core.notify.title=Notification: New version is available",
         "# {0} - version number",
         "# {1} - display name",
-        "WordPressUpgradeChecker.core.notify.detail=New version is available: {0} ({1})",})
+        "WordPressCoreUpgradeChecker.core.notify.detail=New version is available: {0} ({1})",})
     @Override
     public void notifyUpgrade(PhpModule phpModule) {
         if (StringUtils.isEmpty(upgradeVersionNumber)) {
             return;
         }
         NotificationDisplayer.getDefault().notify(
-                Bundle.WordPressUpgradeChecker_core_notify_title(),
+                Bundle.WordPressCoreUpgradeChecker_core_notify_title(),
                 ImageUtilities.loadImageIcon(WordPress.WP_ICON_16, false),
-                Bundle.WordPressUpgradeChecker_core_notify_detail(upgradeVersionNumber, phpModule.getDisplayName()),
+                Bundle.WordPressCoreUpgradeChecker_core_notify_detail(upgradeVersionNumber, phpModule.getDisplayName()),
                 new CoreUpdateActionListener(phpModule)
         );
     }

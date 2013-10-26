@@ -41,6 +41,7 @@
  */
 package org.netbeans.modules.php.wordpress;
 
+import org.netbeans.modules.php.wordpress.update.WordPressUpgradeChecker;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
