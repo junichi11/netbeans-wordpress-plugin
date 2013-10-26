@@ -83,7 +83,8 @@ public class WordPressPluginUpgradeChecker implements WordPressUpgradeChecker {
     }
 
     @NbBundle.Messages({
-        "WordPressPluginUpgradeChecker.notify.title=Notification: New plugin version is available",
+        "# {0} - project",
+        "WordPressPluginUpgradeChecker.notify.title=Notification({0}): New plugin version is available",
         "# {0} - status",
         "# {1} - project",
         "WordPressPluginUpgradeChecker.notify.detail={0} ({1})",})
@@ -100,7 +101,7 @@ public class WordPressPluginUpgradeChecker implements WordPressUpgradeChecker {
             sb.append(String.format(" %s:%s", item.getName(), item.getVersion())); // NOI18N
         }
         NotificationDisplayer.getDefault().notify(
-                Bundle.WordPressPluginUpgradeChecker_notify_title(),
+                Bundle.WordPressPluginUpgradeChecker_notify_title(phpModule.getDisplayName()),
                 ImageUtilities.loadImageIcon(WordPress.WP_ICON_16, false),
                 Bundle.WordPressPluginUpgradeChecker_notify_detail(sb.toString(), phpModule.getDisplayName()),
                 new PluginUpdateActionListener(phpModule)

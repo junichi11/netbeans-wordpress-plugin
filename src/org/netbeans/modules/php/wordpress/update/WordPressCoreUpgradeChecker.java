@@ -139,17 +139,18 @@ public final class WordPressCoreUpgradeChecker implements WordPressUpgradeChecke
     }
 
     @NbBundle.Messages({
-        "WordPressCoreUpgradeChecker.core.notify.title=Notification: New version is available",
+        "# {0} - project",
+        "WordPressCoreUpgradeChecker.core.notify.title=Notification({0}): New version is available",
         "# {0} - version number",
         "# {1} - display name",
-        "WordPressCoreUpgradeChecker.core.notify.detail=New version is available: {0} ({1})",})
+        "WordPressCoreUpgradeChecker.core.notify.detail=New core version is available: {0} ({1})",})
     @Override
     public void notifyUpgrade(PhpModule phpModule) {
         if (StringUtils.isEmpty(upgradeVersionNumber)) {
             return;
         }
         NotificationDisplayer.getDefault().notify(
-                Bundle.WordPressCoreUpgradeChecker_core_notify_title(),
+                Bundle.WordPressCoreUpgradeChecker_core_notify_title(phpModule.getDisplayName()),
                 ImageUtilities.loadImageIcon(WordPress.WP_ICON_16, false),
                 Bundle.WordPressCoreUpgradeChecker_core_notify_detail(upgradeVersionNumber, phpModule.getDisplayName()),
                 new CoreUpdateActionListener(phpModule)

@@ -83,7 +83,8 @@ public class WordPressThemeUpgradeChecker implements WordPressUpgradeChecker {
     }
 
     @NbBundle.Messages({
-        "WordPressThemeUpgradeChecker.notify.title=Notification: New theme version is available",
+        "# {0} - project",
+        "WordPressThemeUpgradeChecker.notify.title=Notification({0}): New theme version is available",
         "# {0} - status",
         "# {1} - project",
         "WordPressThemeUpgradeChecker.notify.detail={0} ({1})",})
@@ -100,7 +101,7 @@ public class WordPressThemeUpgradeChecker implements WordPressUpgradeChecker {
             sb.append(String.format(" %s:%s", item.getName(), item.getVersion())); // NOI18N
         }
         NotificationDisplayer.getDefault().notify(
-                Bundle.WordPressThemeUpgradeChecker_notify_title(),
+                Bundle.WordPressThemeUpgradeChecker_notify_title(phpModule.getDisplayName()),
                 ImageUtilities.loadImageIcon(WordPress.WP_ICON_16, false),
                 Bundle.WordPressThemeUpgradeChecker_notify_detail(sb.toString(), phpModule.getDisplayName()),
                 new ThemeUpdateActionListener(phpModule)
