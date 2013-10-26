@@ -120,8 +120,8 @@ Please see the followings:
 
 ### Upgrade Notification
 
-Check current and latest version number when WordPress project is opened.
-Furthermore, we can upgrade(run core update, core update-db) WordPress with notification window if we are setting wp-cli.
+Check whether new versions (for core, plugin and theme) are available when WordPress project is opened.
+Furthermore, we can upgrade(run core update, core update-db, e.t.c.) WordPress with notification window if we are setting wp-cli.
 
 If you don't want to check that, please uncheck `Check new version when project is opened` at Options.
 
