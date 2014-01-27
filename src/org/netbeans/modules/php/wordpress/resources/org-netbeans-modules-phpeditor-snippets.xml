@@ -43,7 +43,7 @@ Portions Copyrighted 2013 Sun Microsystems, Inc.
 
 <!DOCTYPE codetemplates PUBLIC "-//NetBeans//DTD Editor Code Templates settings 1.0//EN" "http://www.netbeans.org/dtds/EditorCodeTemplates-1_0.dtd">
 <codetemplates>
-    <codetemplate abbreviation="wpph" xml:space="preserve">
+    <codetemplate contexts="wp-code" abbreviation="wpph">
         <code><![CDATA[/*
 Plugin Name: ${name}
 Plugin URI: http://${url}/
@@ -56,7 +56,7 @@ License: ${GPLv2}
 ${cursor}]]></code>
         <description>WordPress Snippet wordpress plugin header</description>
     </codetemplate>
-    <codetemplate abbreviation="wpgpl" xml:space="preserve">
+    <codetemplate contexts="wp-code" abbreviation="wpgpl">
         <code><![CDATA[/*  Copyright ${year} ${author_name} (email : ${email})
 
     This program is free software; you can redistribute it and/or modify
