@@ -382,7 +382,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             }
 
             // check whether project is WordPress
-            PhpModule pmTemp = PhpModule.forFileObject(fileObject);
+            PhpModule pmTemp = PhpModule.Factory.forFileObject(fileObject);
             if (!WPUtils.isWP(pmTemp)) {
                 clearLabel();
                 return;

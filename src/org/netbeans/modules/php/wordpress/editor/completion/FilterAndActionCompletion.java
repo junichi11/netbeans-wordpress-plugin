@@ -256,7 +256,7 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
         actionItems = new ArrayList<WordPressCompletionItem>();
         FileObject filterXml = null;
         FileObject actionXml = null;
-        PhpModule phpModule = PhpModule.inferPhpModule();
+        PhpModule phpModule = PhpModule.Factory.inferPhpModule();
         // TODO improve for each locales
 //        String locale = "";
         // use custom file
