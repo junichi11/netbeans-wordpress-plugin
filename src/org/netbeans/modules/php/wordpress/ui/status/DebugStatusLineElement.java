@@ -109,9 +109,9 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
     private final Lookup.Result<FileObject> result;
     private final JLabel debugLabel = new JLabel(""); // NOI18N
     private final JLabel versionLabel = new JLabel(""); // NOI18N
-    private final DefaultListModel model;
+    private final DefaultListModel<String> model;
     private PhpModule phpModule;
-    private JList list;
+    private JList<String> list;
     private Popup popup;
     private String level = ""; // NOI18N
     private String version = "";  // NOI18N
@@ -126,11 +126,11 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
         result = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
         result.addLookupListener(new LookupListenerImpl());
 
-        model = new DefaultListModel();
+        model = new DefaultListModel<String>();
         for (String debugLv : debugLevel.keySet()) {
             model.addElement(debugLv);
         }
-        list = new JList(model);
+        list = new JList<String>(model);
 
         // add MouseAdapter
         debugLabel.addMouseListener(new MouseAdapter() {
@@ -369,11 +369,11 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
 
         @Override
         public void resultChanged(LookupEvent lookupEvent) {
-            Lookup.Result lookupResult = (Lookup.Result) lookupEvent.getSource();
-            Collection c = lookupResult.allInstances();
+            Lookup.Result<?> lookupResult = (Lookup.Result<?>) lookupEvent.getSource();
+            Collection<?> c = lookupResult.allInstances();
 
             // get FileObject
-            FileObject fileObject = null;
+            FileObject fileObject;
             if (!c.isEmpty()) {
                 fileObject = (FileObject) c.iterator().next();
             } else {

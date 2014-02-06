@@ -67,8 +67,8 @@ public final class DocUtils {
         ad.readLock();
         TokenSequence<PHPTokenId> ts = null;
         try {
-            TokenHierarchy hierarchy = TokenHierarchy.get(doc);
-            ts = (TokenSequence<PHPTokenId>) hierarchy.tokenSequence(PHPTokenId.language());
+            TokenHierarchy<Document> hierarchy = TokenHierarchy.get(doc);
+            ts = hierarchy.tokenSequence(PHPTokenId.language());
         } finally {
             ad.readUnlock();
         }
