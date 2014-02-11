@@ -41,6 +41,7 @@
  */
 package org.netbeans.modules.php.wordpress.customizer;
 
+import org.netbeans.modules.php.wordpress.validators.WordPressCustomizerValidator;
 import java.beans.PropertyChangeEvent;
 import java.util.EnumSet;
 import javax.swing.JComponent;
