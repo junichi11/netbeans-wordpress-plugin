@@ -41,7 +41,6 @@
  */
 package org.netbeans.modules.php.wordpress;
 
-import org.netbeans.modules.php.wordpress.update.WordPressUpgradeChecker;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
@@ -62,6 +61,7 @@ import org.netbeans.modules.php.wordpress.commands.WordPressCommandSupport;
 import org.netbeans.modules.php.wordpress.customizer.WordPressCustomizerExtender;
 import org.netbeans.modules.php.wordpress.editor.WordPressEditorExtender;
 import org.netbeans.modules.php.wordpress.preferences.WordPressPreferences;
+import org.netbeans.modules.php.wordpress.update.WordPressUpgradeChecker;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ImageUtilities;
@@ -179,11 +179,15 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
 
     @Override
     public void phpModuleOpened(PhpModule phpModule) {
-        // check new version
-        Collection<? extends WordPressUpgradeChecker> checkers = Lookup.getDefault().lookupAll(WordPressUpgradeChecker.class);
-        for (WordPressUpgradeChecker checker : checkers) {
-            if (checker.hasUpgrade(phpModule)) {
-                checker.notifyUpgrade(phpModule);
+        // this method is run for not only WordPress projects but also all php projects,
+        // so need check i.e. avoid NPE
+        if (isInPhpModule(phpModule)) {
+            // check new version
+            Collection<? extends WordPressUpgradeChecker> checkers = Lookup.getDefault().lookupAll(WordPressUpgradeChecker.class);
+            for (WordPressUpgradeChecker checker : checkers) {
+                if (checker.hasUpgrade(phpModule)) {
+                    checker.notifyUpgrade(phpModule);
+                }
             }
         }
     }
