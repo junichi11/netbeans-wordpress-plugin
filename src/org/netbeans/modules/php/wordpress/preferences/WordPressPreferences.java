@@ -55,9 +55,18 @@ import org.netbeans.modules.php.editor.indent.FmtOptions;
 public class WordPressPreferences {
 
     private static final List<String> WITHIN_OPTIONS = new ArrayList<String>();
+    private static final String ENABLED = "enabled"; // NOI18N
     private static final String CUSTOM_CONTENT_NAME = "custom-content-name"; // NOI18N
 
     private WordPressPreferences() {
+    }
+
+    public static boolean isEnabled(PhpModule phpModule) {
+        return getPreferences(phpModule).getBoolean(ENABLED, false);
+    }
+
+    public static void setEnabled(PhpModule phpModule, boolean isEnabled) {
+        getPreferences(phpModule).putBoolean(ENABLED, isEnabled);
     }
 
     public static String getCustomContentName(PhpModule phpModule) {

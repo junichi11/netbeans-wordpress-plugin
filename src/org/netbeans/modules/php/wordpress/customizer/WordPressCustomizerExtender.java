@@ -60,8 +60,9 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
 
     private WordPressCustomizerExtenderPanel panel;
     private final PhpModule phpModule;
-    private String originalCustomeContentName;
+    private boolean originalEnabled;
     private boolean isValid;
+    private String originalCustomeContentName;
     private String errorMessage;
 
     public WordPressCustomizerExtender(PhpModule phpModule) {
@@ -132,12 +133,12 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
 
     @Override
     public EnumSet<Change> save(PhpModule pm) {
-        String customContentName = getPanel().getCustomContentName();
-        if (StringUtils.isEmpty(customContentName)) {
-            return null;
+        if (originalEnabled != getPanel().isPluginEnabled()) {
+            WordPressPreferences.setEnabled(phpModule, getPanel().isPluginEnabled());
         }
 
-        if (!originalCustomeContentName.equals(customContentName)) {
+        String customContentName = getPanel().getCustomContentName();
+        if (!StringUtils.isEmpty(customContentName) && !originalCustomeContentName.equals(customContentName)) {
             WordPressPreferences.setCustomContentName(phpModule, customContentName);
         }
 
@@ -147,8 +148,10 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
     private WordPressCustomizerExtenderPanel getPanel() {
         if (panel == null) {
             panel = new WordPressCustomizerExtenderPanel();
+            originalEnabled = WordPressPreferences.isEnabled(phpModule);
             originalCustomeContentName = WordPressPreferences.getCustomContentName(phpModule);
             panel.setCustomContentName(originalCustomeContentName);
+            panel.setComponentsEnabled(originalEnabled);
         }
 
         return panel;

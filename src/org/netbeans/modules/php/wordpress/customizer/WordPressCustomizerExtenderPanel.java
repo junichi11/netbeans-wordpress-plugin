@@ -41,6 +41,7 @@
  */
 package org.netbeans.modules.php.wordpress.customizer;
 
+import java.awt.Component;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -52,6 +53,8 @@ import org.openide.util.ChangeSupport;
  * @author junichi11
  */
 public class WordPressCustomizerExtenderPanel extends JPanel {
+
+    private static final long serialVersionUID = -290290625888827119L;
 
     private final ChangeSupport changeSupport = new ChangeSupport(this);
 
@@ -65,6 +68,14 @@ public class WordPressCustomizerExtenderPanel extends JPanel {
 
     private void init() {
         customContentNameTextField.getDocument().addDocumentListener(new DefaultDocumentListener());
+    }
+
+    public boolean isPluginEnabled() {
+        return enabledCheckBox.isSelected();
+    }
+
+    public void setPluginEnabled(boolean isEnabled) {
+        enabledCheckBox.setSelected(isEnabled);
     }
 
     public String getCustomContentName() {
@@ -87,6 +98,16 @@ public class WordPressCustomizerExtenderPanel extends JPanel {
         changeSupport.fireChange();
     }
 
+    public void setComponentsEnabled(boolean isEnabled) {
+        Component[] components = this.getComponents();
+        for (Component component : components) {
+            if (component == enabledCheckBox) {
+                continue;
+            }
+            component.setEnabled(isEnabled);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -96,8 +117,18 @@ public class WordPressCustomizerExtenderPanel extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        enabledCheckBox = new javax.swing.JCheckBox();
         customContentNameLabel = new javax.swing.JLabel();
         customContentNameTextField = new javax.swing.JTextField();
+
+        setToolTipText(org.openide.util.NbBundle.getMessage(WordPressCustomizerExtenderPanel.class, "WordPressCustomizerExtenderPanel.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(enabledCheckBox, org.openide.util.NbBundle.getMessage(WordPressCustomizerExtenderPanel.class, "WordPressCustomizerExtenderPanel.enabledCheckBox.text")); // NOI18N
+        enabledCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enabledCheckBoxActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(customContentNameLabel, org.openide.util.NbBundle.getMessage(WordPressCustomizerExtenderPanel.class, "WordPressCustomizerExtenderPanel.customContentNameLabel.text")); // NOI18N
 
@@ -109,7 +140,9 @@ public class WordPressCustomizerExtenderPanel extends JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(customContentNameLabel)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(customContentNameLabel)
+                    .addComponent(enabledCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(customContentNameTextField)
                 .addContainerGap())
@@ -118,6 +151,8 @@ public class WordPressCustomizerExtenderPanel extends JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(enabledCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(customContentNameLabel)
                     .addComponent(customContentNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -125,9 +160,14 @@ public class WordPressCustomizerExtenderPanel extends JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void enabledCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enabledCheckBoxActionPerformed
+        setComponentsEnabled(enabledCheckBox.isSelected());
+    }//GEN-LAST:event_enabledCheckBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel customContentNameLabel;
     private javax.swing.JTextField customContentNameTextField;
+    private javax.swing.JCheckBox enabledCheckBox;
     // End of variables declaration//GEN-END:variables
 
     private class DefaultDocumentListener implements DocumentListener {
