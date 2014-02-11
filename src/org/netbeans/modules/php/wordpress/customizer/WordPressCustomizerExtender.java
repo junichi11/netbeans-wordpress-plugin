@@ -41,6 +41,7 @@
  */
 package org.netbeans.modules.php.wordpress.customizer;
 
+import java.beans.PropertyChangeEvent;
 import java.util.EnumSet;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
@@ -133,8 +134,12 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
 
     @Override
     public EnumSet<Change> save(PhpModule pm) {
-        if (originalEnabled != getPanel().isPluginEnabled()) {
-            WordPressPreferences.setEnabled(phpModule, getPanel().isPluginEnabled());
+        boolean isEnabled = getPanel().isPluginEnabled();
+        if (originalEnabled != isEnabled) {
+            WordPressPreferences.setEnabled(phpModule, isEnabled);
+            if (isEnabled) {
+                pm.notifyPropertyChanged(new PropertyChangeEvent(this, PhpModule.PROPERTY_FRAMEWORKS, null, null));
+            }
         }
 
         String customContentName = getPanel().getCustomContentName();
@@ -150,6 +155,7 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
             panel = new WordPressCustomizerExtenderPanel();
             originalEnabled = WordPressPreferences.isEnabled(phpModule);
             originalCustomeContentName = WordPressPreferences.getCustomContentName(phpModule);
+            panel.setPluginEnabled(originalEnabled);
             panel.setCustomContentName(originalCustomeContentName);
             panel.setComponentsEnabled(originalEnabled);
         }
