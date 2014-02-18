@@ -1,8 +1,13 @@
-# About
+# NetBeans WordPress Plugin
+
 This is NetBeans plugin for WordPress.
 
+## How to enable
+
+`enabled` option is unchecked as default. Please check it on `project properties > Frameworks > WordPress`
+
 ## Environment
-- NetBeans 7.3+
+- NetBeans 8.0+
 - WordPress 3.5+
 
 ## Features
