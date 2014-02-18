@@ -71,26 +71,44 @@ public class WPFileUtils {
     public static final String WP_ADMIN = "wp-admin"; // NOI18N
     private static final String WP_VERSION_PHP = "wp-includes/version.php"; // NOI18N
 
+    /**
+     * @deprecated instead, use {@code WordPressModule}
+     */
     public static FileObject getPluginsDirectory(PhpModule phpModule) {
         return getDirectory(phpModule, String.format(WP_PLUGINS, WordPressPreferences.getCustomContentName(phpModule)));
     }
 
+    /**
+     * @deprecated instead, use {@code WordPressModule}
+     */
     public static FileObject getThemesDirectory(PhpModule phpModule) {
         return getDirectory(phpModule, String.format(WP_THEMES, WordPressPreferences.getCustomContentName(phpModule)));
     }
 
+    /**
+     * @deprecated instead, use {@code WordPressModule}
+     */
     public static FileObject getIncludesDirectory(PhpModule phpModule) {
         return getDirectory(phpModule, WP_INCLUDES);
     }
 
+    /**
+     * @deprecated instead, use {@code WordPressModule}
+     */
     public static FileObject getIncludesDirectory(PhpModule phpModule, String path) {
         return getDirectory(phpModule, WP_INCLUDES + "/" + path); // NOI18N
     }
 
+    /**
+     * @deprecated instead, use {@code WordPressModule}
+     */
     public static FileObject getAdminDirectory(PhpModule phpModule) {
         return getDirectory(phpModule, WP_ADMIN);
     }
 
+    /**
+     * @deprecated instead, use {@code WordPressModule}
+     */
     public static FileObject getDirectory(PhpModule phpModule, String path) {
         if (phpModule == null) {
             return null;
@@ -104,6 +122,9 @@ public class WPFileUtils {
 
     }
 
+    /**
+     * @deprecated instead, use {@code WordPressModule}
+     */
     public static FileObject getVersionFile(PhpModule phpModule) {
         return getDirectory(phpModule, WP_VERSION_PHP);
     }
