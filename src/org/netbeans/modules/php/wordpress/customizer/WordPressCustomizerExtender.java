@@ -41,7 +41,6 @@
  */
 package org.netbeans.modules.php.wordpress.customizer;
 
-import org.netbeans.modules.php.wordpress.validators.WordPressCustomizerValidator;
 import java.beans.PropertyChangeEvent;
 import java.util.EnumSet;
 import javax.swing.JComponent;
@@ -50,7 +49,9 @@ import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.netbeans.modules.php.spi.framework.PhpModuleCustomizerExtender;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule;
 import org.netbeans.modules.php.wordpress.preferences.WordPressPreferences;
+import org.netbeans.modules.php.wordpress.validators.WordPressCustomizerValidator;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
@@ -138,9 +139,8 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
         boolean isEnabled = getPanel().isPluginEnabled();
         if (originalEnabled != isEnabled) {
             WordPressPreferences.setEnabled(phpModule, isEnabled);
-            if (isEnabled) {
-                pm.notifyPropertyChanged(new PropertyChangeEvent(this, PhpModule.PROPERTY_FRAMEWORKS, null, null));
-            }
+            WordPressModule wpModule = WordPressModule.Factory.forPhpModule(phpModule);
+            wpModule.notifyPropertyChanged(new PropertyChangeEvent(this, WordPressModule.PROPERTY_CHANGE_WP, null, null));
         }
 
         String customContentName = getPanel().getCustomContentName();

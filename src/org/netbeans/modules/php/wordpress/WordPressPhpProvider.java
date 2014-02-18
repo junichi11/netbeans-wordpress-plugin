@@ -65,6 +65,7 @@ import org.netbeans.modules.php.spi.framework.commands.FrameworkCommandSupport;
 import org.netbeans.modules.php.wordpress.commands.WordPressCommandSupport;
 import org.netbeans.modules.php.wordpress.customizer.WordPressCustomizerExtender;
 import org.netbeans.modules.php.wordpress.editor.WordPressEditorExtender;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule;
 import org.netbeans.modules.php.wordpress.preferences.WordPressPreferences;
 import org.netbeans.modules.php.wordpress.update.WordPressUpgradeChecker;
 import org.netbeans.modules.php.wordpress.validators.WordPressModuleValidator;
@@ -172,6 +173,11 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
         return new WordPressEditorExtender();
     }
 
+    @Override
+    public void phpModuleClosed(PhpModule phpModule) {
+        WordPressModule.Factory.remove(phpModule);
+    }
+
     @NbBundle.Messages({
         "# {0} - name",
         "WordPressPhpProvider.autoditection=WordPress autoditection : {0}",
@@ -238,6 +244,8 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
             @Override
             public void actionPerformed(ActionEvent e) {
                 WordPressPreferences.setEnabled(phpModule, true);
+                WordPressModule module = WordPressModule.Factory.forPhpModule(phpModule);
+                module.notifyPropertyChanged(new PropertyChangeEvent(this, WordPressModule.PROPERTY_CHANGE_WP, null, null));
                 phpModule.notifyPropertyChanged(new PropertyChangeEvent(this, PhpModule.PROPERTY_FRAMEWORKS, null, null));
                 notification.clear();
             }
