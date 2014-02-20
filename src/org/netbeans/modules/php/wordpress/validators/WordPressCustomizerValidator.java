@@ -57,22 +57,28 @@ public final class WordPressCustomizerValidator {
     private final ValidationResult result = new ValidationResult();
 
     @NbBundle.Messages({
-        "WordPressCustomizerValidator.wordpress.dir.invalid=Project might be broken...",
-        "WordPressCustomizerValidator.wordpress.content.name.invalid=Existing directory name must be set.",
+        "# {0} - directory name",
+        "WordPressCustomizerValidator.wordpress.dir.invalid=Existing {0} directory name must be set.",
+        "WordPressCustomizerValidator.wordpress.source.dir.invalid=Project might be broken...",
         "WordPressCustomizerValidator.wordpress.content.name.contains.shash=The name must not contain slash."
     })
-    public WordPressCustomizerValidator validateWpContent(@NonNull PhpModule phpModule, String name) {
+    public WordPressCustomizerValidator validateWpContent(@NonNull PhpModule phpModule, FileObject wordPressRoot, String name) {
         FileObject sourceDirectory = phpModule.getSourceDirectory();
         if (sourceDirectory == null) {
-            result.addWarning(new ValidationResult.Message("wordpress.dir", Bundle.WordPressCustomizerValidator_wordpress_dir_invalid())); // NOI18N
+            result.addWarning(new ValidationResult.Message("wordpress.dir", Bundle.WordPressCustomizerValidator_wordpress_source_dir_invalid())); // NOI18N
             return this;
         }
 
-        FileObject wpContent = sourceDirectory.getFileObject(name);
+        if (wordPressRoot == null) {
+            result.addWarning(new ValidationResult.Message("wordpress.dir", Bundle.WordPressCustomizerValidator_wordpress_dir_invalid("WordPress Root"))); // NOI18N
+            return this;
+        }
+
+        FileObject wpContent = wordPressRoot.getFileObject(name);
         if (wpContent == null
                 || !wpContent.isFolder()
                 || StringUtils.isEmpty(name)) {
-            result.addWarning(new ValidationResult.Message("wordpress.content.name", Bundle.WordPressCustomizerValidator_wordpress_content_name_invalid())); // NOI18N
+            result.addWarning(new ValidationResult.Message("wordpress.content.name", Bundle.WordPressCustomizerValidator_wordpress_dir_invalid("content"))); // NOI18N
             return this;
         }
 
@@ -81,6 +87,32 @@ public final class WordPressCustomizerValidator {
             return this;
         }
 
+        return this;
+    }
+
+    public WordPressCustomizerValidator validateWordPressRootDirectory(@NonNull PhpModule phpModule, @NonNull String path) {
+        return validateDirectory(phpModule, path, "WordPress Root"); // NOI18N
+    }
+
+    public WordPressCustomizerValidator validatePluginsDirectory(@NonNull PhpModule phpModule, @NonNull String path) {
+        return validateDirectory(phpModule, path, "plugins"); // NOI18N
+    }
+
+    public WordPressCustomizerValidator validateThemesDirectory(@NonNull PhpModule phpModule, @NonNull String path) {
+        return validateDirectory(phpModule, path, "themes"); // NOI18N
+    }
+
+    private WordPressCustomizerValidator validateDirectory(PhpModule phpModule, String path, String dirname) {
+        FileObject sourceDirectory = phpModule.getSourceDirectory();
+        if (sourceDirectory == null) {
+            result.addWarning(new ValidationResult.Message("wordpress.dir", Bundle.WordPressCustomizerValidator_wordpress_source_dir_invalid())); // NOI18N
+            return this;
+        }
+
+        FileObject targetDirectory = sourceDirectory.getFileObject(path);
+        if (targetDirectory == null) {
+            result.addWarning(new ValidationResult.Message("wordpress.dir", Bundle.WordPressCustomizerValidator_wordpress_dir_invalid(dirname)));
+        }
         return this;
     }
 

@@ -41,8 +41,11 @@
  */
 package org.netbeans.modules.php.wordpress.modules;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.wordpress.preferences.WordPressPreferences;
 import static org.netbeans.modules.php.wordpress.util.WPFileUtils.WP_ADMIN;
 import static org.netbeans.modules.php.wordpress.util.WPFileUtils.WP_INCLUDES;
@@ -59,6 +62,7 @@ public class WordPress3ModuleImpl extends WordPressModuleImpl {
     private FileObject contentDirectory;
     private FileObject wordPressRootDirectory;
     private final PhpModule phpModule;
+    private static final Logger LOGGER = Logger.getLogger(WordPress3ModuleImpl.class.getName());
 
     public WordPress3ModuleImpl(@NonNull PhpModule phpModule) {
         this.phpModule = phpModule;
@@ -156,12 +160,42 @@ public class WordPress3ModuleImpl extends WordPressModuleImpl {
             return;
         }
         String contentName = WordPressPreferences.getCustomContentName(phpModule);
-        wordPressRootDirectory = sourceDirectory;
+        String wordPressRootPath = WordPressPreferences.getWordPressRootPath(phpModule);
+        if (StringUtils.isEmpty(wordPressRootPath)) {
+            wordPressRootDirectory = sourceDirectory;
+        } else {
+            wordPressRootDirectory = sourceDirectory.getFileObject(wordPressRootPath);
+        }
+        if (wordPressRootDirectory == null) {
+            if (WordPressPreferences.isEnabled(phpModule)) {
+                LOGGER.log(Level.WARNING, "WordPress Root is invalid");
+            }
+            return;
+        }
         contentDirectory = wordPressRootDirectory.getFileObject(contentName);
-        pluginsDirectory = wordPressRootDirectory.getFileObject(String.format(WP_PLUGINS, contentName));
-        themesDirectory = wordPressRootDirectory.getFileObject(String.format(WP_THEMES, contentName));
         includesDirectory = wordPressRootDirectory.getFileObject(WP_INCLUDES);
         adminDirectory = wordPressRootDirectory.getFileObject(WP_ADMIN);
+
+        constructPluginsDirectory(sourceDirectory, contentName);
+        constructThemesDirectory(sourceDirectory, contentName);
+    }
+
+    private void constructPluginsDirectory(FileObject sourceDirectory, String contentName) {
+        String pluginsPath = WordPressPreferences.getPluginsPath(phpModule);
+        if (StringUtils.isEmpty(pluginsPath)) {
+            pluginsDirectory = wordPressRootDirectory.getFileObject(String.format(WP_PLUGINS, contentName));
+        } else {
+            pluginsDirectory = sourceDirectory.getFileObject(pluginsPath);
+        }
+    }
+
+    private void constructThemesDirectory(FileObject sourceDirectory, String contentName) {
+        String themesPath = WordPressPreferences.getThemesPath(phpModule);
+        if (StringUtils.isEmpty(themesPath)) {
+            themesDirectory = wordPressRootDirectory.getFileObject(String.format(WP_THEMES, contentName));
+        } else {
+            themesDirectory = sourceDirectory.getFileObject(themesPath);
+        }
     }
 
 }

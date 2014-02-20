@@ -125,9 +125,10 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
     @Override
     public File[] getConfigurationFiles(PhpModule pm) {
         List<File> files = new LinkedList<File>();
-        FileObject sourceDirectory = pm.getSourceDirectory();
-        if (sourceDirectory != null) {
-            FileObject config = sourceDirectory.getFileObject("wp-config.php"); // NOI18N
+        WordPressModule wpModuel = WordPressModule.Factory.forPhpModule(pm);
+        FileObject wordPressRoot = wpModuel.getWordPressRootDirecotry();
+        if (wordPressRoot != null) {
+            FileObject config = wordPressRoot.getFileObject("wp-config.php"); // NOI18N
             if (config != null) {
                 files.add(FileUtil.toFile(config));
             }

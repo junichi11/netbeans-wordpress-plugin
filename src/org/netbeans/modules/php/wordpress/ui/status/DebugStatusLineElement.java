@@ -72,8 +72,9 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.wordpress.WordPress;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule.DIR_TYPE;
 import org.netbeans.modules.php.wordpress.util.Charset;
-import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
 import org.openide.awt.StatusLineElementProvider;
 import org.openide.cookies.EditorCookie;
@@ -104,7 +105,6 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
     private static final String VERSION_REGEX = "^\\$wp_version\\s*=\\s*'(.+)';$"; // NOI18N
     private static final Map<String, String> debugLevel = new HashMap<String, String>();
     private static final String WP_CONFIG_PHP = "wp-config.php"; // NOI18N
-    private static final String WP_VERSION_PHP = "wp-includes/version.php"; // NOI18N
     private final ImageIcon icon = ImageUtilities.loadImageIcon(WordPress.WP_ICON_16, true);
     private final Lookup.Result<FileObject> result;
     private final JLabel debugLabel = new JLabel(""); // NOI18N
@@ -146,7 +146,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
                 list.addListSelectionListener(new ListSelectionListener() {
                     @Override
                     public void valueChanged(ListSelectionEvent e) {
-                        String debugLv = list.getSelectedValue().toString();
+                        String debugLv = list.getSelectedValue();
                         // write file
                         if (!debugLv.equals(level)) {
                             writeConfig(debugLv);
@@ -176,7 +176,8 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      * @param debugLv true or false
      */
     private void writeConfig(final String debugLv) {
-        FileObject config = WPFileUtils.getDirectory(phpModule, WP_CONFIG_PHP);
+        WordPressModule wpModule = WordPressModule.Factory.forPhpModule(phpModule);
+        FileObject config = wpModule.getDirecotry(DIR_TYPE.ROOT, WP_CONFIG_PHP);
         if (config == null) {
             LOGGER.log(Level.WARNING, "Not found wp-config.php");
             return;
@@ -404,7 +405,8 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             }
 
             // if it is other project, add FileChangeListener to FileObject
-            FileObject config = WPFileUtils.getDirectory(phpModule, WP_CONFIG_PHP);
+            WordPressModule wpModule = WordPressModule.Factory.forPhpModule(phpModule);
+            FileObject config = wpModule.getDirecotry(DIR_TYPE.ROOT, WP_CONFIG_PHP);
             if (config == null) {
                 return;
             }
@@ -418,7 +420,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             setDebugLevelLabel(level);
 
             // version
-            FileObject version = WPFileUtils.getDirectory(phpModule, WP_VERSION_PHP);
+            FileObject version = wpModule.getVersionFile();
             String versionNumber = ""; // NOI18N
             if (version != null) {
                 versionNumber = getVersion(version) + ":"; // NOI18N
@@ -428,7 +430,8 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
         }
 
         private void removeFileChangeListenerForConfig(PhpModule pm) {
-            FileObject config = WPFileUtils.getDirectory(pm, WP_CONFIG_PHP);
+            WordPressModule wpModule = WordPressModule.Factory.forPhpModule(pm);
+            FileObject config = wpModule.getDirecotry(DIR_TYPE.ROOT, WP_CONFIG_PHP);
             if (config != null) {
                 config.removeFileChangeListener(fileChangeAdapter);
             }

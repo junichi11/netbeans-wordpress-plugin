@@ -115,8 +115,8 @@ public final class WordPressModule {
 
     public void notifyPropertyChanged(PropertyChangeEvent event) {
         if (PROPERTY_CHANGE_WP.equals(event.getPropertyName())) {
-            resetNode();
             refresh();
+            resetNode();
         }
     }
 
