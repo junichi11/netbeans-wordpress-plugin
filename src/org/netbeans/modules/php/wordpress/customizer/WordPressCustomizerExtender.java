@@ -167,8 +167,6 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
         boolean isEnabled = getPanel().isPluginEnabled();
         if (originalEnabled != isEnabled) {
             WordPressPreferences.setEnabled(phpModule, isEnabled);
-            WordPressModule wpModule = WordPressModule.Factory.forPhpModule(phpModule);
-            wpModule.notifyPropertyChanged(new PropertyChangeEvent(this, WordPressModule.PROPERTY_CHANGE_WP, null, null));
         }
 
         String customContentName = getPanel().getCustomContentName();
@@ -191,6 +189,8 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
             WordPressPreferences.setThemesPath(phpModule, themes);
         }
 
+        WordPressModule wpModule = WordPressModule.Factory.forPhpModule(phpModule);
+        wpModule.notifyPropertyChanged(new PropertyChangeEvent(this, WordPressModule.PROPERTY_CHANGE_WP, null, null));
         return EnumSet.of(Change.FRAMEWORK_CHANGE);
     }
 
