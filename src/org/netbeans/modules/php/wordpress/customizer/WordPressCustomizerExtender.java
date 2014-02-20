@@ -175,17 +175,17 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
         }
 
         String wordPressRoot = getPanel().getWordPressRootDirectory();
-        if (!StringUtils.isEmpty(wordPressRoot) && !originalCustomeContentName.equals(wordPressRoot)) {
+        if (!originalCustomeContentName.equals(wordPressRoot)) {
             WordPressPreferences.setWordPressRootPath(phpModule, wordPressRoot);
         }
 
         String plugins = getPanel().getPluginsDirectory();
-        if (!StringUtils.isEmpty(plugins) && !originalCustomeContentName.equals(plugins)) {
+        if (!originalCustomeContentName.equals(plugins)) {
             WordPressPreferences.setPluginsPath(phpModule, plugins);
         }
 
         String themes = getPanel().getThemesDirectory();
-        if (!StringUtils.isEmpty(themes) && !originalCustomeContentName.equals(themes)) {
+        if (!originalCustomeContentName.equals(themes)) {
             WordPressPreferences.setThemesPath(phpModule, themes);
         }
 
