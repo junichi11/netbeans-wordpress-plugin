@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.php.wordpress
 OpenIDE-Module-Layer: org/netbeans/modules/php/wordpress/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/wordpress/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.7.0
+OpenIDE-Module-Specification-Version: 0.7.1
 OpenIDE-Module-Install: org/netbeans/modules/php/wordpress/WordPressModuleInstall.class
