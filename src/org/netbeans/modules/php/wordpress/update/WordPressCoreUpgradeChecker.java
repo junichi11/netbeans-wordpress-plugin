@@ -97,6 +97,9 @@ public final class WordPressCoreUpgradeChecker implements WordPressUpgradeChecke
             }
 
             WordPressVersion version = WordPressVersion.create(phpModule);
+            if (version == null) {
+                return false;
+            }
             return hasUpgrade(version);
         } catch (MalformedURLException ex) {
             LOGGER.log(Level.WARNING, ex.getLocalizedMessage());
@@ -115,6 +118,9 @@ public final class WordPressCoreUpgradeChecker implements WordPressUpgradeChecke
      * @throws NumberFormatException
      */
     private boolean hasUpgrade(WordPressVersion version) throws NumberFormatException {
+        if (version == null) {
+            return false;
+        }
         // compare version
         String[] splitVersion = upgradeVersionNumber.split("[.]"); // NOI18N
         int length = splitVersion.length;
