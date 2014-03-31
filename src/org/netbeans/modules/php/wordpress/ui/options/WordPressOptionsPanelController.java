@@ -46,19 +46,23 @@ import java.beans.PropertyChangeSupport;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.modules.php.api.util.UiUtils;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
-@OptionsPanelController.SubRegistration(
-        id = WordPressOptions.OPTIONS_SUBPATH,
-        location = "org-netbeans-modules-php-project-ui-options-PHPOptionsCategory",
-        displayName = "#AdvancedOption_DisplayName_WordPress",
-        keywords = "#AdvancedOption_Keywords_WordPress",
-        keywordsCategory = "org-netbeans-modules-php-project-ui-options-PHPOptionsCategory/WordPress")
-@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_WordPress=WordPress", "AdvancedOption_Keywords_WordPress=WordPress"})
+@UiUtils.PhpOptionsPanelRegistration(
+        id = WordPressOptionsPanelController.ID,
+        displayName = "#LBL_WordPressOptionsName",
+        position = 1000
+)
+@NbBundle.Messages({"LBL_WordPressOptionsName=WordPress", "WordPress.options.keywords.TabTitle=Frameworks & Tools"})
+@OptionsPanelController.Keywords(keywords = {"php", "wordpress", "wp"},
+        location = UiUtils.OPTIONS_PATH, tabTitle = "#WordPress.options.keywords.TabTitle")
 public final class WordPressOptionsPanelController extends OptionsPanelController implements ChangeListener {
 
+    static final String ID = "WordPress"; // NOI18N
     private WordPressOptionsPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed = false;

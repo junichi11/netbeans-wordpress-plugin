@@ -45,8 +45,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule;
 import org.netbeans.modules.php.wordpress.ui.status.DebugStatusLineElement;
-import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
 import org.openide.awt.StatusLineElementProvider;
 import org.openide.filesystems.FileChangeAdapter;
@@ -74,7 +74,8 @@ public final class WordPressVersion {
             return version;
         }
 
-        FileObject versionFile = WPFileUtils.getVersionFile(phpModule);
+        WordPressModule wpModule = WordPressModule.Factory.forPhpModule(phpModule);
+        FileObject versionFile = wpModule.getVersionFile();
         if (versionFile == null) {
             return null;
         }

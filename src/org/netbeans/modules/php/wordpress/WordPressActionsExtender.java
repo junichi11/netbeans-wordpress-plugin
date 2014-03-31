@@ -48,9 +48,10 @@ import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
 import org.netbeans.modules.php.spi.framework.actions.RunCommandAction;
 import org.netbeans.modules.php.wordpress.commands.WordPressCli;
-import org.netbeans.modules.php.wordpress.ui.actions.RefreshCodeCompletionAction;
+import org.netbeans.modules.php.wordpress.ui.actions.CreatePermalinkHtaccessAction;
 import org.netbeans.modules.php.wordpress.ui.actions.CreatePluginAction;
 import org.netbeans.modules.php.wordpress.ui.actions.CreateThemeAction;
+import org.netbeans.modules.php.wordpress.ui.actions.RefreshCodeCompletionAction;
 import org.netbeans.modules.php.wordpress.ui.actions.WordPressRunCommandAction;
 import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
 import org.openide.util.NbBundle;
@@ -87,6 +88,7 @@ public class WordPressActionsExtender extends PhpModuleActionsExtender {
         actions.add(CreateThemeAction.getInstance());
         actions.add(CreatePluginAction.getInstance());
         actions.add(new RefreshCodeCompletionAction());
+        actions.add(CreatePermalinkHtaccessAction.getInstance());
         return actions;
     }
 }

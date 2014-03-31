@@ -41,6 +41,7 @@
  */
 package org.netbeans.modules.php.wordpress.customizer;
 
+import java.beans.PropertyChangeEvent;
 import java.util.EnumSet;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
@@ -48,7 +49,11 @@ import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.netbeans.modules.php.spi.framework.PhpModuleCustomizerExtender;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule;
 import org.netbeans.modules.php.wordpress.preferences.WordPressPreferences;
+import org.netbeans.modules.php.wordpress.validators.WordPressCustomizerValidator;
+import org.netbeans.modules.php.wordpress.validators.WordPressModuleValidator;
+import org.openide.filesystems.FileObject;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
@@ -60,9 +65,13 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
 
     private WordPressCustomizerExtenderPanel panel;
     private final PhpModule phpModule;
-    private String originalCustomeContentName;
+    private boolean originalEnabled;
     private boolean isValid;
+    private String originalCustomeContentName;
     private String errorMessage;
+    private String originalWordPressRoot;
+    private String originalPlugins;
+    private String originalThemes;
 
     public WordPressCustomizerExtender(PhpModule phpModule) {
         this.phpModule = phpModule;
@@ -107,10 +116,33 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
     }
 
     private void validate() {
+        if (!getPanel().isPluginEnabled()) {
+            errorMessage = null;
+            isValid = true;
+            return;
+        }
+        String wordPressRootDirectoryPath = getPanel().getWordPressRootDirectory();
         String contentName = getPanel().getCustomContentName();
+        FileObject sourceDirectory = phpModule.getSourceDirectory();
+        FileObject wordPressRoot = null;
+        if (sourceDirectory != null) {
+            wordPressRoot = sourceDirectory.getFileObject(wordPressRootDirectoryPath);
+        }
+
         ValidationResult result = new WordPressCustomizerValidator()
-                .validateWpContent(phpModule, contentName)
+                .validateWpContent(phpModule, wordPressRoot, contentName)
+                .validateWordPressRootDirectory(phpModule, getPanel().getWordPressRootDirectory())
+                .validatePluginsDirectory(phpModule, getPanel().getPluginsDirectory())
+                .validateThemesDirectory(phpModule, getPanel().getThemesDirectory())
                 .getResult();
+
+        if (wordPressRoot != null) {
+            ValidationResult wpResult = new WordPressModuleValidator()
+                    .validateWordPressDirectories(wordPressRoot, contentName)
+                    .getResult();
+            result.merge(wpResult);
+        }
+
         // error
         if (result.hasErrors()) {
             isValid = false;
@@ -132,23 +164,50 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
 
     @Override
     public EnumSet<Change> save(PhpModule pm) {
-        String customContentName = getPanel().getCustomContentName();
-        if (StringUtils.isEmpty(customContentName)) {
-            return null;
+        boolean isEnabled = getPanel().isPluginEnabled();
+        if (originalEnabled != isEnabled) {
+            WordPressPreferences.setEnabled(phpModule, isEnabled);
         }
 
-        if (!originalCustomeContentName.equals(customContentName)) {
+        String customContentName = getPanel().getCustomContentName();
+        if (!StringUtils.isEmpty(customContentName) && !originalCustomeContentName.equals(customContentName)) {
             WordPressPreferences.setCustomContentName(phpModule, customContentName);
         }
 
+        String wordPressRoot = getPanel().getWordPressRootDirectory();
+        if (!originalCustomeContentName.equals(wordPressRoot)) {
+            WordPressPreferences.setWordPressRootPath(phpModule, wordPressRoot);
+        }
+
+        String plugins = getPanel().getPluginsDirectory();
+        if (!originalCustomeContentName.equals(plugins)) {
+            WordPressPreferences.setPluginsPath(phpModule, plugins);
+        }
+
+        String themes = getPanel().getThemesDirectory();
+        if (!originalCustomeContentName.equals(themes)) {
+            WordPressPreferences.setThemesPath(phpModule, themes);
+        }
+
+        WordPressModule wpModule = WordPressModule.Factory.forPhpModule(phpModule);
+        wpModule.notifyPropertyChanged(new PropertyChangeEvent(this, WordPressModule.PROPERTY_CHANGE_WP, null, null));
         return EnumSet.of(Change.FRAMEWORK_CHANGE);
     }
 
     private WordPressCustomizerExtenderPanel getPanel() {
         if (panel == null) {
             panel = new WordPressCustomizerExtenderPanel();
+            originalEnabled = WordPressPreferences.isEnabled(phpModule);
             originalCustomeContentName = WordPressPreferences.getCustomContentName(phpModule);
+            originalWordPressRoot = WordPressPreferences.getWordPressRootPath(phpModule);
+            originalPlugins = WordPressPreferences.getPluginsPath(phpModule);
+            originalThemes = WordPressPreferences.getThemesPath(phpModule);
+            panel.setPluginEnabled(originalEnabled);
             panel.setCustomContentName(originalCustomeContentName);
+            panel.setComponentsEnabled(originalEnabled);
+            panel.setWordPressRootDirectory(originalWordPressRoot);
+            panel.setPluginsDirectory(originalPlugins);
+            panel.setThemesDirectory(originalThemes);
         }
 
         return panel;

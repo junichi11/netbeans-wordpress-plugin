@@ -1,8 +1,13 @@
-# About
+# NetBeans WordPress Plugin
+
 This is NetBeans plugin for WordPress.
 
+## How to enable
+
+`enabled` option is unchecked as default. Please check it on `project properties > Frameworks > WordPress`
+
 ## Environment
-- NetBeans 7.3+
+- NetBeans 8.0+
 - WordPress 3.5+
 
 ## Features
@@ -20,6 +25,7 @@ This is NetBeans plugin for WordPress.
 - custom content name
 - run command (wp-cli)
 - upgrade notification
+- create a .htaccess file for permalink
 
 ### Impotant Files
 It contains wp-config.php
@@ -124,6 +130,13 @@ Check whether new versions (for core, plugin and theme) are available when WordP
 Furthermore, we can upgrade(run core update, core update-db, e.t.c.) WordPress with notification window if we are setting wp-cli.
 
 If you don't want to check that, please uncheck `Check new version when project is opened` at Options.
+
+### Create a .htaccess file for permalink
+
+Right-click project node > WordPress > Create .htaccesss for permalink
+
+#### Note
+.htaccess file for permalink can be also created with template.
 
 ## Version Number
 

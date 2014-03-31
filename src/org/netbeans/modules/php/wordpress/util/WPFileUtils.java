@@ -53,8 +53,6 @@ import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import org.netbeans.modules.php.api.phpmodule.PhpModule;
-import org.netbeans.modules.php.wordpress.preferences.WordPressPreferences;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -69,44 +67,6 @@ public class WPFileUtils {
     public static final String WP_THEMES = "%s/themes"; // NOI18N
     public static final String WP_INCLUDES = "wp-includes"; // NOI18N
     public static final String WP_ADMIN = "wp-admin"; // NOI18N
-    private static final String WP_VERSION_PHP = "wp-includes/version.php"; // NOI18N
-
-    public static FileObject getPluginsDirectory(PhpModule phpModule) {
-        return getDirectory(phpModule, String.format(WP_PLUGINS, WordPressPreferences.getCustomContentName(phpModule)));
-    }
-
-    public static FileObject getThemesDirectory(PhpModule phpModule) {
-        return getDirectory(phpModule, String.format(WP_THEMES, WordPressPreferences.getCustomContentName(phpModule)));
-    }
-
-    public static FileObject getIncludesDirectory(PhpModule phpModule) {
-        return getDirectory(phpModule, WP_INCLUDES);
-    }
-
-    public static FileObject getIncludesDirectory(PhpModule phpModule, String path) {
-        return getDirectory(phpModule, WP_INCLUDES + "/" + path); // NOI18N
-    }
-
-    public static FileObject getAdminDirectory(PhpModule phpModule) {
-        return getDirectory(phpModule, WP_ADMIN);
-    }
-
-    public static FileObject getDirectory(PhpModule phpModule, String path) {
-        if (phpModule == null) {
-            return null;
-        }
-        FileObject sourceDirectory = phpModule.getSourceDirectory();
-        FileObject fileObject = null;
-        if (sourceDirectory != null) {
-            fileObject = sourceDirectory.getFileObject(path);
-        }
-        return fileObject;
-
-    }
-
-    public static FileObject getVersionFile(PhpModule phpModule) {
-        return getDirectory(phpModule, WP_VERSION_PHP);
-    }
 
     /**
      * Zip compress. Create a zip file to the same hierarchy as the target

@@ -65,6 +65,7 @@ import org.netbeans.modules.php.api.executable.PhpExecutableValidator;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.spi.framework.commands.FrameworkCommand;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule;
 import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -258,8 +259,14 @@ public final class WordPressCli {
      */
     private List<String> getStatus(String command, PhpModule phpModule) {
         HelpLineProcessor lineProcessor = new HelpLineProcessor();
+        WordPressModule wpModule = WordPressModule.Factory.forPhpModule(phpModule);
+        FileObject root = wpModule.getWordPressRootDirecotry();
+        if (root == null) {
+            lineProcessor.asLines();
+        }
+
         Future<Integer> result = createExecutable()
-                .workDir(FileUtil.toFile(phpModule.getSourceDirectory()))
+                .workDir(FileUtil.toFile(root))
                 .additionalParameters(Arrays.asList(command, STATUS_COMMAND))
                 .run(getSilentDescriptor(), getOutputProcessorFactory(lineProcessor));
         try {
@@ -466,12 +473,13 @@ public final class WordPressCli {
      * @return PhpExecutable
      */
     private PhpExecutable getExecutable(PhpModule phpModule) {
-        FileObject sourceDirectory = phpModule.getSourceDirectory();
-        if (sourceDirectory == null) {
+        WordPressModule wpModule = WordPressModule.Factory.forPhpModule(phpModule);
+        FileObject wordPressRootDirectory = wpModule.getWordPressRootDirecotry();
+        if (wordPressRootDirectory == null) {
             return null;
         }
         return createExecutable()
-                .workDir(FileUtil.toFile(sourceDirectory));
+                .workDir(FileUtil.toFile(wordPressRootDirectory));
     }
 
     /**

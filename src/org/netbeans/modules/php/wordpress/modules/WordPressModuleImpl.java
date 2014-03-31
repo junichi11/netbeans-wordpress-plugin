@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright 2013 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2014 Oracle and/or its affiliates. All rights reserved.
  *
  * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
  * Other names may be trademarks of their respective owners.
@@ -37,54 +37,39 @@
  *
  * Contributor(s):
  *
- * Portions Copyrighted 2013 Sun Microsystems, Inc.
+ * Portions Copyrighted 2014 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress.customizer;
+package org.netbeans.modules.php.wordpress.modules;
 
-import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.modules.php.api.phpmodule.PhpModule;
-import org.netbeans.modules.php.api.util.StringUtils;
-import org.netbeans.modules.php.api.validation.ValidationResult;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule.DIR_TYPE;
 import org.openide.filesystems.FileObject;
-import org.openide.util.NbBundle;
 
 /**
  *
  * @author junichi11
  */
-public final class WordPressCustomizerValidator {
+public abstract class WordPressModuleImpl {
 
-    private final ValidationResult result = new ValidationResult();
+    public abstract FileObject getPluginsDirectory();
 
-    @NbBundle.Messages({
-        "WordPressCustomizerValidator.wordpress.dir.invalid=Project might be broken...",
-        "WordPressCustomizerValidator.wordpress.content.name.invalid=Existing directory name must be set.",
-        "WordPressCustomizerValidator.wordpress.content.name.contains.shash=The name must not contain slash."
-    })
-    public WordPressCustomizerValidator validateWpContent(@NonNull PhpModule phpModule, String name) {
-        FileObject sourceDirectory = phpModule.getSourceDirectory();
-        if (sourceDirectory == null) {
-            result.addWarning(new ValidationResult.Message("wordpress.dir", Bundle.WordPressCustomizerValidator_wordpress_dir_invalid())); // NOI18N
-            return this;
-        }
+    public abstract FileObject getThemesDirectory();
 
-        FileObject wpContent = sourceDirectory.getFileObject(name);
-        if (wpContent == null
-                || !wpContent.isFolder()
-                || StringUtils.isEmpty(name)) {
-            result.addWarning(new ValidationResult.Message("wordpress.content.name", Bundle.WordPressCustomizerValidator_wordpress_content_name_invalid())); // NOI18N
-            return this;
-        }
+    public abstract FileObject getIncludesDirectory();
 
-        if (name.contains("/")) { // NOI18N
-            result.addWarning(new ValidationResult.Message("wordpress.content.name.slash", Bundle.WordPressCustomizerValidator_wordpress_content_name_contains_shash())); // NOI18N
-            return this;
-        }
+    public abstract FileObject getIncludesDirectory(String path);
 
-        return this;
-    }
+    public abstract FileObject getAdminDirectory();
 
-    public ValidationResult getResult() {
-        return result;
-    }
+    public abstract FileObject getContentDirectory();
+
+    public abstract FileObject getWordPressRootDirecotry();
+
+    public abstract FileObject getDirecotry(DIR_TYPE dirType);
+
+    public abstract FileObject getDirecotry(DIR_TYPE dirType, String path);
+
+    public abstract FileObject getVersionFile();
+
+    public abstract void refresh();
+
 }

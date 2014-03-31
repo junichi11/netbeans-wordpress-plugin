@@ -57,6 +57,7 @@ import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.spi.framework.actions.BaseAction;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule;
 import org.netbeans.modules.php.wordpress.util.GithubZipEntryFilter;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
@@ -113,7 +114,7 @@ public abstract class CreateThemeBaseAction extends BaseAction {
         }
 
         // get Themes directory
-        themesDirectory = WPFileUtils.getThemesDirectory(phpModule);
+        themesDirectory = WordPressModule.Factory.forPhpModule(phpModule).getThemesDirectory();
         if (themesDirectory == null) {
             LOGGER.log(Level.WARNING, Bundle.LBL_NotFound(Bundle.LBL_ThemesDirectory()));
             return;

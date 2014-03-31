@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright 2013 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2014 Oracle and/or its affiliates. All rights reserved.
  *
  * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
  * Other names may be trademarks of their respective owners.
@@ -37,47 +37,65 @@
  *
  * Contributor(s):
  *
- * Portions Copyrighted 2013 Sun Microsystems, Inc.
+ * Portions Copyrighted 2014 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress.editor.completion;
+package org.netbeans.modules.php.wordpress.modules;
 
-import javax.swing.text.Document;
-import javax.swing.text.JTextComponent;
-import org.netbeans.modules.editor.NbEditorUtilities;
-import org.netbeans.modules.php.api.phpmodule.PhpModule;
-import org.netbeans.modules.php.wordpress.util.WPUtils;
-import org.netbeans.spi.editor.completion.CompletionProvider;
-import org.netbeans.spi.editor.completion.CompletionTask;
 import org.openide.filesystems.FileObject;
 
-/**
- *
- * @author junichi11
- */
-public abstract class WordPressCompletionProvider implements CompletionProvider {
+public class WordPressDummyModuleImpl extends WordPressModuleImpl {
 
     @Override
-    public CompletionTask createTask(int queryType, JTextComponent component) {
-        PhpModule phpModule = getPhpModule(component);
-        if (!WPUtils.isWP(phpModule)) {
-            return null;
-        }
-        return createTask(queryType, component, phpModule);
+    public FileObject getPluginsDirectory() {
+        return null;
     }
-
-    public abstract CompletionTask createTask(int queryType, JTextComponent component, PhpModule phpModule);
 
     @Override
-    public int getAutoQueryTypes(JTextComponent component, String typedText) {
-        return 0;
+    public FileObject getThemesDirectory() {
+        return null;
     }
 
-    private PhpModule getPhpModule(JTextComponent component) {
-        Document doc = component.getDocument();
-        FileObject fileObject = NbEditorUtilities.getFileObject(doc);
-        if (fileObject == null) {
-            return null;
-        }
-        return PhpModule.Factory.forFileObject(fileObject);
+    @Override
+    public FileObject getIncludesDirectory() {
+        return null;
+    }
+
+    @Override
+    public FileObject getIncludesDirectory(String path) {
+        return null;
+    }
+
+    @Override
+    public FileObject getAdminDirectory() {
+        return null;
+    }
+
+    @Override
+    public FileObject getContentDirectory() {
+        return null;
+    }
+
+    @Override
+    public FileObject getWordPressRootDirecotry() {
+        return null;
+    }
+
+    @Override
+    public FileObject getDirecotry(WordPressModule.DIR_TYPE dirType) {
+        return null;
+    }
+
+    @Override
+    public FileObject getDirecotry(WordPressModule.DIR_TYPE dirType, String path) {
+        return null;
+    }
+
+    @Override
+    public FileObject getVersionFile() {
+        return null;
+    }
+
+    @Override
+    public void refresh() {
     }
 }

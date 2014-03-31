@@ -96,7 +96,7 @@ public class WordPressHyperlinkProviderExt implements HyperlinkProviderExt {
         if (fileObject == null) {
             return false;
         }
-        phpModule = PhpModule.forFileObject(fileObject);
+        phpModule = PhpModule.Factory.forFileObject(fileObject);
         if (phpModule == null || !WPUtils.isWP(phpModule)) {
             return false;
         }

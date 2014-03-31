@@ -136,7 +136,7 @@ public class WordPressEditorExtender extends EditorExtender {
 
     @Override
     public List<PhpBaseElement> getElementsForCodeCompletion(FileObject fo) {
-        PhpModule phpModule = PhpModule.forFileObject(fo);
+        PhpModule phpModule = PhpModule.Factory.forFileObject(fo);
         // check whether project is WordPress
         if (!WPUtils.isWP(phpModule)) {
             return new LinkedList<PhpBaseElement>();

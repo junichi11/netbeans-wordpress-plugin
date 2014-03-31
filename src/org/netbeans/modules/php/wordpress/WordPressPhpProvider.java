@@ -41,16 +41,20 @@
  */
 package org.netbeans.modules.php.wordpress;
 
-import org.netbeans.modules.php.wordpress.update.WordPressUpgradeChecker;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import org.netbeans.modules.php.api.framework.BadgeIcon;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.phpmodule.PhpModuleProperties;
+import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.netbeans.modules.php.spi.editor.EditorExtender;
 import org.netbeans.modules.php.spi.framework.PhpFrameworkProvider;
 import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
@@ -61,12 +65,18 @@ import org.netbeans.modules.php.spi.framework.commands.FrameworkCommandSupport;
 import org.netbeans.modules.php.wordpress.commands.WordPressCommandSupport;
 import org.netbeans.modules.php.wordpress.customizer.WordPressCustomizerExtender;
 import org.netbeans.modules.php.wordpress.editor.WordPressEditorExtender;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule;
 import org.netbeans.modules.php.wordpress.preferences.WordPressPreferences;
+import org.netbeans.modules.php.wordpress.update.WordPressUpgradeChecker;
+import org.netbeans.modules.php.wordpress.validators.WordPressModuleValidator;
+import org.openide.awt.Notification;
+import org.openide.awt.NotificationDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -74,10 +84,11 @@ import org.openide.util.NbBundle;
  */
 public class WordPressPhpProvider extends PhpFrameworkProvider {
 
+    private static final RequestProcessor RP = new RequestProcessor(WordPressPhpProvider.class);
     private static final WordPressPhpProvider INSTANCE = new WordPressPhpProvider();
     private static final String ICON_PATH = "org/netbeans/modules/php/wordpress/resources/wordpress_badge_8.png"; // NOI18N
     private final BadgeIcon badgeIcon;
-    private static final Set<String> WP_DIRS = new HashSet<String>();
+    public static final Set<String> WP_DIRS = new HashSet<String>();
 
     static {
         WP_DIRS.add("wp-admin"); // NOI18N
@@ -108,30 +119,16 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
 
     @Override
     public boolean isInPhpModule(PhpModule pm) {
-        FileObject sourceDirectory = pm.getSourceDirectory();
-        if (sourceDirectory != null) {
-            for (String dir : WP_DIRS) {
-                FileObject fileObject = sourceDirectory.getFileObject(dir);
-                if (fileObject == null) {
-                    return false;
-                }
-            }
-
-            // content name
-            FileObject content = sourceDirectory.getFileObject(WordPressPreferences.getCustomContentName(pm));
-            if (content == null) {
-                return false;
-            }
-        }
-        return true;
+        return WordPressPreferences.isEnabled(pm);
     }
 
     @Override
     public File[] getConfigurationFiles(PhpModule pm) {
         List<File> files = new LinkedList<File>();
-        FileObject sourceDirectory = pm.getSourceDirectory();
-        if (sourceDirectory != null) {
-            FileObject config = sourceDirectory.getFileObject("wp-config.php"); // NOI18N
+        WordPressModule wpModuel = WordPressModule.Factory.forPhpModule(pm);
+        FileObject wordPressRoot = wpModuel.getWordPressRootDirecotry();
+        if (wordPressRoot != null) {
+            FileObject config = wordPressRoot.getFileObject("wp-config.php"); // NOI18N
             if (config != null) {
                 files.add(FileUtil.toFile(config));
             }
@@ -178,12 +175,80 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
     }
 
     @Override
+    public void phpModuleClosed(PhpModule phpModule) {
+        WordPressModule.Factory.remove(phpModule);
+    }
+
+    @NbBundle.Messages({
+        "# {0} - name",
+        "WordPressPhpProvider.autoditection=WordPress autoditection : {0}",
+        "WordPressPhpProvider.autoditection.action=If you want to enable as WordPress project, please click here."
+    })
+    @Override
     public void phpModuleOpened(PhpModule phpModule) {
-        // check new version
-        Collection<? extends WordPressUpgradeChecker> checkers = Lookup.getDefault().lookupAll(WordPressUpgradeChecker.class);
-        for (WordPressUpgradeChecker checker : checkers) {
-            if (checker.hasUpgrade(phpModule)) {
-                checker.notifyUpgrade(phpModule);
+        // this method is run for not only WordPress projects but also all php projects,
+        // so need check i.e. avoid NPE
+        if (isInPhpModule(phpModule)) {
+            // check new version
+            Collection<? extends WordPressUpgradeChecker> checkers = Lookup.getDefault().lookupAll(WordPressUpgradeChecker.class);
+            for (WordPressUpgradeChecker checker : checkers) {
+                if (checker.hasUpgrade(phpModule)) {
+                    checker.notifyUpgrade(phpModule);
+                }
+            }
+        }
+        RP.schedule(new WordPressAutoDetectionTask(phpModule), 1, TimeUnit.MINUTES);
+    }
+
+    //~ Inner class
+    private static class WordPressAutoDetectionTask implements Runnable {
+
+        private final PhpModule phpModule;
+        private Notification notification;
+
+        public WordPressAutoDetectionTask(PhpModule phpModule) {
+            this.phpModule = phpModule;
+        }
+
+        @Override
+        public void run() {
+            // auto detection
+            FileObject wordPressRoot = phpModule.getSourceDirectory();
+            if (wordPressRoot == null) {
+                return;
+            }
+            ValidationResult result = new WordPressModuleValidator()
+                    .validateWordPressDirectories(wordPressRoot, WordPressPreferences.getCustomContentName(phpModule))
+                    .getResult();
+            if (result.hasWarnings()) {
+                return;
+            }
+
+            // show notification displayer
+            if (!WordPressPreferences.isEnabled(phpModule)) {
+                NotificationDisplayer notificationDisplayer = NotificationDisplayer.getDefault();
+                notification = notificationDisplayer.notify(
+                        Bundle.WordPressPhpProvider_autoditection(phpModule.getDisplayName()), // title
+                        NotificationDisplayer.Priority.LOW.getIcon(), // icon
+                        Bundle.WordPressPhpProvider_autoditection_action(),
+                        new WordPressAutoDetectionActionListener(), // action
+                        NotificationDisplayer.Priority.LOW); // priority
+            }
+
+        }
+
+        private class WordPressAutoDetectionActionListener implements ActionListener {
+
+            public WordPressAutoDetectionActionListener() {
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                WordPressPreferences.setEnabled(phpModule, true);
+                WordPressModule module = WordPressModule.Factory.forPhpModule(phpModule);
+                module.notifyPropertyChanged(new PropertyChangeEvent(this, WordPressModule.PROPERTY_CHANGE_WP, null, null));
+                phpModule.notifyPropertyChanged(new PropertyChangeEvent(this, PhpModule.PROPERTY_FRAMEWORKS, null, null));
+                notification.clear();
             }
         }
     }

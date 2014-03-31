@@ -54,6 +54,7 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.spi.framework.actions.BaseAction;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule;
 import org.netbeans.modules.php.wordpress.ui.wizards.CreateUnderscoresThemePanel;
 import org.netbeans.modules.php.wordpress.util.Charset;
 import org.netbeans.modules.php.wordpress.util.UnderscoresUtils;
@@ -113,7 +114,7 @@ public class CreateUnderscoresThemeAction extends BaseAction {
             return;
         }
         // create folder
-        FileObject themesDirectory = WPFileUtils.getThemesDirectory(pm);
+        FileObject themesDirectory = WordPressModule.Factory.forPhpModule(pm).getThemesDirectory();
         if (themesDirectory == null) {
             LOGGER.log(Level.WARNING, "themes directory don't exist!");
             return;

@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright 2013 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2014 Oracle and/or its affiliates. All rights reserved.
  *
  * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
  * Other names may be trademarks of their respective owners.
@@ -37,47 +37,46 @@
  *
  * Contributor(s):
  *
- * Portions Copyrighted 2013 Sun Microsystems, Inc.
+ * Portions Copyrighted 2014 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress.editor.completion;
+package org.netbeans.modules.php.wordpress.validators;
 
-import javax.swing.text.Document;
-import javax.swing.text.JTextComponent;
-import org.netbeans.modules.editor.NbEditorUtilities;
-import org.netbeans.modules.php.api.phpmodule.PhpModule;
-import org.netbeans.modules.php.wordpress.util.WPUtils;
-import org.netbeans.spi.editor.completion.CompletionProvider;
-import org.netbeans.spi.editor.completion.CompletionTask;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.php.api.validation.ValidationResult;
+import static org.netbeans.modules.php.wordpress.WordPressPhpProvider.WP_DIRS;
 import org.openide.filesystems.FileObject;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author junichi11
  */
-public abstract class WordPressCompletionProvider implements CompletionProvider {
+public class WordPressModuleValidator {
 
-    @Override
-    public CompletionTask createTask(int queryType, JTextComponent component) {
-        PhpModule phpModule = getPhpModule(component);
-        if (!WPUtils.isWP(phpModule)) {
-            return null;
+    private final ValidationResult result = new ValidationResult();
+
+    @NbBundle.Messages({
+        "WordPressModuleValidator.core.dir.invalid=WordPress directories don't exit."
+    })
+    public WordPressModuleValidator validateWordPressDirectories(@NonNull FileObject wordPressRoot, @NonNull String customContentName) {
+        for (String dir : WP_DIRS) {
+            FileObject fileObject = wordPressRoot.getFileObject(dir);
+            if (fileObject == null) {
+                result.addWarning(new ValidationResult.Message("wp.dir", Bundle.WordPressModuleValidator_core_dir_invalid())); // NOI18N
+            }
         }
-        return createTask(queryType, component, phpModule);
-    }
 
-    public abstract CompletionTask createTask(int queryType, JTextComponent component, PhpModule phpModule);
-
-    @Override
-    public int getAutoQueryTypes(JTextComponent component, String typedText) {
-        return 0;
-    }
-
-    private PhpModule getPhpModule(JTextComponent component) {
-        Document doc = component.getDocument();
-        FileObject fileObject = NbEditorUtilities.getFileObject(doc);
-        if (fileObject == null) {
-            return null;
+        // content name
+        FileObject content = wordPressRoot.getFileObject(customContentName);
+        if (content == null) {
+            result.addWarning(new ValidationResult.Message("wp.dir", Bundle.WordPressModuleValidator_core_dir_invalid())); // NOI18N
         }
-        return PhpModule.Factory.forFileObject(fileObject);
+
+        return this;
     }
+
+    public ValidationResult getResult() {
+        return result;
+    }
+
 }
