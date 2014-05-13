@@ -66,7 +66,7 @@ public class CreateChildThemePanel extends JPanel {
         initComponents();
         DefaultComboBoxModel<String> defaultComboBoxModel = new DefaultComboBoxModel<String>(themes.toArray(new String[0]));
         parentThemeComboBox.setModel(defaultComboBoxModel);
-        childThemeNameTextField.getDocument().addDocumentListener(new DefaultDocumentListener());
+        childDirectoryNameTextField.getDocument().addDocumentListener(new DefaultDocumentListener());
         errorLabel.setText(" "); // NOI18N
         errorLabel.setForeground(UIManager.getColor("nb.errorForeground")); // NOI18N
     }
@@ -85,6 +85,10 @@ public class CreateChildThemePanel extends JPanel {
 
     public String getParentThemeName() {
         return (String) parentThemeComboBox.getSelectedItem();
+    }
+
+    public String getChildDirectoryName() {
+        return childDirectoryNameTextField.getText().trim();
     }
 
     public String getChildThemeName() {
@@ -134,8 +138,8 @@ public class CreateChildThemePanel extends JPanel {
 
         parentThemeLabel = new javax.swing.JLabel();
         parentThemeComboBox = new javax.swing.JComboBox<String>();
-        childThemeNameLabel = new javax.swing.JLabel();
-        childThemeNameTextField = new javax.swing.JTextField();
+        childDirectoryNameLabel = new javax.swing.JLabel();
+        childDirectoryNameTextField = new javax.swing.JTextField();
         errorLabel = new javax.swing.JLabel();
         childThemeUriLabel = new javax.swing.JLabel();
         descriptionLabel = new javax.swing.JLabel();
@@ -151,12 +155,14 @@ public class CreateChildThemePanel extends JPanel {
         textDomainTextField = new javax.swing.JTextField();
         authorUriLabel = new javax.swing.JLabel();
         authorUriTextField = new javax.swing.JTextField();
+        childThemeNameLabel = new javax.swing.JLabel();
+        childThemeNameTextField = new javax.swing.JTextField();
 
         org.openide.awt.Mnemonics.setLocalizedText(parentThemeLabel, org.openide.util.NbBundle.getMessage(CreateChildThemePanel.class, "CreateChildThemePanel.parentThemeLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(childThemeNameLabel, org.openide.util.NbBundle.getMessage(CreateChildThemePanel.class, "CreateChildThemePanel.childThemeNameLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(childDirectoryNameLabel, org.openide.util.NbBundle.getMessage(CreateChildThemePanel.class, "CreateChildThemePanel.childDirectoryNameLabel.text")); // NOI18N
 
-        childThemeNameTextField.setText(org.openide.util.NbBundle.getMessage(CreateChildThemePanel.class, "CreateChildThemePanel.childThemeNameTextField.text")); // NOI18N
+        childDirectoryNameTextField.setText(org.openide.util.NbBundle.getMessage(CreateChildThemePanel.class, "CreateChildThemePanel.childDirectoryNameTextField.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(errorLabel, org.openide.util.NbBundle.getMessage(CreateChildThemePanel.class, "CreateChildThemePanel.errorLabel.text")); // NOI18N
 
@@ -188,6 +194,10 @@ public class CreateChildThemePanel extends JPanel {
 
         authorUriTextField.setText(org.openide.util.NbBundle.getMessage(CreateChildThemePanel.class, "CreateChildThemePanel.authorUriTextField.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(childThemeNameLabel, org.openide.util.NbBundle.getMessage(CreateChildThemePanel.class, "CreateChildThemePanel.childThemeNameLabel.text")); // NOI18N
+
+        childThemeNameTextField.setText(org.openide.util.NbBundle.getMessage(CreateChildThemePanel.class, "CreateChildThemePanel.childThemeNameTextField.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -197,33 +207,37 @@ public class CreateChildThemePanel extends JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(childThemeNameLabel)
+                            .addComponent(childDirectoryNameLabel)
+                            .addComponent(childThemeNameLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(childDirectoryNameTextField)
+                            .addComponent(childThemeNameTextField)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(descriptionLabel)
                             .addComponent(childThemeUriLabel)
                             .addComponent(versionLabel)
                             .addComponent(authorLabel)
-                            .addComponent(parentThemeLabel)
-                            .addComponent(authorUriLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(authorUriLabel)
+                            .addComponent(tagsLabel)
+                            .addComponent(textDomainLabel))
+                        .addGap(48, 48, 48)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(parentThemeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(childThemeNameTextField)
+                            .addComponent(textDomainTextField)
+                            .addComponent(tagsTextField)
                             .addComponent(childThemeUriTextField)
                             .addComponent(descriptionTextField)
                             .addComponent(versionTextField)
                             .addComponent(authorTextField)
                             .addComponent(authorUriTextField)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(tagsLabel)
-                        .addGap(110, 110, 110)
-                        .addComponent(tagsTextField))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(textDomainLabel)
-                        .addGap(55, 55, 55)
-                        .addComponent(textDomainTextField))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(errorLabel)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(parentThemeLabel)
+                        .addGap(60, 60, 60)
+                        .addComponent(parentThemeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -235,9 +249,13 @@ public class CreateChildThemePanel extends JPanel {
                     .addComponent(parentThemeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(childDirectoryNameLabel)
+                    .addComponent(childDirectoryNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(childThemeNameLabel)
                     .addComponent(childThemeNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(childThemeUriLabel)
                     .addComponent(childThemeUriTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -276,6 +294,8 @@ public class CreateChildThemePanel extends JPanel {
     private javax.swing.JTextField authorTextField;
     private javax.swing.JLabel authorUriLabel;
     private javax.swing.JTextField authorUriTextField;
+    private javax.swing.JLabel childDirectoryNameLabel;
+    private javax.swing.JTextField childDirectoryNameTextField;
     private javax.swing.JLabel childThemeNameLabel;
     private javax.swing.JTextField childThemeNameTextField;
     private javax.swing.JLabel childThemeUriLabel;

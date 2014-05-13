@@ -161,7 +161,7 @@ public final class CreateChildThemeAction extends BaseAction implements ChangeLi
             return;
         }
         // create child theme directory and style.css
-        FileObject childThemeDirectory = themesDirectory.createFolder(getPanel().getChildThemeName());
+        FileObject childThemeDirectory = themesDirectory.createFolder(getPanel().getChildDirectoryName());
         if (childThemeDirectory == null) {
             LOGGER.log(Level.WARNING, Bundle.CreateChildThemeAction_childFolder_error());
             return;
@@ -198,7 +198,7 @@ public final class CreateChildThemeAction extends BaseAction implements ChangeLi
         if (descriptor == null || panel == null) {
             return;
         }
-        String childThemeName = getPanel().getChildThemeName();
+        String childThemeName = getPanel().getChildDirectoryName();
         WordPressDirectoryNameValidator validator = new WordPressDirectoryNameValidator();
         ValidationResult result = validator.validateName(childThemeName)
                 .validateExistingName(childThemeName, themes)
