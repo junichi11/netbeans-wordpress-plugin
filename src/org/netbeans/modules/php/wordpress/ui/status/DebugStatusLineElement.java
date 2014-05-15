@@ -66,6 +66,7 @@ import javax.swing.JSeparator;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.BadLocationException;
@@ -301,12 +302,18 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      *
      * @param debugLv true or false
      */
-    private void setDebugLevelLabel(String debugLv) {
-        if (debugLv.matches("^(true|false)$")) { // NOI18N
-            debugLabel.setText(debugLevel.get(debugLv));
-        } else {
-            debugLabel.setText(debugLv);
-        }
+    private void setDebugLevelLabel(final String debugLv) {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                if (debugLv.matches("^(true|false)$")) { // NOI18N
+                    debugLabel.setText(debugLevel.get(debugLv));
+                } else {
+                    debugLabel.setText(debugLv);
+                }
+            }
+        });
     }
 
     /**
@@ -314,18 +321,30 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      *
      * @param versionNumber
      */
-    private void setVersionLabel(String versionNumber) {
-        versionLabel.setText(versionNumber);
-        versionLabel.setIcon(icon);
+    private void setVersionLabel(final String versionNumber) {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                versionLabel.setText(versionNumber);
+                versionLabel.setIcon(icon);
+            }
+        });
     }
 
     /**
      * Clear debug label
      */
     private void clearLabel() {
-        debugLabel.setText(""); //NOI18N
-        versionLabel.setText(""); // NOI18N
-        versionLabel.setIcon(null);
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                debugLabel.setText(""); //NOI18N
+                versionLabel.setText(""); // NOI18N
+                versionLabel.setIcon(null);
+            }
+        });
     }
 
     public void setLevel(String level) {
