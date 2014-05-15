@@ -1,0 +1,15 @@
+/*
+Theme Name: <#if name?? && name != "">${name}</#if>
+Theme URI: <#if uri?? && uri != "">${uri}</#if>
+Description: <#if description?? && description != "">${description}</#if>
+Version: <#if version?? && version != "">${version}</#if>
+Author: <#if author?? && author != "">${author}</#if>
+Author URI: <#if authorUri?? && authorUri != "">${authorUri}</#if>
+Template: <#if parent?? && parent != "">${parent}</#if>
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: <#if tags?? && tags != "">${tags}</#if>
+Text Domain: <#if textDomain?? && textDomain != "">${textDomain}</#if>
+*/
+
+@import url("../<#if parent?? && parent != "">${parent}<#else>parent</#if>/style.css");

@@ -26,6 +26,7 @@ This is NetBeans plugin for WordPress.
 - run command (wp-cli)
 - upgrade notification
 - create a .htaccess file for permalink
+- create a new child theme action (create a style.css for child theme)
 
 ### Impotant Files
 It contains wp-config.php
@@ -82,6 +83,12 @@ WordPress version number is also displayed.
 
 ### Create New Theme Action
 Right-click Project > WordPress > Create Theme
+
+### Create New Child Theme Action
+Right-click Project > WordPress > Create Child Theme
+
+- Create a new directory for child theme
+- Add style.css for child theme
 
 #### Underscores
 Create theme from [Underscores | A Starter Theme for WordPress](http://underscores.me/). Underscores is awesome!

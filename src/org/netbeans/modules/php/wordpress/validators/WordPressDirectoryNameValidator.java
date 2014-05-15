@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright 2013 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2014 Oracle and/or its affiliates. All rights reserved.
  *
  * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
  * Other names may be trademarks of their respective owners.
@@ -37,60 +37,41 @@
  *
  * Contributor(s):
  *
- * Portions Copyrighted 2013 Sun Microsystems, Inc.
+ * Portions Copyrighted 2014 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress;
+package org.netbeans.modules.php.wordpress.validators;
 
-import java.util.ArrayList;
 import java.util.List;
-import javax.swing.Action;
 import org.netbeans.modules.php.api.util.StringUtils;
-import org.netbeans.modules.php.spi.framework.PhpModuleActionsExtender;
-import org.netbeans.modules.php.spi.framework.actions.RunCommandAction;
-import org.netbeans.modules.php.wordpress.commands.WordPressCli;
-import org.netbeans.modules.php.wordpress.ui.actions.CreateChildThemeAction;
-import org.netbeans.modules.php.wordpress.ui.actions.CreatePermalinkHtaccessAction;
-import org.netbeans.modules.php.wordpress.ui.actions.CreatePluginAction;
-import org.netbeans.modules.php.wordpress.ui.actions.CreateThemeAction;
-import org.netbeans.modules.php.wordpress.ui.actions.RefreshCodeCompletionAction;
-import org.netbeans.modules.php.wordpress.ui.actions.WordPressRunCommandAction;
-import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
+import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.openide.util.NbBundle;
 
 /**
  *
  * @author junichi11
  */
-public class WordPressActionsExtender extends PhpModuleActionsExtender {
+public final class WordPressDirectoryNameValidator {
 
-    @NbBundle.Messages("LBL_MenuName=WordPress")
-    @Override
-    public String getMenuName() {
-        return Bundle.LBL_MenuName();
+    private final ValidationResult result = new ValidationResult();
+    private static final String DIRECTORY_NAME_REGEX = "\\A[-.a-zA-Z0-9_]+\\z"; // NOI18N
+
+    @NbBundle.Messages("WordPressDirectoryNameValidator.invalid.name=Please use alphanumeric, '-', '.' and '_'.")
+    public WordPressDirectoryNameValidator validateName(String directoryName) {
+        if (StringUtils.isEmpty(directoryName) || !directoryName.matches(DIRECTORY_NAME_REGEX)) {
+            result.addWarning(new ValidationResult.Message("dir.name", Bundle.WordPressDirectoryNameValidator_invalid_name())); // NOI18N
+        }
+        return this;
     }
 
-    @Override
-    public RunCommandAction getRunCommandAction() {
-        // If wp-cli path is invalid, run command action is not added to context menu.
-        String wpCliPath = WordPressOptions.getInstance().getWpCliPath();
-        if (StringUtils.isEmpty(wpCliPath)) {
-            return null;
+    @NbBundle.Messages("WordPressDirectoryNameValidator.existing.name=Child name already exists.")
+    public WordPressDirectoryNameValidator validateExistingName(String directoryName, List<String> exstingNames) {
+        if (exstingNames.contains(directoryName)) {
+            result.addWarning(new ValidationResult.Message("dir.name", Bundle.WordPressDirectoryNameValidator_existing_name())); // NOI18N
         }
-        String error = WordPressCli.validate(wpCliPath);
-        if (error != null) {
-            return null;
-        }
-        return WordPressRunCommandAction.getInstance();
+        return this;
     }
 
-    @Override
-    public List<? extends Action> getActions() {
-        List<Action> actions = new ArrayList<Action>();
-        actions.add(CreateThemeAction.getInstance());
-        actions.add(CreateChildThemeAction.getInstance());
-        actions.add(CreatePluginAction.getInstance());
-        actions.add(new RefreshCodeCompletionAction());
-        actions.add(CreatePermalinkHtaccessAction.getInstance());
-        return actions;
+    public ValidationResult getResult() {
+        return result;
     }
 }
