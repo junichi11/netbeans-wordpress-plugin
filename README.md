@@ -84,12 +84,6 @@ WordPress version number is also displayed.
 ### Create New Theme Action
 Right-click Project > WordPress > Create Theme
 
-### Create New Child Theme Action
-Right-click Project > WordPress > Create Child Theme
-
-- Create a new directory for child theme
-- Add style.css for child theme
-
 #### Underscores
 Create theme from [Underscores | A Starter Theme for WordPress](http://underscores.me/). Underscores is awesome!
 This plugin uses [Automattic/_s · GitHub](https://github.com/automattic/_s).
@@ -98,6 +92,12 @@ This plugin uses [Automattic/_s · GitHub](https://github.com/automattic/_s).
 
 #### Barebones
 Create theme form [welcomebrand/Barebones · GitHub](https://github.com/welcomebrand/Barebones).
+
+### Create New Child Theme Action
+Right-click Project > WordPress > Create Child Theme
+
+- Create a new directory for child theme
+- Add style.css for child theme
 
 ### Create New Plugin Action
 Right-click Project > WordPress > Create Plugin
