@@ -88,6 +88,10 @@ public class WordPressVersionCheckApi extends WordPressApi {
         InputStream inputStream = openStream();
         try {
             JSONObject jsonObject = (JSONObject) JSONValue.parse(new InputStreamReader(inputStream, Charset.UTF8));
+            if (jsonObject == null) {
+                LOGGER.log(Level.INFO, "Can't get json for version check information."); // NOI18N
+                return;
+            }
             JSONArray offers = (JSONArray) jsonObject.get("offers"); // NOI18N
 
             // get version and locale
