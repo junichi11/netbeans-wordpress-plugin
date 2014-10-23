@@ -101,8 +101,7 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
     private static final String WP_CONFIG_PHP = "wp-config.php"; // NOI18N
     private NewProjectConfigurationPanel panel;
     private static final String WORDPRESS = "wordpress"; // NOI18N
-    private static final String WP_DL_URL_DEFAULT = "http://wordpress.org/latest.zip"; // NOI18N
-    private static final String WP_DL_URL_FORMAT = "http://%s.wordpress.org/latest-%s.zip"; // NOI18N
+    private static final String WP_DL_URL_DEFAULT = "https://wordpress.org/latest.zip"; // NOI18N
     private static final String DB_NAME = "DB_NAME"; // NOI18N
     private static final String DB_USER = "DB_USER"; // NOI18N
     private static final String DB_PASSWORD = "DB_PASSWORD"; // NOI18N
