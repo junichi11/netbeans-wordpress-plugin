@@ -1,50 +1,50 @@
 # NetBeans WordPress Plugin
 
-This is NetBeans plugin for WordPress.
+This is the NetBeans IDE plugin for WordPress.
 
 ## How to enable
 
-`enabled` option is unchecked as default. Please check it on `project properties > Frameworks > WordPress`
+The `enabled` option is unchecked by default. Please check it on `Project Properties > Frameworks > WordPress`
 
 ## Environment
 - NetBeans 8.0+
 - WordPress 3.5+
 
 ## Features
-- badge icon
-- important files
-- create new WordPress project
-- code templates
-- zip compress action
-- template files
-- display and change debug status
-- code completion for filter and action
-- create new theme action
-- hyperlink navigation
-- create new plugin action
-- custom content name
-- run command (wp-cli)
-- upgrade notification
-- create a .htaccess file for permalink
-- create a new child theme action (create a style.css for child theme)
+- Badge icon
+- Important files
+- Create new WordPress project
+- Code templates
+- Zip compress action
+- Template files
+- Display and change debug status
+- Code completion for filter and action
+- Create new theme action
+- Hyperlink navigation
+- Create new plugin action
+- Custom content name
+- Run command (wp-cli)
+- Upgrade notification
+- Create a .htaccess file for permalink
+- Create a new child theme action (create a style.css for child theme)
 
-### Impotant Files
-It contains wp-config.php
+### Important Files
+It contains the wp-config.php
 
 ### Create New WordPress Project
-You can create a new WordPress project with Wizard.
+You can create a new WordPress project using the Wizard.
 
-1. set Tools > Options > PHP > WordPress > download url(e.g. http://wordpress.org/latest.zip) or local file path(e.g. /path/to/wordpress.zip)
-2. check New Project > PHP > PHP Application > ... > Framework > WordPress PHP Web Blog/CMS
-3. select options (url / local file / wp-cli)
-4. finish
+1. Set Tools > Options > PHP > WordPress > download url(e.g. http://wordpress.org/latest.zip) or local file path(e.g. /path/to/wordpress.zip)
+2. Check New Project > PHP > PHP Application > ... > Framework > WordPress PHP Web Blog/CMS
+3. Select options (url / local file / wp-cli)
+4. Finished
 
-### Custome Content Name
+### Custom Content Name
 
 If you want to use custom content name(default is `wp-content`), please set your content name to the project properties.
-(project properties > Framework > WordPress)
+(Project Properties > Framework > WordPress)
 
-#### options
+#### Options
 - Set format to project : set format option to project.properties
 - create wp-config.php : copy from wp-config-sample.php
 
@@ -124,9 +124,9 @@ We can run wp-cli commands. *Please notice that this action needs so much time t
 2. Select WordPress Project node
 3. Right-click > WordPress > RunCommand...
 
-#### wp-cli
+#### WP-CLI
 
-Please see the followings:
+Please see the following:
 
 - https://github.com/wp-cli/wp-cli
 - http://wp-cli.org/
@@ -158,11 +158,11 @@ Available on [Plugin Portal](http://plugins.netbeans.org/plugin/46542/php-wordpr
 
 ### Development version
 
-If development version exists, it will be available in the same archive as stable version.
+If a development version exists, it will be available in the same archive as the stable version.
 
 ### Archive
 
-[github releases](https://github.com/junichi11/netbeans-wordpress-plugin/releases)
+[Github releases](https://github.com/junichi11/netbeans-wordpress-plugin/releases)
 
 ## License
 [Common Development and Distribution License (CDDL) v1.0 and GNU General Public License (GPL) v2](http://netbeans.org/cddl-gplv2.html)
