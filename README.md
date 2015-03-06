@@ -124,9 +124,9 @@ We can run wp-cli commands. *Please notice that this action needs so much time t
 2. Select WordPress Project node
 3. Right-click > WordPress > RunCommand...
 
-#### wp-cli
+#### WP-CLI
 
-Please see the followings:
+Please see the following:
 
 - https://github.com/wp-cli/wp-cli
 - http://wp-cli.org/
@@ -158,11 +158,11 @@ Available on [Plugin Portal](http://plugins.netbeans.org/plugin/46542/php-wordpr
 
 ### Development version
 
-If development version exists, it will be available in the same archive as stable version.
+If a development version exists, it will be available in the same archive as the stable version.
 
 ### Archive
 
-[github releases](https://github.com/junichi11/netbeans-wordpress-plugin/releases)
+[Github releases](https://github.com/junichi11/netbeans-wordpress-plugin/releases)
 
 ## License
 [Common Development and Distribution License (CDDL) v1.0 and GNU General Public License (GPL) v2](http://netbeans.org/cddl-gplv2.html)
