@@ -28,23 +28,23 @@ The `enabled` option is unchecked as default. Please check it on `project proper
 - Create a .htaccess file for permalink
 - Create a new child theme action (create a style.css for child theme)
 
-### Impotant Files
-It contains wp-config.php
+### Important Files
+It contains the wp-config.php
 
 ### Create New WordPress Project
-You can create a new WordPress project with Wizard.
+You can create a new WordPress project using the Wizard.
 
-1. set Tools > Options > PHP > WordPress > download url(e.g. http://wordpress.org/latest.zip) or local file path(e.g. /path/to/wordpress.zip)
-2. check New Project > PHP > PHP Application > ... > Framework > WordPress PHP Web Blog/CMS
-3. select options (url / local file / wp-cli)
-4. finish
+1. Set Tools > Options > PHP > WordPress > download url(e.g. http://wordpress.org/latest.zip) or local file path(e.g. /path/to/wordpress.zip)
+2. Check New Project > PHP > PHP Application > ... > Framework > WordPress PHP Web Blog/CMS
+3. Select options (url / local file / wp-cli)
+4. Finished
 
-### Custome Content Name
+### Custom Content Name
 
 If you want to use custom content name(default is `wp-content`), please set your content name to the project properties.
-(project properties > Framework > WordPress)
+(Project Properties > Framework > WordPress)
 
-#### options
+#### Options
 - Set format to project : set format option to project.properties
 - create wp-config.php : copy from wp-config-sample.php
 
