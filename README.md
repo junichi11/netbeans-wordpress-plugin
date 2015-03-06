@@ -1,32 +1,32 @@
 # NetBeans WordPress Plugin
 
-This is NetBeans plugin for WordPress.
+This is the NetBeans IDE plugin for WordPress.
 
 ## How to enable
 
-`enabled` option is unchecked as default. Please check it on `project properties > Frameworks > WordPress`
+The `enabled` option is unchecked as default. Please check it on `project properties > Frameworks > WordPress`
 
 ## Environment
 - NetBeans 8.0+
 - WordPress 3.5+
 
 ## Features
-- badge icon
-- important files
-- create new WordPress project
-- code templates
-- zip compress action
-- template files
-- display and change debug status
-- code completion for filter and action
-- create new theme action
-- hyperlink navigation
-- create new plugin action
-- custom content name
-- run command (wp-cli)
-- upgrade notification
-- create a .htaccess file for permalink
-- create a new child theme action (create a style.css for child theme)
+- Badge icon
+- Important files
+- Create new WordPress project
+- Code templates
+- Zip compress action
+- Template files
+- Display and change debug status
+- Code completion for filter and action
+- Create new theme action
+- Hyperlink navigation
+- Create new plugin action
+- Custom content name
+- Run command (wp-cli)
+- Upgrade notification
+- Create a .htaccess file for permalink
+- Create a new child theme action (create a style.css for child theme)
 
 ### Impotant Files
 It contains wp-config.php
