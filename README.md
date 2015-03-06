@@ -4,7 +4,7 @@ This is the NetBeans IDE plugin for WordPress.
 
 ## How to enable
 
-The `enabled` option is unchecked as default. Please check it on `project properties > Frameworks > WordPress`
+The `enabled` option is unchecked by default. Please check it on `Project Properties > Frameworks > WordPress`
 
 ## Environment
 - NetBeans 8.0+
