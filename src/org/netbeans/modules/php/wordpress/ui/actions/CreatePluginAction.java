@@ -58,8 +58,8 @@ import org.netbeans.modules.csl.api.UiUtils;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.spi.framework.actions.BaseAction;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule;
 import org.netbeans.modules.php.wordpress.util.Charset;
-import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -112,7 +112,7 @@ public class CreatePluginAction extends BaseAction {
         }
 
         // get plugins directory
-        pluginsDirectory = WPFileUtils.getPluginsDirectory(phpModule);
+        pluginsDirectory = WordPressModule.Factory.forPhpModule(phpModule).getPluginsDirectory();
         if (pluginsDirectory == null) {
             return;
         }

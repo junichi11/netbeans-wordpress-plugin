@@ -44,15 +44,18 @@ package org.netbeans.modules.php.wordpress.ui.actions;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.modules.php.wordpress.WordPress;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(
@@ -69,11 +72,16 @@ import org.openide.util.NbBundle.Messages;
 public final class ZipAction implements ActionListener {
 
     private final DataObject context;
+    private static final Logger LOGGER = Logger.getLogger(ZipAction.class.getName());
 
     public ZipAction(DataObject context) {
         this.context = context;
     }
 
+    @Messages({
+        "# {0} - file name",
+        "ZipAction.error.file.already.exist=Zip file ({0}) already exists."
+    })
     @Override
     public void actionPerformed(ActionEvent ev) {
         if (!isValidDirectory()) {
@@ -85,7 +93,9 @@ public final class ZipAction implements ActionListener {
         try {
             WPFileUtils.zip(target);
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            // #36
+            LOGGER.log(Level.WARNING, ex.getMessage());
+            showErrorDialog(Bundle.ZipAction_error_file_already_exist(target.getName() + ".zip")); // NOI18N
         }
     }
 
@@ -110,9 +120,26 @@ public final class ZipAction implements ActionListener {
         String name = parent.getNameExt();
         if (parent.isFolder()) {
             if (name.equals("plugins") || name.equals("themes")) { // NOI18N
+                // #36
+                String zipFileName = target.getName() + ".zip"; // NOI18N
+                FileObject zipFile = parent.getFileObject(zipFileName);
+                if (zipFile != null) {
+                    showErrorDialog(Bundle.ZipAction_error_file_already_exist(zipFileName));
+                    return false;
+                }
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Show error message dialog.
+     *
+     * @param errorMessage Error message
+     */
+    private void showErrorDialog(String errorMessage) {
+        NotifyDescriptor.Message message = new NotifyDescriptor.Message(errorMessage, NotifyDescriptor.ERROR_MESSAGE);
+        DialogDisplayer.getDefault().notify(message);
     }
 }

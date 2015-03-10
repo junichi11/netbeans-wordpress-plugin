@@ -78,6 +78,6 @@ public abstract class WordPressCompletionProvider implements CompletionProvider 
         if (fileObject == null) {
             return null;
         }
-        return PhpModule.forFileObject(fileObject);
+        return PhpModule.Factory.forFileObject(fileObject);
     }
 }

@@ -26,13 +26,28 @@
             displayName = "#WordPress_Theme_Style_DisplayName",
             content = "style.css",
             description = "WpThemeStyleDescription.html",
+            scriptEngine = "freemarker"),
+    @TemplateRegistration(
+            folder = "WordPress",
+            iconBase = WordPress.WP_ICON_16,
+            displayName = "#WordPress_Child_Theme_Style_DisplayName",
+            content = "child-style.css",
+            description = "WpChildThemeStyleDescription.html",
+            scriptEngine = "freemarker"),
+    @TemplateRegistration(
+            folder = "WordPress",
+            //            iconBase = WordPress.WP_ICON_16,
+            displayName = "#WordPress_Permalink_Htaccess_DisplayName",
+            content = ".htaccess",
+            description = "WpPermalinkHtaccessDescription.html",
             scriptEngine = "freemarker"),})
 @NbBundle.Messages({
     "WordPress_License_Template_DisplayName=GPLv2",
     "WordPress_Plugin_Template_DisplayName=WordPress Plugin File",
     "WordPress_Plugin_Readme_DisplayName=WordPress Plugin Readme File",
-    "WordPress_Theme_Style_DisplayName=WordPress Theme Style File"
-})
+    "WordPress_Theme_Style_DisplayName=WordPress Theme Style File",
+    "WordPress_Child_Theme_Style_DisplayName=WordPress Child Theme Style File",
+    "WordPress_Permalink_Htaccess_DisplayName=WordPress .htaccess file for permalink"})
 package org.netbeans.modules.php.wordpress.resources.templates;
 
 import org.netbeans.api.templates.TemplateRegistration;

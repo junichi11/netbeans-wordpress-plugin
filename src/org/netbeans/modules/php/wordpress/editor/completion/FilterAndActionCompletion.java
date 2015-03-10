@@ -53,12 +53,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.text.AbstractDocument;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.Token;
-import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
@@ -70,6 +68,7 @@ import org.netbeans.modules.php.editor.api.QuerySupportFactory;
 import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.wordpress.util.Charset;
+import org.netbeans.modules.php.wordpress.util.DocUtils;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
 import org.netbeans.spi.editor.completion.CompletionTask;
@@ -87,7 +86,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author junichi11
  */
-@MimeRegistration(mimeType = "text/x-php5", service = CompletionProvider.class)
+@MimeRegistration(mimeType = FileUtils.PHP_MIME_TYPE, service = CompletionProvider.class)
 public final class FilterAndActionCompletion extends WordPressCompletionProvider {
 
     private static final Logger LOGGER = Logger.getLogger(FilterAndActionCompletion.class.getName());
@@ -112,16 +111,15 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
         return new AsyncCompletionTask(new AsyncCompletionQuery() {
             @Override
             protected void query(CompletionResultSet completionResultSet, Document doc, int caretOffset) {
-                AbstractDocument ad = (AbstractDocument) doc;
-                ad.readLock();
-                TokenHierarchy hierarchy = TokenHierarchy.get(doc);
                 try {
-                    TokenSequence<PHPTokenId> ts = (TokenSequence<PHPTokenId>) hierarchy.tokenSequence(PHPTokenId.language());
+                    TokenSequence<PHPTokenId> ts = DocUtils.getTokenSequence(doc);
+                    if (ts == null) {
+                        return;
+                    }
                     ts.move(caretOffset);
                     ts.moveNext();
                     Token<PHPTokenId> token = ts.token();
                     if (token.id() != PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING) {
-                        completionResultSet.finish();
                         return;
                     }
                     String caretInput = ts.token().text().toString();
@@ -135,7 +133,6 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
 
                     // check whether funciton is add_filter
                     if (!isValidCompletion(ts) || length < 2) {
-                        completionResultSet.finish();
                         return;
                     }
 
@@ -161,10 +158,8 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
                         }
                     }
                 } finally {
-                    ad.readUnlock();
+                    completionResultSet.finish();
                 }
-
-                completionResultSet.finish();
             }
         }, component);
     }
@@ -261,16 +256,14 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
         actionItems = new ArrayList<WordPressCompletionItem>();
         FileObject filterXml = null;
         FileObject actionXml = null;
-        PhpModule phpModule = PhpModule.inferPhpModule();
+        PhpModule phpModule = PhpModule.Factory.inferPhpModule();
         // TODO improve for each locales
 //        String locale = "";
         // use custom file
         if (phpModule != null) {
             FileObject projectDirectory = phpModule.getProjectDirectory();
-            if (projectDirectory != null) {
-                filterXml = projectDirectory.getFileObject(CUSTOM_FILTER_CODE_COMPLETION_XML);
-                actionXml = projectDirectory.getFileObject(CUSTOM_ACTION_CODE_COMPLETION_XML);
-            }
+            filterXml = projectDirectory.getFileObject(CUSTOM_FILTER_CODE_COMPLETION_XML);
+            actionXml = projectDirectory.getFileObject(CUSTOM_ACTION_CODE_COMPLETION_XML);
         }
         // TODO improve loop
         InputStream filterInputStream = null;

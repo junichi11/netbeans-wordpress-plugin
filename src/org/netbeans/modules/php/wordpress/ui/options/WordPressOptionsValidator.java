@@ -39,55 +39,32 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress.ui.actions;
+package org.netbeans.modules.php.wordpress.ui.options;
 
-import java.util.Collection;
-import org.netbeans.api.editor.mimelookup.MimeLookup;
-import org.netbeans.api.editor.mimelookup.MimePath;
-import org.netbeans.modules.php.api.phpmodule.PhpModule;
-import org.netbeans.modules.php.api.util.FileUtils;
-import org.netbeans.modules.php.spi.framework.actions.BaseAction;
-import org.netbeans.modules.php.wordpress.editor.completion.FilterAndActionCompletion;
-import org.netbeans.modules.php.wordpress.util.WPUtils;
-import org.netbeans.spi.editor.completion.CompletionProvider;
-import org.openide.util.NbBundle;
+import org.netbeans.modules.php.api.validation.ValidationResult;
+import org.netbeans.modules.php.wordpress.commands.WordPressCli;
 
 /**
  *
  * @author junichi11
  */
-public class CodeCompletionRefreshAction extends BaseAction {
+public final class WordPressOptionsValidator {
 
-    private static final long serialVersionUID = -1446444622440007833L;
+    private final ValidationResult result;
 
-    @NbBundle.Messages({
-        "# {0} - name",
-        "LBL_WordPressAction=WordPress Action: {0}"
-    })
-    @Override
-    protected String getFullName() {
-        return Bundle.LBL_WordPressAction(getPureName());
+    public WordPressOptionsValidator() {
+        this.result = new ValidationResult();
     }
 
-    @NbBundle.Messages("LBL_ActionName=Code Completion Refresh")
-    @Override
-    protected String getPureName() {
-        return Bundle.LBL_ActionName();
+    public WordPressOptionsValidator validate(String wpCliPath) {
+        String error = WordPressCli.validate(wpCliPath);
+        if (error != null) {
+            result.addWarning(new ValidationResult.Message("wp-cli.path", error)); // NOI18N
+        }
+        return this;
     }
 
-    @Override
-    protected void actionPerformed(PhpModule pm) {
-        if (!WPUtils.isWP(pm)) {
-            // called via shortcut
-            return;
-        }
-        MimePath mimePath = MimePath.parse(FileUtils.PHP_MIME_TYPE);
-        Collection<? extends CompletionProvider> providers = MimeLookup.getLookup(mimePath).lookupAll(CompletionProvider.class);
-        for (CompletionProvider provider : providers) {
-            if (provider instanceof FilterAndActionCompletion) {
-                FilterAndActionCompletion completion = (FilterAndActionCompletion) provider;
-                completion.refresh();
-            }
-        }
+    public ValidationResult getResult() {
+        return result;
     }
 }
