@@ -170,7 +170,7 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
     }
 
     /**
-     * Check whether funciton is add_filter
+     * Check whether function is add_filter
      *
      * @param ts
      * @return true if add_filter, otherwise false
