@@ -110,7 +110,6 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
         refresh();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public CompletionTask createTask(int queryType, JTextComponent component, final PhpModule phpModule) {
         return new AsyncCompletionTask(new AsyncCompletionQuery() {
