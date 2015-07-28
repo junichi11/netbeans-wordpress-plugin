@@ -150,6 +150,7 @@ public class WordPressPluginUpgradeChecker implements WordPressUpgradeChecker {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (StringUtils.isEmpty(WordPressOptions.getInstance().getWpCliPath())) {
+                UpgradeUtils.showInvalidWpCliDialog();
                 return;
             }
 
