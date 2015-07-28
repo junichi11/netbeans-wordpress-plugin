@@ -42,40 +42,48 @@
 package org.netbeans.modules.php.wordpress.ui.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.modules.php.wordpress.WordPress;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
+import org.netbeans.modules.php.wordpress.util.WPUtils;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
+import org.openide.util.ContextAwareAction;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(
-        category = "File",
-        id = "org.netbeans.modules.php.wordpress.ui.actions.ZipAction")
-@ActionRegistration(
-        iconBase = WordPress.WP_ICON_16,
-        displayName = "#CTL_ZipAction")
-@ActionReferences({
-    @ActionReference(path = "Menu/File", position = 2700),
-    @ActionReference(path = "Loaders/folder/any/Actions", position = 1650)
-})
+@ActionID(category = "File", id = "org.netbeans.modules.php.wordpress.ui.actions.ZipAction")
+@ActionRegistration(displayName = "#CTL_ZipAction", lazy = false)
+@ActionReference(path = "Loaders/folder/any/Actions", position = 1650)
 @Messages("CTL_ZipAction=WordPress Zip compress")
-public final class ZipAction implements ActionListener {
+public final class ZipAction extends AbstractAction implements ContextAwareAction {
 
-    private final DataObject context;
+    private static final long serialVersionUID = 1781415535743693501L;
+
+    private DataObject context;
     private static final Logger LOGGER = Logger.getLogger(ZipAction.class.getName());
+
+    public ZipAction() {
+        this(null);
+    }
 
     public ZipAction(DataObject context) {
         this.context = context;
+        if (context == null) {
+            putValue(Action.NAME, ""); // NOI18N
+        } else {
+            putValue(Action.NAME, Bundle.CTL_ZipAction()); // NOI18N
+        }
+        setEnabled(context != null);
     }
 
     @Messages({
@@ -84,7 +92,7 @@ public final class ZipAction implements ActionListener {
     })
     @Override
     public void actionPerformed(ActionEvent ev) {
-        if (!isValidDirectory()) {
+        if (!isValidDirectory(getFileObject())) {
             return;
         }
 
@@ -114,8 +122,10 @@ public final class ZipAction implements ActionListener {
      * @return true if parent directory name is "plugins" or "themes", otherwise
      * false.
      */
-    private boolean isValidDirectory() {
-        FileObject target = getFileObject();
+    private boolean isValidDirectory(FileObject target) {
+        if (target == null) {
+            return false;
+        }
         FileObject parent = target.getParent();
         String name = parent.getNameExt();
         if (parent.isFolder()) {
@@ -141,5 +151,25 @@ public final class ZipAction implements ActionListener {
     private void showErrorDialog(String errorMessage) {
         NotifyDescriptor.Message message = new NotifyDescriptor.Message(errorMessage, NotifyDescriptor.ERROR_MESSAGE);
         DialogDisplayer.getDefault().notify(message);
+    }
+
+    @Override
+    public Action createContextAwareInstance(Lookup actionContext) {
+        DataObject dataObject = actionContext.lookup(DataObject.class);
+        if (dataObject == null) {
+            return this;
+        }
+        FileObject fileObject = dataObject.getPrimaryFile();
+        PhpModule phpModule = PhpModule.Factory.forFileObject(fileObject);
+        if (phpModule == null) {
+            return this;
+        }
+        if (!WPUtils.isWP(phpModule)) {
+            return this;
+        }
+        if (!isValidDirectory(fileObject)) {
+            return this;
+        }
+        return new ZipAction(dataObject);
     }
 }
