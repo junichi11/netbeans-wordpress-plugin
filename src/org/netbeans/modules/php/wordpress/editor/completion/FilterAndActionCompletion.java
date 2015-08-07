@@ -47,7 +47,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -89,6 +88,12 @@ import org.xml.sax.helpers.DefaultHandler;
 @MimeRegistration(mimeType = FileUtils.PHP_MIME_TYPE, service = CompletionProvider.class)
 public final class FilterAndActionCompletion extends WordPressCompletionProvider {
 
+    enum Type {
+
+        Filter,
+        Action
+    }
+
     private static final Logger LOGGER = Logger.getLogger(FilterAndActionCompletion.class.getName());
     private static final String CUSTOM_FILTER_CODE_COMPLETION_XML = "nbproject/code-completion-filter.xml"; // NOI18N
     private static final String CUSTOM_ACTION_CODE_COMPLETION_XML = "nbproject/code-completion-action.xml"; // NOI18N
@@ -97,15 +102,14 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
     private int argCount;
     private boolean isFilter = false;
     private boolean isAction = false;
-    private List<WordPressCompletionItem> filterItems;
-    private List<WordPressCompletionItem> actionItems;
+    private final List<WordPressCompletionItem> filterItems = new ArrayList<>();
+    private final List<WordPressCompletionItem> actionItems = new ArrayList<>();
     private String currentInput;
 
     public FilterAndActionCompletion() {
         refresh();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public CompletionTask createTask(int queryType, JTextComponent component, final PhpModule phpModule) {
         return new AsyncCompletionTask(new AsyncCompletionQuery() {
@@ -165,7 +169,7 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
     }
 
     /**
-     * Check whether funciton is add_filter
+     * Check whether function is add_filter
      *
      * @param ts
      * @return true if add_filter, otherwise false
@@ -211,7 +215,7 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
     }
 
     private List<WordPressCompletionItem> getCodeCompletionList(PhpModule phpModule) {
-        List<WordPressCompletionItem> list = new ArrayList<WordPressCompletionItem>();
+        List<WordPressCompletionItem> list = new ArrayList<>();
         if (argCount == 1) {
             if (isFilter) {
                 list = filterItems;
@@ -225,7 +229,7 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
     }
 
     private List<WordPressCompletionItem> getFunctionsList(PhpModule phpModule) {
-        List<WordPressCompletionItem> list = new ArrayList<WordPressCompletionItem>();
+        List<WordPressCompletionItem> list = new ArrayList<>();
         FileObject sourceDirectory = phpModule.getSourceDirectory();
         String rootPath = ""; // NOI18N
         if (sourceDirectory != null) {
@@ -252,47 +256,69 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
 
     public void refresh() {
         // read file for filter
-        filterItems = new ArrayList<WordPressCompletionItem>();
-        actionItems = new ArrayList<WordPressCompletionItem>();
-        FileObject filterXml = null;
-        FileObject actionXml = null;
+        filterItems.clear();
+        actionItems.clear();
+        FileObject customFilterXml = null;
+        FileObject customActionXml = null;
         PhpModule phpModule = PhpModule.Factory.inferPhpModule();
-        // TODO improve for each locales
-//        String locale = "";
+
         // use custom file
         if (phpModule != null) {
             FileObject projectDirectory = phpModule.getProjectDirectory();
-            filterXml = projectDirectory.getFileObject(CUSTOM_FILTER_CODE_COMPLETION_XML);
-            actionXml = projectDirectory.getFileObject(CUSTOM_ACTION_CODE_COMPLETION_XML);
+            customFilterXml = projectDirectory.getFileObject(CUSTOM_FILTER_CODE_COMPLETION_XML);
+            customActionXml = projectDirectory.getFileObject(CUSTOM_ACTION_CODE_COMPLETION_XML);
         }
-        // TODO improve loop
-        InputStream filterInputStream = null;
-        InputStream actionInputStream = null;
-        if (filterXml == null) {
-            filterInputStream = FilterAndActionCompletion.class.getResourceAsStream(DEFAULT_FILTER_CODE_COMPLETION_XML);
-        } else {
-            try {
-                filterInputStream = filterXml.getInputStream();
-            } catch (FileNotFoundException ex) {
-                LOGGER.log(Level.WARNING, null, ex);
+        refresh(customFilterXml, Type.Filter);
+        refresh(customActionXml, Type.Action);
+    }
+
+    private void refresh(FileObject customXml, Type type) {
+        try (InputStream inputStream = getInputStream(customXml, type)) {
+            if (inputStream != null) {
+                try (Reader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.UTF8))) {
+                    parse(reader, type);
+                }
             }
-        }
-        if (actionXml == null) {
-            actionInputStream = FilterAndActionCompletion.class.getResourceAsStream(DEFAULT_ACTION_CODE_COMPLETION_XML);
-        } else {
-            try {
-                actionInputStream = actionXml.getInputStream();
-            } catch (FileNotFoundException ex) {
-                LOGGER.log(Level.WARNING, null, ex);
-            }
-        }
-        try {
-            Reader filterReader = new BufferedReader(new InputStreamReader(filterInputStream, Charset.UTF8));
-            WordPressCodeCompletionParser.parse(filterReader, filterItems);
-            Reader actionReader = new BufferedReader(new InputStreamReader(actionInputStream, Charset.UTF8));
-            WordPressCodeCompletionParser.parse(actionReader, actionItems);
-        } catch (UnsupportedEncodingException ex) {
+        } catch (IOException ex) {
             LOGGER.log(Level.WARNING, null, ex);
+        }
+    }
+
+    private void parse(Reader reader, Type type) {
+        switch (type) {
+            case Filter:
+                WordPressCodeCompletionParser.parse(reader, filterItems);
+                break;
+            case Action:
+                WordPressCodeCompletionParser.parse(reader, actionItems);
+                break;
+            default:
+                throw new AssertionError();
+        }
+    }
+
+    private InputStream getInputStream(FileObject customXml, Type type) {
+        InputStream inputStream = null;
+        if (customXml == null) {
+            inputStream = getDefaultInputStream(type);
+        } else {
+            try {
+                inputStream = customXml.getInputStream();
+            } catch (FileNotFoundException ex) {
+                LOGGER.log(Level.WARNING, null, ex);
+            }
+        }
+        return inputStream;
+    }
+
+    private InputStream getDefaultInputStream(Type type) {
+        switch (type) {
+            case Filter:
+                return FilterAndActionCompletion.class.getResourceAsStream(DEFAULT_FILTER_CODE_COMPLETION_XML);
+            case Action:
+                return FilterAndActionCompletion.class.getResourceAsStream(DEFAULT_ACTION_CODE_COMPLETION_XML);
+            default:
+                return null;
         }
     }
 
@@ -321,9 +347,7 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
             try {
                 WordPressCodeCompletionParser parser = new WordPressCodeCompletionParser(items);
                 parser.xmlReader.parse(new InputSource(reader));
-            } catch (SAXException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IOException ex) {
+            } catch (SAXException | IOException ex) {
                 Exceptions.printStackTrace(ex);
             } finally {
                 try {

@@ -45,6 +45,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -60,6 +61,7 @@ import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
 import org.netbeans.modules.php.wordpress.wpapis.WordPressVersionCheckApi;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.HtmlBrowser;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -74,6 +76,7 @@ import org.openide.util.lookup.ServiceProvider;
 public final class WordPressCoreUpgradeChecker implements WordPressUpgradeChecker {
 
     private String upgradeVersionNumber;
+    private String downloadUrl;
     private static final Logger LOGGER = Logger.getLogger(WordPressCoreUpgradeChecker.class.getName());
 
     public WordPressCoreUpgradeChecker() {
@@ -90,6 +93,7 @@ public final class WordPressCoreUpgradeChecker implements WordPressUpgradeChecke
                 WordPressVersionCheckApi versionCheckApi = new WordPressVersionCheckApi();
                 versionCheckApi.parse();
                 upgradeVersionNumber = versionCheckApi.getVersion();
+                downloadUrl = versionCheckApi.getDownload();
                 if (StringUtils.isEmpty(upgradeVersionNumber)) {
                     // XXX throw exception?
                     return false;
@@ -149,17 +153,18 @@ public final class WordPressCoreUpgradeChecker implements WordPressUpgradeChecke
         "WordPressCoreUpgradeChecker.core.notify.title=Notification({0}): New version is available",
         "# {0} - version number",
         "# {1} - display name",
-        "WordPressCoreUpgradeChecker.core.notify.detail=New core version is available: {0} ({1})",})
+        "WordPressCoreUpgradeChecker.core.notify.detail=New core version is available: {0} ({1})"
+    })
     @Override
     public void notifyUpgrade(PhpModule phpModule) {
-        if (StringUtils.isEmpty(upgradeVersionNumber)) {
+        if (StringUtils.isEmpty(upgradeVersionNumber) || StringUtils.isEmpty(downloadUrl)) {
             return;
         }
         NotificationDisplayer.getDefault().notify(
                 Bundle.WordPressCoreUpgradeChecker_core_notify_title(phpModule.getDisplayName()),
                 ImageUtilities.loadImageIcon(WordPress.WP_ICON_16, false),
                 Bundle.WordPressCoreUpgradeChecker_core_notify_detail(upgradeVersionNumber, phpModule.getDisplayName()),
-                new CoreUpdateActionListener(phpModule)
+                new CoreUpdateActionListener(phpModule, downloadUrl)
         );
     }
 
@@ -171,15 +176,36 @@ public final class WordPressCoreUpgradeChecker implements WordPressUpgradeChecke
     private static class CoreUpdateActionListener implements ActionListener {
 
         private final PhpModule phpModule;
+        private final String downloadUrl;
 
-        public CoreUpdateActionListener(PhpModule phpModule) {
+        public CoreUpdateActionListener(PhpModule phpModule, String downloadUrl) {
             this.phpModule = phpModule;
+            this.downloadUrl = downloadUrl;
         }
 
-        @NbBundle.Messages("CoreUpdateActionListener.comfirmation=Do you want to update? (run wp core update, update-db)")
+        @NbBundle.Messages({
+            "CoreUpdateActionListener.comfirmation=Do you want to update? (run wp core update, update-db)",
+            "# {0} - download url",
+            "CoreUpdateActionListener.download.zip.confirmation=<html><p>Dou you want to download the zip file({0}) on the browsser?</p>"
+            + "<b>NOTE:</b> You can also update the WP using the update command of wp-cli if you set wp-cli to the Options"
+        })
         @Override
         public void actionPerformed(ActionEvent e) {
             if (StringUtils.isEmpty(WordPressOptions.getInstance().getWpCliPath())) {
+                // show dialog
+                NotifyDescriptor.Confirmation message = new NotifyDescriptor.Confirmation(
+                        Bundle.CoreUpdateActionListener_download_zip_confirmation(downloadUrl),
+                        NotifyDescriptor.QUESTION_MESSAGE
+                );
+                if (DialogDisplayer.getDefault().notify(message) == NotifyDescriptor.OK_OPTION) {
+                    if (!StringUtils.isEmpty(downloadUrl)) {
+                        try {
+                            HtmlBrowser.URLDisplayer.getDefault().showURL(new URL(downloadUrl));
+                        } catch (MalformedURLException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    }
+                }
                 return;
             }
 
@@ -207,11 +233,7 @@ public final class WordPressCoreUpgradeChecker implements WordPressUpgradeChecke
                         if (result != null) {
                             result.get();
                         }
-                    } catch (InvalidPhpExecutableException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (InterruptedException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (ExecutionException ex) {
+                    } catch (InvalidPhpExecutableException | InterruptedException | ExecutionException ex) {
                         Exceptions.printStackTrace(ex);
                     }
                 }
