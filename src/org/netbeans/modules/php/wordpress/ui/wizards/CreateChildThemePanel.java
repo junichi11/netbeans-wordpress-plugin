@@ -64,7 +64,7 @@ public class CreateChildThemePanel extends JPanel {
      */
     public CreateChildThemePanel(List<String> themes) {
         initComponents();
-        DefaultComboBoxModel<String> defaultComboBoxModel = new DefaultComboBoxModel<String>(themes.toArray(new String[0]));
+        DefaultComboBoxModel<String> defaultComboBoxModel = new DefaultComboBoxModel<>(themes.toArray(new String[0]));
         parentThemeComboBox.setModel(defaultComboBoxModel);
         childDirectoryNameTextField.getDocument().addDocumentListener(new DefaultDocumentListener());
         errorLabel.setText(" "); // NOI18N

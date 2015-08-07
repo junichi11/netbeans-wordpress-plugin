@@ -66,8 +66,8 @@ public class WordPressEditorExtender extends EditorExtender {
      * @see <a href="http://codex.wordpress.org/Global_Variables">Global
      * Variables</a>
      */
-    private static final Map<String, String> globalMap = new HashMap<String, String>();
-    private static final List<PhpBaseElement> elements = new LinkedList<PhpBaseElement>();
+    private static final Map<String, String> globalMap = new HashMap<>();
+    private static final List<PhpBaseElement> elements = new LinkedList<>();
 
     static {
         // object
@@ -139,7 +139,7 @@ public class WordPressEditorExtender extends EditorExtender {
         PhpModule phpModule = PhpModule.Factory.forFileObject(fo);
         // check whether project is WordPress
         if (!WPUtils.isWP(phpModule)) {
-            return new LinkedList<PhpBaseElement>();
+            return new LinkedList<>();
         }
         return elements;
     }

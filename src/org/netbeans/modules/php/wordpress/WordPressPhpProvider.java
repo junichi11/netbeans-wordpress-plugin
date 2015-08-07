@@ -89,7 +89,7 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
     private static final WordPressPhpProvider INSTANCE = new WordPressPhpProvider();
     private static final String ICON_PATH = "org/netbeans/modules/php/wordpress/resources/wordpress_badge_8.png"; // NOI18N
     private final BadgeIcon badgeIcon;
-    public static final Set<String> WP_DIRS = new HashSet<String>();
+    public static final Set<String> WP_DIRS = new HashSet<>();
 
     static {
         WP_DIRS.add("wp-admin"); // NOI18N

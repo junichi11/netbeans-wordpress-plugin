@@ -50,7 +50,7 @@ import java.util.HashSet;
 public class UnderscoresZipEntryFilter extends GithubZipEntryFilter {
 
     public UnderscoresZipEntryFilter() {
-        topDirectories = new HashSet<String>();
+        topDirectories = new HashSet<>();
         topDirectories.add("inc"); // NOI18N
         topDirectories.add("js"); // NOI18N
         topDirectories.add("languages"); // NOI18N

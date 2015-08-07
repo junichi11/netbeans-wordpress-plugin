@@ -78,7 +78,7 @@ public final class CreateChildThemeAction extends BaseAction implements ChangeLi
 
     private CreateChildThemePanel panel;
     private DialogDescriptor descriptor;
-    private final List<String> themes = new ArrayList<String>();
+    private final List<String> themes = new ArrayList<>();
     private static final CreateChildThemeAction INSTANCE = new CreateChildThemeAction();
     private static final Logger LOGGER = Logger.getLogger(CreateChildThemeAction.class.getName());
     private static final long serialVersionUID = -2231810352652363996L;
@@ -168,7 +168,7 @@ public final class CreateChildThemeAction extends BaseAction implements ChangeLi
         }
         DataObject templateDataObject = DataObject.find(template);
         DataFolder targetFolder = DataFolder.findFolder(childThemeDirectory);
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<>();
         parameters.put("name", getPanel().getChildThemeName()); // NOI18N
         parameters.put("parent", getPanel().getParentThemeName()); // NOI18N
         parameters.put("uri", getPanel().getChildThemeUri()); // NOI18N

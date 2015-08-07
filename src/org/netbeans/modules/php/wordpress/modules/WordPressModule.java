@@ -131,7 +131,7 @@ public final class WordPressModule {
     //~ Inner class
     public static class Factory {
 
-        private static final Map<PhpModule, WordPressModule> modules = new HashMap<PhpModule, WordPressModule>();
+        private static final Map<PhpModule, WordPressModule> modules = new HashMap<>();
 
         public static WordPressModule forPhpModule(PhpModule phpModule) {
             WordPressModule module = modules.get(phpModule);

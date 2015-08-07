@@ -109,7 +109,7 @@ public class WordPressThemeUpgradeChecker implements WordPressUpgradeChecker {
     }
 
     private List<UpdateItem> getUpdateItems(PhpModule phpModule) {
-        items = new ArrayList<UpdateItem>();
+        items = new ArrayList<>();
         try {
             // get result
             WordPressCli wpCli = WordPressCli.getDefault(false);

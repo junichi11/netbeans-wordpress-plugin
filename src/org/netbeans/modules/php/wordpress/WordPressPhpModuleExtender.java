@@ -108,9 +108,9 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
     private static final String DB_HOST = "DB_HOST"; // NOI18N
     private static final String DB_CHARSET = "DB_CHARSET"; // NOI18N
     private static final String DB_COLLATE = "DB_COLLATE"; // NOI18N
-    private static final Set<String> SECRET_KEYS = new HashSet<String>();
-    private static final Set<String> CONFIG_KEYS = new HashSet<String>();
-    private static final Map<String, String> CONFIG_MAP = new HashMap<String, String>();
+    private static final Set<String> SECRET_KEYS = new HashSet<>();
+    private static final Set<String> CONFIG_KEYS = new HashSet<>();
+    private static final Map<String, String> CONFIG_MAP = new HashMap<>();
     private boolean isInternetReachable = true;
     private String errorMessage;
     private static final Logger LOGGER = Logger.getLogger(WordPressPhpModuleExtender.class.getName());
@@ -218,7 +218,7 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
         } else if (panel.useWpCli()) {
             try {
                 // params
-                ArrayList<String> params = new ArrayList<String>(2);
+                ArrayList<String> params = new ArrayList<>(2);
                 WordPressOptions options = WordPressOptions.getInstance();
                 String locale = options.getWpCliDownloadLocale();
                 if (!StringUtils.isEmpty(locale)) {
@@ -254,7 +254,7 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
             WordPressPreferences.setWordPressFormat(pm);
         }
 
-        Set<FileObject> files = new HashSet<FileObject>();
+        Set<FileObject> files = new HashSet<>();
         if (sourceDirectory != null) {
             // create wp-config.php
             if (panel.isSelectedCreateConfig()) {
@@ -377,7 +377,7 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
      * @return
      */
     private List<String> getSecretKey() {
-        List<String> keys = new ArrayList<String>();
+        List<String> keys = new ArrayList<>();
         try {
             URL url = new URL(HTTPS_API_WORDPRESS_ORG_SECRET_KEY);
             URLConnection connection = url.openConnection();

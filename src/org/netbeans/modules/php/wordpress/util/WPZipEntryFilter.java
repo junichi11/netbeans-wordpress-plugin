@@ -53,7 +53,7 @@ import javax.swing.text.JTextComponent;
 public class WPZipEntryFilter implements ZipEntryFilter {
 
     private JTextComponent component = null;
-    private static final Set<String> topDirectories = new HashSet<String>();
+    private static final Set<String> topDirectories = new HashSet<>();
 
     static {
         topDirectories.add("wp-admin");

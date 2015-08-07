@@ -256,7 +256,7 @@ public class CreateUnderscoresThemeAction extends BaseAction {
      * @return theme names
      */
     private Set<String> getExistingThemeNames(FileObject themesDirectory) {
-        Set<String> existingThemeNames = new HashSet<String>();
+        Set<String> existingThemeNames = new HashSet<>();
         for (FileObject child : themesDirectory.getChildren()) {
             if (child.isFolder()) {
                 existingThemeNames.add(child.getName());

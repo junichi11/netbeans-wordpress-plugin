@@ -218,7 +218,7 @@ public abstract class CreateThemeBaseAction extends BaseAction {
      * Set existing theme names.
      */
     private void setExistingThemeNames() {
-        existingThemeNames = new HashSet<String>();
+        existingThemeNames = new HashSet<>();
         if (themesDirectory != null) {
             for (FileObject child : themesDirectory.getChildren()) {
                 if (child.isFolder()) {

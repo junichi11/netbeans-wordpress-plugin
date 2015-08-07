@@ -104,7 +104,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
     private static final String WP_DEBUG_FORMAT = "define('WP_DEBUG', %s);"; // NOI18N
     private static final String DEBUG_REGEX = "^define\\(\\s*'WP_DEBUG',\\s*(true|false)\\s*\\);$"; // NOI18N
     private static final String VERSION_REGEX = "^\\$wp_version\\s*=\\s*'(.+)';$"; // NOI18N
-    private static final Map<String, String> debugLevel = new HashMap<String, String>();
+    private static final Map<String, String> debugLevel = new HashMap<>();
     private static final String WP_CONFIG_PHP = "wp-config.php"; // NOI18N
     private final ImageIcon icon = ImageUtilities.loadImageIcon(WordPress.WP_ICON_16, true);
     private final Lookup.Result<FileObject> result;
@@ -127,11 +127,11 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
         result = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
         result.addLookupListener(new LookupListenerImpl());
 
-        model = new DefaultListModel<String>();
+        model = new DefaultListModel<>();
         for (String debugLv : debugLevel.keySet()) {
             model.addElement(debugLv);
         }
-        list = new JList<String>(model);
+        list = new JList<>(model);
 
         // add MouseAdapter
         debugLabel.addMouseListener(new MouseAdapter() {

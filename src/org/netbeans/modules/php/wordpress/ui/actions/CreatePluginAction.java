@@ -186,7 +186,7 @@ public class CreatePluginAction extends BaseAction {
      * Set existing plugin names.
      */
     private void setExistingPluginNames() {
-        existingPluignNames = new HashSet<String>();
+        existingPluignNames = new HashSet<>();
         if (pluginsDirectory != null) {
             for (FileObject child : pluginsDirectory.getChildren()) {
                 if (child.isFolder()) {
