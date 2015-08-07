@@ -184,7 +184,7 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
         localFileLabel = new javax.swing.JLabel();
         formatCheckBox = new javax.swing.JCheckBox();
         wpConfigPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        dbNameLabel = new javax.swing.JLabel();
         dbNameTextField = new javax.swing.JTextField();
         dbUserLabel = new javax.swing.JLabel();
         dbUserTextField = new javax.swing.JTextField();
@@ -232,7 +232,7 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
         wpConfigPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.wpConfigPanel.border.title"))); // NOI18N
         wpConfigPanel.setAutoscrolls(true);
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.jLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(dbNameLabel, org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbNameLabel.text")); // NOI18N
 
         dbNameTextField.setText(org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbNameTextField.text")); // NOI18N
 
@@ -264,33 +264,27 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
         wpConfigPanelLayout.setHorizontalGroup(
             wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(wpConfigPanelLayout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dbNameTextField))
-            .addGroup(wpConfigPanelLayout.createSequentialGroup()
                 .addGroup(wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dbNameLabel)
                     .addComponent(dbHostLabel)
                     .addComponent(dbCharsetLabel)
-                    .addComponent(dbCollateLabel))
-                .addGap(14, 14, 14)
-                .addGroup(wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dbCharsetTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(dbHostTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
-                    .addComponent(dbCollateTextField)))
-            .addGroup(wpConfigPanelLayout.createSequentialGroup()
-                .addGroup(wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dbCollateLabel)
                     .addComponent(dbUserLabel)
                     .addComponent(dbPasswordLabel))
-                .addGap(19, 19, 19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dbNameTextField)
                     .addComponent(dbUserTextField)
-                    .addComponent(dbPasswordTextField)))
+                    .addComponent(dbPasswordTextField)
+                    .addComponent(dbHostTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                    .addComponent(dbCharsetTextField)
+                    .addComponent(dbCollateTextField)))
         );
         wpConfigPanelLayout.setVerticalGroup(
             wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(wpConfigPanelLayout.createSequentialGroup()
                 .addGroup(wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                    .addComponent(dbNameLabel)
                     .addComponent(dbNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -347,7 +341,7 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
                             .addComponent(formatCheckBox)
                             .addComponent(createConfigCheckBox)
                             .addComponent(useWpCliRadioButton))
-                        .addGap(0, 223, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(wpConfigPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -417,13 +411,13 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
     private javax.swing.JTextField dbCollateTextField;
     private javax.swing.JLabel dbHostLabel;
     private javax.swing.JTextField dbHostTextField;
+    private javax.swing.JLabel dbNameLabel;
     private javax.swing.JTextField dbNameTextField;
     private javax.swing.JLabel dbPasswordLabel;
     private javax.swing.JTextField dbPasswordTextField;
     private javax.swing.JLabel dbUserLabel;
     private javax.swing.JTextField dbUserTextField;
     private javax.swing.JCheckBox formatCheckBox;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel localFileLabel;
     private javax.swing.JLabel unzipLabel;
     private javax.swing.JTextField unzipStatusTextField;

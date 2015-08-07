@@ -45,7 +45,7 @@
                           <Component id="createConfigCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="useWpCliRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="223" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -174,32 +174,22 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="dbNameTextField" max="32767" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="dbNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="dbHostLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="dbCharsetLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="dbCollateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="dbCharsetTextField" alignment="1" max="32767" attributes="0"/>
-                      <Component id="dbHostTextField" pref="119" max="32767" attributes="0"/>
-                      <Component id="dbCollateTextField" max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-              <Group type="102" alignment="0" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="dbUserLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="dbPasswordLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="dbUserTextField" max="32767" attributes="0"/>
-                      <Component id="dbPasswordTextField" max="32767" attributes="0"/>
+                      <Component id="dbNameTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="dbUserTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="dbPasswordTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="dbHostTextField" alignment="0" pref="119" max="32767" attributes="0"/>
+                      <Component id="dbCharsetTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="dbCollateTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -208,7 +198,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="dbNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="dbNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -242,10 +232,10 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="jLabel1">
+        <Component class="javax.swing.JLabel" name="dbNameLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/netbeans/modules/php/wordpress/ui/wizards/Bundle.properties" key="NewProjectConfigurationPanel.jLabel1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="org/netbeans/modules/php/wordpress/ui/wizards/Bundle.properties" key="NewProjectConfigurationPanel.dbNameLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
