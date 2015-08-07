@@ -62,6 +62,7 @@ import org.netbeans.modules.php.spi.framework.PhpModuleCustomizerExtender;
 import org.netbeans.modules.php.spi.framework.PhpModuleExtender;
 import org.netbeans.modules.php.spi.framework.PhpModuleIgnoredFilesExtender;
 import org.netbeans.modules.php.spi.framework.commands.FrameworkCommandSupport;
+import org.netbeans.modules.php.spi.phpmodule.ImportantFilesImplementation;
 import org.netbeans.modules.php.wordpress.commands.WordPressCommandSupport;
 import org.netbeans.modules.php.wordpress.customizer.WordPressCustomizerExtender;
 import org.netbeans.modules.php.wordpress.editor.WordPressEditorExtender;
@@ -123,18 +124,8 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
     }
 
     @Override
-    public File[] getConfigurationFiles(PhpModule pm) {
-        List<File> files = new LinkedList<File>();
-        WordPressModule wpModuel = WordPressModule.Factory.forPhpModule(pm);
-        FileObject wordPressRoot = wpModuel.getWordPressRootDirecotry();
-        if (wordPressRoot != null) {
-            FileObject config = wordPressRoot.getFileObject("wp-config.php"); // NOI18N
-            if (config != null) {
-                files.add(FileUtil.toFile(config));
-            }
-        }
-
-        return files.toArray(new File[files.size()]);
+    public ImportantFilesImplementation getConfigurationFiles2(PhpModule pm) {
+        return new ConfigurationFiles(pm);
     }
 
     @Override
