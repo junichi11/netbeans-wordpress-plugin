@@ -59,10 +59,10 @@ public class CreateUnderscoresThemePanel extends javax.swing.JPanel implements A
     private static final long serialVersionUID = -1760493304572967423L;
     private static final String WS = " "; // NOI18N
     private static final String REGEX = "^[ -.a-zA-Z0-9_]+$"; // NOI18N
-    private DialogDescriptor descriptor;
+    private final DialogDescriptor descriptor;
     private Dialog dialog;
     private boolean isOK = false;
-    private Set<String> existingThemeNames;
+    private final Set<String> existingThemeNames;
 
     /**
      * Creates new form CreateUnderscoresThemePanel

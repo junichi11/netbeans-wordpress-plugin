@@ -235,12 +235,10 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
                 if (result != null) {
                     result.get();
                 }
-            } catch (InvalidPhpExecutableException ex) {
+            } catch (InvalidPhpExecutableException | ExecutionException ex) {
                 throw new ExtendingException(ex.getLocalizedMessage());
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
-            } catch (ExecutionException ex) {
-                throw new ExtendingException(ex.getLocalizedMessage());
             }
             // #18
             sourceDirectory.refresh(true);
@@ -383,14 +381,11 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
             URLConnection connection = url.openConnection();
             if (connection instanceof HttpsURLConnection) {
                 HttpsURLConnection httpsConnection = (HttpsURLConnection) connection;
-                BufferedReader reader = new BufferedReader(new InputStreamReader(httpsConnection.getInputStream(), Charset.UTF8)); // NOI18N
-                try {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(httpsConnection.getInputStream(), Charset.UTF8))) {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         keys.add(line);
                     }
-                } finally {
-                    reader.close();
                 }
             }
         } catch (MalformedURLException ex) {

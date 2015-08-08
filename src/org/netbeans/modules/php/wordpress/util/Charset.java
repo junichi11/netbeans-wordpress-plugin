@@ -47,5 +47,5 @@ package org.netbeans.modules.php.wordpress.util;
  */
 public class Charset {
 
-    public static final String UTF8 = "UTF-8";
+    public static final String UTF8 = "UTF-8"; // NOI18N
 }

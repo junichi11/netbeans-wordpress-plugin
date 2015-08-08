@@ -41,6 +41,7 @@
  */
 package org.netbeans.modules.php.wordpress.editor;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,72 +67,72 @@ public class WordPressEditorExtender extends EditorExtender {
      * @see <a href="http://codex.wordpress.org/Global_Variables">Global
      * Variables</a>
      */
-    private static final Map<String, String> globalMap = new HashMap<>();
-    private static final List<PhpBaseElement> elements = new LinkedList<>();
+    private static final Map<String, String> GLOBAL_MAP = new HashMap<>();
+    private static final List<PhpBaseElement> ELEMENTS = new LinkedList<>();
 
     static {
         // object
-        globalMap.put("$post", "WP_Post");
-        globalMap.put("$wpdb", "wpdb");
-        globalMap.put("$wp_admin_bar", "WP_Admin_Bar");
-        globalMap.put("$wp_query", "WP_Query");
-        globalMap.put("$wp_roles", "WP_Roles");
-        globalMap.put("$wp_rewrite", "WP_Rewrite");
-        globalMap.put("$wp", "WP");
-        globalMap.put("$wp_locale", "WP_Locale");
+        GLOBAL_MAP.put("$post", "WP_Post"); // NOI18N
+        GLOBAL_MAP.put("$wpdb", "wpdb"); // NOI18N
+        GLOBAL_MAP.put("$wp_admin_bar", "WP_Admin_Bar"); // NOI18N
+        GLOBAL_MAP.put("$wp_query", "WP_Query"); // NOI18N
+        GLOBAL_MAP.put("$wp_roles", "WP_Roles"); // NOI18N
+        GLOBAL_MAP.put("$wp_rewrite", "WP_Rewrite"); // NOI18N
+        GLOBAL_MAP.put("$wp", "WP"); // NOI18N
+        GLOBAL_MAP.put("$wp_locale", "WP_Locale"); // NOI18N
         // others
-        globalMap.put("$currentday", "string");
-        globalMap.put("$currentmonth", "string");
-        globalMap.put("$page", "int");
-        globalMap.put("$pages", "int");
-        globalMap.put("$multipage", "boolean");
-        globalMap.put("$more", "boolean");
-        globalMap.put("$numpages", "int");
-        globalMap.put("$is_iphone", "boolean");
-        globalMap.put("$is_chrome", "boolean");
-        globalMap.put("$is_safari", "boolean");
-        globalMap.put("$is_NS4", "boolean");
-        globalMap.put("$is_opera", "boolean");
-        globalMap.put("$is_macIE", "boolean");
-        globalMap.put("$is_winIE", "boolean");
-        globalMap.put("$is_gecko", "boolean");
-        globalMap.put("$is_lynx", "boolean");
-        globalMap.put("$is_IE", "boolean");
+        GLOBAL_MAP.put("$currentday", "string"); // NOI18N
+        GLOBAL_MAP.put("$currentmonth", "string"); // NOI18N
+        GLOBAL_MAP.put("$page", "int"); // NOI18N
+        GLOBAL_MAP.put("$pages", "int"); // NOI18N
+        GLOBAL_MAP.put("$multipage", "boolean"); // NOI18N
+        GLOBAL_MAP.put("$more", "boolean"); // NOI18N
+        GLOBAL_MAP.put("$numpages", "int"); // NOI18N
+        GLOBAL_MAP.put("$is_iphone", "boolean"); // NOI18N
+        GLOBAL_MAP.put("$is_chrome", "boolean"); // NOI18N
+        GLOBAL_MAP.put("$is_safari", "boolean"); // NOI18N
+        GLOBAL_MAP.put("$is_NS4", "boolean"); // NOI18N
+        GLOBAL_MAP.put("$is_opera", "boolean"); // NOI18N
+        GLOBAL_MAP.put("$is_macIE", "boolean"); // NOI18N
+        GLOBAL_MAP.put("$is_winIE", "boolean"); // NOI18N
+        GLOBAL_MAP.put("$is_gecko", "boolean"); // NOI18N
+        GLOBAL_MAP.put("$is_lynx", "boolean"); // NOI18N
+        GLOBAL_MAP.put("$is_IE", "boolean"); // NOI18N
 
-        globalMap.put("$is_apache", "boolean");
-        globalMap.put("$is_IIS", "boolean");
-        globalMap.put("$is_iis7", "boolean");
+        GLOBAL_MAP.put("$is_apache", "boolean"); // NOI18N
+        GLOBAL_MAP.put("$is_IIS", "boolean"); // NOI18N
+        GLOBAL_MAP.put("$is_iis7", "boolean"); // NOI18N
 
-        globalMap.put("$wp_version", "string");
-        globalMap.put("$wp_db_version", "int");
-        globalMap.put("$tynymce_version", "string");
-        globalMap.put("$manifest_version", "string");
-        globalMap.put("$required_php_version", "string");
-        globalMap.put("$required_mysql_version", "string");
+        GLOBAL_MAP.put("$wp_version", "string"); // NOI18N
+        GLOBAL_MAP.put("$wp_db_version", "int"); // NOI18N
+        GLOBAL_MAP.put("$tynymce_version", "string"); // NOI18N
+        GLOBAL_MAP.put("$manifest_version", "string"); // NOI18N
+        GLOBAL_MAP.put("$required_php_version", "string"); // NOI18N
+        GLOBAL_MAP.put("$required_mysql_version", "string"); // NOI18N
 
-        globalMap.put("$pagenow", "string");
-        globalMap.put("$allowedposttags", "array");
-        globalMap.put("$allowedtags", "array");
+        GLOBAL_MAP.put("$pagenow", "string"); // NOI18N
+        GLOBAL_MAP.put("$allowedposttags", "array"); // NOI18N
+        GLOBAL_MAP.put("$allowedtags", "array"); // NOI18N
 
-        Set<String> keySet = globalMap.keySet();
+        Set<String> keySet = GLOBAL_MAP.keySet();
         for (String key : keySet) {
-            String clazz = globalMap.get(key);
+            String clazz = GLOBAL_MAP.get(key);
             PhpVariable phpVariable = new PhpVariable(key, new PhpClass(clazz, clazz));
-            elements.add(phpVariable);
+            ELEMENTS.add(phpVariable);
         }
         // $authordata
-        PhpClass authorClass = new PhpClass("stdClass", "stdClass");
-        authorClass.addField("$ID", "$ID");
-        authorClass.addField("$user_login", "$user_login");
-        authorClass.addField("$user_pass", "$user_pass");
-        authorClass.addField("$user_nicename", "$user_nicename");
-        authorClass.addField("$user_email", "$user_email");
-        authorClass.addField("$user_url", "$user_url");
-        authorClass.addField("$user_registered", "$user_registered");
-        authorClass.addField("$user_activation_key", "$user_activation_key");
-        authorClass.addField("$user_status", "$user_status");
-        authorClass.addField("$display_name", "$display_name");
-        elements.add(new PhpVariable("$authordata", authorClass));
+        PhpClass authorClass = new PhpClass("stdClass", "stdClass"); // NOI18N
+        authorClass.addField("$ID", "$ID"); // NOI18N
+        authorClass.addField("$user_login", "$user_login"); // NOI18N
+        authorClass.addField("$user_pass", "$user_pass"); // NOI18N
+        authorClass.addField("$user_nicename", "$user_nicename"); // NOI18N
+        authorClass.addField("$user_email", "$user_email"); // NOI18N
+        authorClass.addField("$user_url", "$user_url"); // NOI18N
+        authorClass.addField("$user_registered", "$user_registered"); // NOI18N
+        authorClass.addField("$user_activation_key", "$user_activation_key"); // NOI18N
+        authorClass.addField("$user_status", "$user_status"); // NOI18N
+        authorClass.addField("$display_name", "$display_name"); // NOI18N
+        ELEMENTS.add(new PhpVariable("$authordata", authorClass)); // NOI18N
     }
 
     @Override
@@ -139,8 +140,8 @@ public class WordPressEditorExtender extends EditorExtender {
         PhpModule phpModule = PhpModule.Factory.forFileObject(fo);
         // check whether project is WordPress
         if (!WPUtils.isWP(phpModule)) {
-            return new LinkedList<>();
+            return Collections.emptyList();
         }
-        return elements;
+        return ELEMENTS;
     }
 }

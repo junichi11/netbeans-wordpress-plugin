@@ -74,7 +74,7 @@ import org.openide.filesystems.FileObject;
 @MimeRegistration(mimeType = "text/x-php5", service = HyperlinkProviderExt.class)
 public class WordPressHyperlinkProviderExt implements HyperlinkProviderExt {
 
-    private static final List<String> methods = Arrays.asList(
+    private static final List<String> METHODS = Arrays.asList(
             "add_filter", // NOI18N
             "remove_filter", // NOI18N
             "add_action", // NOI18N
@@ -169,7 +169,7 @@ public class WordPressHyperlinkProviderExt implements HyperlinkProviderExt {
             if (text.contains("\n") || text.contains("{")) { // NOI18N
                 break;
             }
-            if (methods.contains(text)) {
+            if (METHODS.contains(text)) {
                 argCount = count;
                 return true;
             }

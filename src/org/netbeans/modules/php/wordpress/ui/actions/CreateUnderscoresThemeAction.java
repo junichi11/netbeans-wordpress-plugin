@@ -220,8 +220,7 @@ public class CreateUnderscoresThemeAction extends BaseAction {
             }
             try {
                 List<String> lines = child.asLines();
-                PrintWriter pw = new PrintWriter(new OutputStreamWriter(child.getOutputStream(), Charset.UTF8));
-                try {
+                try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(child.getOutputStream(), Charset.UTF8))) {
                     for (String line : lines) {
                         line = line.replaceAll("_s_", _s_); // NOI18N
                         line = line.replaceAll(" _s", " " + themeName); // NOI18N
@@ -237,8 +236,6 @@ public class CreateUnderscoresThemeAction extends BaseAction {
                         }
                         pw.println(line);
                     }
-                } finally {
-                    pw.close();
                 }
             } catch (FileAlreadyLockedException ex) {
                 Exceptions.printStackTrace(ex);

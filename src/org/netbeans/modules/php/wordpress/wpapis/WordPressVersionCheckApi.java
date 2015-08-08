@@ -84,9 +84,8 @@ public class WordPressVersionCheckApi extends WordPressApi {
 
     @Override
     public void parse() throws IOException {
-        // get json
-        InputStream inputStream = openStream();
-        try {
+        try (InputStream inputStream = openStream()) {
+            // get json
             JSONObject jsonObject = (JSONObject) JSONValue.parse(new InputStreamReader(inputStream, Charset.UTF8));
             if (jsonObject == null) {
                 LOGGER.log(Level.INFO, "Can't get json for version check information."); // NOI18N
@@ -110,8 +109,6 @@ public class WordPressVersionCheckApi extends WordPressApi {
                     return;
                 }
             }
-        } finally {
-            inputStream.close();
         }
 
         // not found locale

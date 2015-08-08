@@ -236,22 +236,17 @@ public class CreatePluginAction extends BaseAction {
             LOGGER.log(Level.WARNING, "Not found:{0}", "plugin template");
             return;
         }
-        OutputStream outputPlugin = pluginDirectory.createAndOpen(name + ".php"); // NOI18N
-        try {
+
+        try (OutputStream outputPlugin = pluginDirectory.createAndOpen(name + ".php")) { // NOI18N
             List<String> lines = pluginTemplate.asLines(Charset.UTF8);
-            PrintWriter pw = new PrintWriter(new OutputStreamWriter(outputPlugin, Charset.UTF8));
-            try {
+            try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(outputPlugin, Charset.UTF8))) {
                 for (String line : lines) {
                     if (line.contains(NAME_PLACE)) {
                         line = line.replace(NAME_PLACE, name);
                     }
                     pw.println(line);
                 }
-            } finally {
-                pw.close();
             }
-        } finally {
-            outputPlugin.close();
         }
     }
 

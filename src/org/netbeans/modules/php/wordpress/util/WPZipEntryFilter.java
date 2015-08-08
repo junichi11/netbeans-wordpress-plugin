@@ -53,12 +53,12 @@ import javax.swing.text.JTextComponent;
 public class WPZipEntryFilter implements ZipEntryFilter {
 
     private JTextComponent component = null;
-    private static final Set<String> topDirectories = new HashSet<>();
+    private static final Set<String> TOP_DIRECTORIES = new HashSet<>();
 
     static {
-        topDirectories.add("wp-admin");
-        topDirectories.add("wp-content");
-        topDirectories.add("wp-includes");
+        TOP_DIRECTORIES.add("wp-admin"); // NOI18N
+        TOP_DIRECTORIES.add("wp-content"); // NOI18N
+        TOP_DIRECTORIES.add("wp-includes"); // NOI18N
     }
 
     public WPZipEntryFilter() {
@@ -98,7 +98,7 @@ public class WPZipEntryFilter implements ZipEntryFilter {
         String path = entry.getName();
         String[] splitPath = splitPath(path);
         String topDirectory = splitPath[0];
-        if (splitPath.length == 1 || topDirectories.contains(topDirectory)) {
+        if (splitPath.length == 1 || TOP_DIRECTORIES.contains(topDirectory)) {
             return path;
         }
         return path.replaceFirst(topDirectory + "/", ""); // NOI18N
