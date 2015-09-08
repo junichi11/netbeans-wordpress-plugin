@@ -158,7 +158,7 @@ public class CreateUnderscoresThemeAction extends BaseAction {
         RequestProcessor.getDefault().post(new Runnable() {
             @Override
             public void run() {
-                ProgressHandle handle = ProgressHandleFactory.createHandle("Createing theme", new Cancellable() {
+                ProgressHandle handle = ProgressHandle.createHandle("Createing theme", new Cancellable() {
                     @Override
                     public boolean cancel() {
                         return true;

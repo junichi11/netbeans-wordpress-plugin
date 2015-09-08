@@ -84,7 +84,6 @@ package org.netbeans.modules.php.wordpress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.wordpress.commands.WordPressCli;
@@ -113,7 +112,7 @@ public class WordPressModuleInstall extends ModuleInstall {
 
                 @Override
                 public void run() {
-                    ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.WordPressModule_get_commands());
+                    ProgressHandle handle = ProgressHandle.createHandle(Bundle.WordPressModule_get_commands());
                     try {
                         handle.start();
                         try {

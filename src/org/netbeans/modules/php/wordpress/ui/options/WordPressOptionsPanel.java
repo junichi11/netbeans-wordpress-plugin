@@ -655,7 +655,7 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
 
             @Override
             public void run() {
-                ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.WordPressOptionsPanel_update_command_progress());
+                ProgressHandle handle = ProgressHandle.createHandle(Bundle.WordPressOptionsPanel_update_command_progress());
                 try {
                     handle.start();
                     try {
