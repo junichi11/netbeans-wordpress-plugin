@@ -85,7 +85,7 @@ public class WordPressActionsExtender extends PhpModuleActionsExtender {
 
     @Override
     public List<? extends Action> getActions() {
-        List<Action> actions = new ArrayList<Action>();
+        List<Action> actions = new ArrayList<>();
         actions.add(CreateThemeAction.getInstance());
         actions.add(CreateChildThemeAction.getInstance());
         actions.add(CreatePluginAction.getInstance());

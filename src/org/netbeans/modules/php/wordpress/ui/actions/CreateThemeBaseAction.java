@@ -176,7 +176,7 @@ public abstract class CreateThemeBaseAction extends BaseAction {
         RequestProcessor.getDefault().post(new Runnable() {
             @Override
             public void run() {
-                ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.LBL_CreatingTheme(), new Cancellable() {
+                ProgressHandle handle = ProgressHandle.createHandle(Bundle.LBL_CreatingTheme(), new Cancellable() {
                     @Override
                     public boolean cancel() {
                         return true;
@@ -218,7 +218,7 @@ public abstract class CreateThemeBaseAction extends BaseAction {
      * Set existing theme names.
      */
     private void setExistingThemeNames() {
-        existingThemeNames = new HashSet<String>();
+        existingThemeNames = new HashSet<>();
         if (themesDirectory != null) {
             for (FileObject child : themesDirectory.getChildren()) {
                 if (child.isFolder()) {

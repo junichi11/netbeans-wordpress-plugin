@@ -90,7 +90,7 @@ public class MVCNodeFactory implements NodeFactory {
         @Override
         public List<Node> keys() {
             if (WPUtils.isWP(phpModule)) {
-                List<Node> list = new ArrayList<Node>();
+                List<Node> list = new ArrayList<>();
                 WordPressModule module = WordPressModule.Factory.forPhpModule(phpModule);
                 // plugins
                 FileObject pluginsDirectory = module.getPluginsDirectory();

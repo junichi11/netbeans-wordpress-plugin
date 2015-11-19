@@ -131,10 +131,10 @@ public final class WordPressModule {
     //~ Inner class
     public static class Factory {
 
-        private static final Map<PhpModule, WordPressModule> modules = new HashMap<PhpModule, WordPressModule>();
+        private static final Map<PhpModule, WordPressModule> MODULES = new HashMap<>();
 
         public static WordPressModule forPhpModule(PhpModule phpModule) {
-            WordPressModule module = modules.get(phpModule);
+            WordPressModule module = MODULES.get(phpModule);
             if (module != null) {
                 return module;
             }
@@ -147,14 +147,14 @@ public final class WordPressModule {
             }
             module = new WordPressModule(impl);
             if (impl instanceof WordPress3ModuleImpl) {
-                modules.put(phpModule, module);
+                MODULES.put(phpModule, module);
             }
             return module;
         }
 
         public static void remove(PhpModule phpModule) {
             if (phpModule != null) {
-                modules.remove(phpModule);
+                MODULES.remove(phpModule);
             }
         }
     }

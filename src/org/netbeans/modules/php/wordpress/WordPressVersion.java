@@ -66,7 +66,7 @@ public final class WordPressVersion {
     private int minor;
     private int revision;
     private String developmentSuffix; // e.g. RC1, beta, ...
-    private static final Map<PhpModule, WordPressVersion> VERSIONS = new HashMap<PhpModule, WordPressVersion>();
+    private static final Map<PhpModule, WordPressVersion> VERSIONS = new HashMap<>();
 
     public static WordPressVersion create(PhpModule phpModule) {
         WordPressVersion version = VERSIONS.get(phpModule);

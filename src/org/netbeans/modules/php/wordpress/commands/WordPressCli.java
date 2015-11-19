@@ -56,9 +56,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
-import org.netbeans.api.extexecution.input.InputProcessor;
-import org.netbeans.api.extexecution.input.InputProcessors;
-import org.netbeans.api.extexecution.input.LineProcessor;
+import org.netbeans.api.extexecution.base.input.InputProcessor;
+import org.netbeans.api.extexecution.base.input.InputProcessors;
+import org.netbeans.api.extexecution.base.input.LineProcessor;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.executable.PhpExecutable;
 import org.netbeans.modules.php.api.executable.PhpExecutableValidator;
@@ -108,7 +108,7 @@ public final class WordPressCli {
 
     // XXX default?
     private final List<String> DEFAULT_PARAMS = Collections.emptyList();
-    private static final List<FrameworkCommand> commandsCache = new ArrayList<FrameworkCommand>();
+    private static final List<FrameworkCommand> commandsCache = new ArrayList<>();
 
     private WordPressCli(String wpCliPath) {
         this.wpCliPath = wpCliPath;
@@ -146,7 +146,7 @@ public final class WordPressCli {
      * @param options (--locale, --version)
      */
     public Future<Integer> download(PhpModule phpModule, List<String> options) {
-        ArrayList<String> allCommands = new ArrayList<String>(options.size() + 2);
+        ArrayList<String> allCommands = new ArrayList<>(options.size() + 2);
         allCommands.add(CORE_COMMAND);
         allCommands.add(DOWNLOAD_COMMAND);
         allCommands.addAll(options);
@@ -161,7 +161,7 @@ public final class WordPressCli {
      * @return
      */
     public Future<Integer> coreUpdate(PhpModule phpModule, List<String> options) {
-        ArrayList<String> allCommands = new ArrayList<String>(options.size() + 2);
+        ArrayList<String> allCommands = new ArrayList<>(options.size() + 2);
         allCommands.add(CORE_COMMAND);
         allCommands.add(UPDATE_COMMAND);
         allCommands.addAll(options);
@@ -175,7 +175,7 @@ public final class WordPressCli {
      * @return
      */
     public Future<Integer> coreUpdateDb(PhpModule phpModule) {
-        ArrayList<String> allCommands = new ArrayList<String>(2);
+        ArrayList<String> allCommands = new ArrayList<>(2);
         allCommands.add(CORE_COMMAND);
         allCommands.add(UPDATE_DB_COMMAND);
         return runCommand(phpModule, allCommands);
@@ -189,7 +189,7 @@ public final class WordPressCli {
      * @return
      */
     public Future<Integer> pluginUpdate(PhpModule phpModule, List<String> options) {
-        ArrayList<String> allCommands = new ArrayList<String>(options.size() + 2);
+        ArrayList<String> allCommands = new ArrayList<>(options.size() + 2);
         allCommands.add(PLUGIN_COMMAND);
         allCommands.add(UPDATE_COMMAND);
         allCommands.addAll(options);
@@ -204,7 +204,7 @@ public final class WordPressCli {
      * @return
      */
     public Future<Integer> themeUpdate(PhpModule phpModule, List<String> options) {
-        ArrayList<String> allCommands = new ArrayList<String>(options.size() + 2);
+        ArrayList<String> allCommands = new ArrayList<>(options.size() + 2);
         allCommands.add(THEME_COMMAND);
         allCommands.add(UPDATE_COMMAND);
         allCommands.addAll(options);
@@ -288,7 +288,7 @@ public final class WordPressCli {
      * @return help for command
      */
     public String getHelp(List<String> commands) {
-        List<String> params = new ArrayList<String>(commands.size() + 1);
+        List<String> params = new ArrayList<>(commands.size() + 1);
         params.addAll(commands);
         params.add(HELP_PARAM);
 
@@ -376,7 +376,7 @@ public final class WordPressCli {
 
     // XXX get help later?
     private void getCommands(List<String> subcommands, List<FrameworkCommand> commands) {
-        ArrayList<String> params = new ArrayList<String>(subcommands.size() + 1);
+        ArrayList<String> params = new ArrayList<>(subcommands.size() + 1);
         params.add(HELP_COMMAND);
         params.addAll(subcommands);
         HelpLineProcessor helpLineProcessor = new HelpLineProcessor();
@@ -415,7 +415,7 @@ public final class WordPressCli {
                 // add command
                 String subcommand = line.substring(0, indexOf);
                 String description = line.substring(indexOf + 1);
-                ArrayList<String> nextSubcommands = new ArrayList<String>(subcommands.size() + 1);
+                ArrayList<String> nextSubcommands = new ArrayList<>(subcommands.size() + 1);
                 nextSubcommands.addAll(subcommands);
                 nextSubcommands.add(subcommand);
                 String help = getHelp(nextSubcommands);
@@ -523,7 +523,7 @@ public final class WordPressCli {
      * @return all parameters
      */
     private List<String> getAllParameters(List<String> parameters) {
-        List<String> allParams = new ArrayList<String>(DEFAULT_PARAMS.size() + parameters.size());
+        List<String> allParams = new ArrayList<>(DEFAULT_PARAMS.size() + parameters.size());
         allParams.addAll(DEFAULT_PARAMS);
         allParams.addAll(parameters);
         return allParams;
@@ -535,8 +535,8 @@ public final class WordPressCli {
      * @param lineProcessor
      * @return InputProcessorFactory
      */
-    private ExecutionDescriptor.InputProcessorFactory getOutputProcessorFactory(final LineProcessor lineProcessor) {
-        return new ExecutionDescriptor.InputProcessorFactory() {
+    private ExecutionDescriptor.InputProcessorFactory2 getOutputProcessorFactory(final LineProcessor lineProcessor) {
+        return new ExecutionDescriptor.InputProcessorFactory2() {
             @Override
             public InputProcessor newInputProcessor(InputProcessor defaultProcessor) {
                 return InputProcessors.ansiStripping(InputProcessors.bridge(lineProcessor));
@@ -556,7 +556,7 @@ public final class WordPressCli {
     private static class HelpLineProcessor implements LineProcessor {
 
         private final StringBuilder sb = new StringBuilder();
-        private final List<String> list = new ArrayList<String>();
+        private final List<String> list = new ArrayList<>();
 
         @Override
         public void processLine(String line) {

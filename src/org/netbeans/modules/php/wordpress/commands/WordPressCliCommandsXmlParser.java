@@ -79,9 +79,7 @@ public class WordPressCliCommandsXmlParser extends DefaultHandler {
         try {
             WordPressCliCommandsXmlParser parser = new WordPressCliCommandsXmlParser(commands);
             parser.xmlReader.parse(new InputSource(reader));
-        } catch (SAXException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IOException ex) {
+        } catch (SAXException | IOException ex) {
             Exceptions.printStackTrace(ex);
         } finally {
             try {
@@ -94,19 +92,27 @@ public class WordPressCliCommandsXmlParser extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        if ("command".equals(qName)) { // NOI18N
-            command = attributes.getValue("name").split(" "); // NOI18N
-            displayname = attributes.getValue("displayname"); // NOI18N
-        } else if ("description".equals(qName)) { // NOI18N
-            content = "description"; // NOI18N
-        } else if ("help".equals(qName)) { // NOI18N
-            content = "help"; // NOI18N
+        if (null != qName) {
+            switch (qName) {
+                case "command": // NOI18N
+                    command = attributes.getValue("name").split(" "); // NOI18N
+                    displayname = attributes.getValue("displayname"); // NOI18N
+                    break;
+                case "description": // NOI18N
+                    content = "description"; // NOI18N
+                    break;
+                case "help": // NOI18N
+                    content = "help"; // NOI18N
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if ("command".equals(qName)) {
+        if ("command".equals(qName)) { // NOI18N
             commands.add(new WordPressCliCommand(command, description, help));
             command = null;
             description = null;

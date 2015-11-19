@@ -54,7 +54,7 @@ import org.netbeans.modules.php.editor.indent.FmtOptions;
  */
 public class WordPressPreferences {
 
-    private static final List<String> WITHIN_OPTIONS = new ArrayList<String>();
+    private static final List<String> WITHIN_OPTIONS = new ArrayList<>();
     private static final String ENABLED = "enabled"; // NOI18N
     private static final String CUSTOM_CONTENT_NAME = "custom-content-name"; // NOI18N
     private static final String WP_ROOT = "wp-root"; // NOI18N

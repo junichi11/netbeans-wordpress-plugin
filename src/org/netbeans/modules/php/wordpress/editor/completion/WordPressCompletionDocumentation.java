@@ -51,7 +51,7 @@ import org.netbeans.spi.editor.completion.CompletionDocumentation;
  */
 public class WordPressCompletionDocumentation implements CompletionDocumentation {
 
-    private WordPressCompletionItem item;
+    private final WordPressCompletionItem item;
 
     WordPressCompletionDocumentation(WordPressCompletionItem item) {
         this.item = item;

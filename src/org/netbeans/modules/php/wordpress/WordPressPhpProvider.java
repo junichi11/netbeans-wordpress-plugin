@@ -44,11 +44,8 @@ package org.netbeans.modules.php.wordpress;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
-import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.netbeans.modules.php.api.framework.BadgeIcon;
@@ -62,6 +59,7 @@ import org.netbeans.modules.php.spi.framework.PhpModuleCustomizerExtender;
 import org.netbeans.modules.php.spi.framework.PhpModuleExtender;
 import org.netbeans.modules.php.spi.framework.PhpModuleIgnoredFilesExtender;
 import org.netbeans.modules.php.spi.framework.commands.FrameworkCommandSupport;
+import org.netbeans.modules.php.spi.phpmodule.ImportantFilesImplementation;
 import org.netbeans.modules.php.wordpress.commands.WordPressCommandSupport;
 import org.netbeans.modules.php.wordpress.customizer.WordPressCustomizerExtender;
 import org.netbeans.modules.php.wordpress.editor.WordPressEditorExtender;
@@ -72,7 +70,6 @@ import org.netbeans.modules.php.wordpress.validators.WordPressModuleValidator;
 import org.openide.awt.Notification;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -88,7 +85,7 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
     private static final WordPressPhpProvider INSTANCE = new WordPressPhpProvider();
     private static final String ICON_PATH = "org/netbeans/modules/php/wordpress/resources/wordpress_badge_8.png"; // NOI18N
     private final BadgeIcon badgeIcon;
-    public static final Set<String> WP_DIRS = new HashSet<String>();
+    public static final Set<String> WP_DIRS = new HashSet<>();
 
     static {
         WP_DIRS.add("wp-admin"); // NOI18N
@@ -123,18 +120,8 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
     }
 
     @Override
-    public File[] getConfigurationFiles(PhpModule pm) {
-        List<File> files = new LinkedList<File>();
-        WordPressModule wpModuel = WordPressModule.Factory.forPhpModule(pm);
-        FileObject wordPressRoot = wpModuel.getWordPressRootDirecotry();
-        if (wordPressRoot != null) {
-            FileObject config = wordPressRoot.getFileObject("wp-config.php"); // NOI18N
-            if (config != null) {
-                files.add(FileUtil.toFile(config));
-            }
-        }
-
-        return files.toArray(new File[files.size()]);
+    public ImportantFilesImplementation getConfigurationFiles2(PhpModule pm) {
+        return new ConfigurationFiles(pm);
     }
 
     @Override

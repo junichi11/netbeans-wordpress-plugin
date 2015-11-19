@@ -67,7 +67,7 @@ import org.openide.util.ImageUtilities;
  */
 public class WordPressCompletionItem implements CompletionItem {
 
-    private String text;
+    private final String text;
     private String description;
     private static ImageIcon fieldIcon = new ImageIcon(ImageUtilities.loadImage(WordPress.WP_ICON_16)); // NOI18N
     private static Color fieldColor = Color.decode("0x21759b"); // NOI18N

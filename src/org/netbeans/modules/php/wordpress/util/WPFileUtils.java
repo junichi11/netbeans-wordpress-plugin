@@ -113,8 +113,7 @@ public class WPFileUtils {
                 compress(target, file.listFiles(), zipOutputStream);
             } else {
                 // file
-                InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-                try {
+                try (InputStream inputStream = new BufferedInputStream(new FileInputStream(file))) {
                     String path = file.getPath();
                     path = path.replace(parentPath, ""); // NOI18N
                     path = path.replace("\\", "/"); // NOI18N
@@ -124,8 +123,6 @@ public class WPFileUtils {
                         zipOutputStream.write(buffer, 0, data);
                     }
                     zipOutputStream.closeEntry();
-                } finally {
-                    inputStream.close();
                 }
             }
         }
@@ -145,10 +142,8 @@ public class WPFileUtils {
             return;
         }
         URL zipUrl = new URL(url);
-        ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(zipUrl.openStream()));
-
-        try {
-            ZipEntry entry = null;
+        try (ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(zipUrl.openStream()))) {
+            ZipEntry entry;
             while ((entry = zipInputStream.getNextEntry()) != null) {
                 if (!filter.accept(entry)) {
                     zipInputStream.closeEntry();
@@ -162,8 +157,6 @@ public class WPFileUtils {
                 createDirectories(outFile, entry);
                 writeFile(outFile, zipInputStream, entry);
             }
-        } finally {
-            zipInputStream.close();
         }
     }
 
@@ -181,7 +174,7 @@ public class WPFileUtils {
                 return;
             }
             BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outFile));
-            int data = 0;
+            int data;
             try {
                 while ((data = zipInputStream.read()) != -1) {
                     outputStream.write(data);
