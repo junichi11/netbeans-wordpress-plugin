@@ -68,6 +68,11 @@ public final class ConfigurationFiles extends FileChangeAdapter implements Impor
     // @GuardedBy("this")
     private boolean isInitialized = false;
     private static final String WP_CONFIG_PHP = "wp-config.php"; // NOI18N
+    private static final String HTACCESS = ".htaccess"; // NOI18N
+    private static final String[] CONFIG_FILES = {
+        WP_CONFIG_PHP,
+        HTACCESS
+    };
 
     public ConfigurationFiles(PhpModule phpModule) {
         assert phpModule != null;
@@ -79,9 +84,11 @@ public final class ConfigurationFiles extends FileChangeAdapter implements Impor
         FileObject wordPressRoot = getWordPressRoot();
         List<FileInfo> files = new ArrayList<>();
         if (wordPressRoot != null) {
-            FileObject config = wordPressRoot.getFileObject(WP_CONFIG_PHP);
-            if (config != null) {
-                files.add(new FileInfo(config));
+            for (String configFile : CONFIG_FILES) {
+                FileObject config = wordPressRoot.getFileObject(configFile);
+                if (config != null) {
+                    files.add(new FileInfo(config));
+                }
             }
         }
         return files;
