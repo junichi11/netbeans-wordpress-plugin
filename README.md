@@ -28,7 +28,7 @@ This is NetBeans plugin for WordPress.
 - create a .htaccess file for permalink
 - create a new child theme action (create a style.css for child theme)
 
-### Impotant Files
+### Important Files
 It contains wp-config.php
 
 ### Create New WordPress Project
