@@ -121,43 +121,44 @@ public final class FilterAndActionCompletion extends WordPressCompletionProvider
                         return;
                     }
                     ts.move(caretOffset);
-                    ts.moveNext();
-                    Token<PHPTokenId> token = ts.token();
-                    if (token.id() != PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING) {
-                        return;
-                    }
-                    String caretInput = ts.token().text().toString();
+                    if (ts.moveNext()) {
+                        Token<PHPTokenId> token = ts.token();
+                        if (token.id() != PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING) {
+                            return;
+                        }
+                        String caretInput = ts.token().text().toString();
 
-                    int startOffset = ts.offset() + 1;
-                    int removeLength = caretInput.length() - 2;
-                    if (removeLength < 0) {
-                        removeLength = 0;
-                    }
-                    int length = caretInput.length();
+                        int startOffset = ts.offset() + 1;
+                        int removeLength = caretInput.length() - 2;
+                        if (removeLength < 0) {
+                            removeLength = 0;
+                        }
+                        int length = caretInput.length();
 
-                    // check whether funciton is add_filter
-                    if (!isValidCompletion(ts) || length < 2) {
-                        return;
-                    }
+                        // check whether funciton is add_filter
+                        if (!isValidCompletion(ts) || length < 2) {
+                            return;
+                        }
 
-                    // filter
-                    int substrLength = caretOffset - startOffset + 1;
-                    String filter = ""; // NOI18N
-                    if (substrLength > 1) {
-                        filter = caretInput.substring(1, substrLength);
-                    }
-                    currentInput = filter;
+                        // filter
+                        int substrLength = caretOffset - startOffset + 1;
+                        String filter = ""; // NOI18N
+                        if (substrLength > 1) {
+                            filter = caretInput.substring(1, substrLength);
+                        }
+                        currentInput = filter;
 
-                    // set isAction and isFilter
-                    List<WordPressCompletionItem> completions = getCodeCompletionList(phpModule);
+                        // set isAction and isFilter
+                        List<WordPressCompletionItem> completions = getCodeCompletionList(phpModule);
 
-                    if (isAction || isFilter) {
-                        for (WordPressCompletionItem completion : completions) {
-                            String text = completion.getText();
-                            if (!text.isEmpty()
-                                    && text.startsWith(filter)) {
-                                completion.setOffset(startOffset, removeLength);
-                                completionResultSet.addItem(completion);
+                        if (isAction || isFilter) {
+                            for (WordPressCompletionItem completion : completions) {
+                                String text = completion.getText();
+                                if (!text.isEmpty()
+                                        && text.startsWith(filter)) {
+                                    completion.setOffset(startOffset, removeLength);
+                                    completionResultSet.addItem(completion);
+                                }
                             }
                         }
                     }

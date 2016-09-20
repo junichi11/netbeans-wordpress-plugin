@@ -29,7 +29,9 @@ This is NetBeans plugin for WordPress.
 - create a new child theme action (create a style.css for child theme)
 
 ### Important Files
-It contains wp-config.php
+
+- wp-config.php
+- .htaccess (only the root directory)
 
 ### Create New WordPress Project
 You can create a new WordPress project with Wizard.

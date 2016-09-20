@@ -88,7 +88,9 @@ public final class ZipAction extends AbstractAction implements ContextAwareActio
 
     @Messages({
         "# {0} - file name",
-        "ZipAction.error.file.already.exist=Zip file ({0}) already exists."
+        "ZipAction.error.file.already.exist=Zip file ({0}) already exists.\nDo you really want to overwrite it?",
+        "ZipAction.error.not.directory=It must be selected a directory.",
+        "ZipAction.error.invalid.parent.directory=The parent directory doesn't exist."
     })
     @Override
     public void actionPerformed(ActionEvent ev) {
@@ -96,14 +98,31 @@ public final class ZipAction extends AbstractAction implements ContextAwareActio
             return;
         }
 
-        // zip compress
         FileObject target = getFileObject();
+        if (target == null || !target.isFolder()) {
+            showErrorDialog(Bundle.ZipAction_error_not_directory());
+            return;
+        }
+
+        FileObject parent = target.getParent();
+        if (parent == null) {
+            showErrorDialog(Bundle.ZipAction_error_invalid_parent_directory());
+            return;
+        }
+
+        FileObject targetZip = parent.getFileObject(target.getName() + ".zip"); // NOI18N
+        if (targetZip != null) {
+            if (!showConfirmationDialog(Bundle.ZipAction_error_file_already_exist(target.getName() + ".zip"))) { // NOI18N
+                return;
+            }
+        }
+
+        // zip compress
         try {
             WPFileUtils.zip(target);
         } catch (IOException ex) {
             // #36
             LOGGER.log(Level.WARNING, ex.getMessage());
-            showErrorDialog(Bundle.ZipAction_error_file_already_exist(target.getName() + ".zip")); // NOI18N
         }
     }
 
@@ -130,13 +149,6 @@ public final class ZipAction extends AbstractAction implements ContextAwareActio
         String name = parent.getNameExt();
         if (parent.isFolder()) {
             if (name.equals("plugins") || name.equals("themes")) { // NOI18N
-                // #36
-                String zipFileName = target.getName() + ".zip"; // NOI18N
-                FileObject zipFile = parent.getFileObject(zipFileName);
-                if (zipFile != null) {
-                    showErrorDialog(Bundle.ZipAction_error_file_already_exist(zipFileName));
-                    return false;
-                }
                 return true;
             }
         }
@@ -151,6 +163,17 @@ public final class ZipAction extends AbstractAction implements ContextAwareActio
     private void showErrorDialog(String errorMessage) {
         NotifyDescriptor.Message message = new NotifyDescriptor.Message(errorMessage, NotifyDescriptor.ERROR_MESSAGE);
         DialogDisplayer.getDefault().notify(message);
+    }
+
+    /**
+     * Show confirmation message dialog.
+     *
+     * @param meesage the confirmation message
+     * @return {@code true} if OK is pressed, otherwise {@code false}
+     */
+    private boolean showConfirmationDialog(String meesage) {
+        NotifyDescriptor.Confirmation message = new NotifyDescriptor.Confirmation(meesage, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.QUESTION_MESSAGE);
+        return DialogDisplayer.getDefault().notify(message) == NotifyDescriptor.OK_OPTION;
     }
 
     @Override

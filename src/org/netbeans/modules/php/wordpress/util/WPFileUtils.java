@@ -82,8 +82,14 @@ public class WPFileUtils {
         }
         // create zip file
         FileObject parent = target.getParent();
-        FileObject zipFile = parent.createData(target.getName() + ".zip"); // NOI18N
-        ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(FileUtil.toFile(zipFile)));
+        if (parent == null) {
+            return;
+        }
+        FileObject targetZip = parent.getFileObject(target.getName() + ".zip"); // NOI18N
+        if (targetZip == null) {
+            targetZip = parent.createData(target.getName() + ".zip"); // NOI18N
+        }
+        ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(FileUtil.toFile(targetZip)));
 
         // compress
         File targetDirectory = FileUtil.toFile(target);
