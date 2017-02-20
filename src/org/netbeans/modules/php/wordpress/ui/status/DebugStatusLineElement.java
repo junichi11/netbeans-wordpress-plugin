@@ -48,8 +48,6 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -68,17 +66,23 @@ import javax.swing.JSeparator;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.StyledDocument;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.wordpress.WordPress;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule.DIR_TYPE;
 import org.netbeans.modules.php.wordpress.util.Charset;
-import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
 import org.openide.awt.StatusLineElementProvider;
+import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -98,17 +102,20 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
     private static final String DEBUG_TRUE = "true"; // NOI18N
     private static final String DEBUG_FALSE = "false"; // NOI18N
     private static final String WP_DEBUG_FORMAT = "define('WP_DEBUG', %s);"; // NOI18N
-    private static final String DEBUG_REGEX = "^define\\('WP_DEBUG', *(true|false)\\);$"; // NOI18N
+    private static final String DEBUG_REGEX = "^define\\(\\s*'WP_DEBUG',\\s*(true|false)\\s*\\);$"; // NOI18N
+    private static final String VERSION_REGEX = "^\\$wp_version\\s*=\\s*'(.+)';$"; // NOI18N
     private static final Map<String, String> debugLevel = new HashMap<String, String>();
     private static final String WP_CONFIG_PHP = "wp-config.php"; // NOI18N
     private final ImageIcon icon = ImageUtilities.loadImageIcon(WordPress.WP_ICON_16, true);
     private final Lookup.Result<FileObject> result;
     private final JLabel debugLabel = new JLabel(""); // NOI18N
-    private final DefaultListModel model;
+    private final JLabel versionLabel = new JLabel(""); // NOI18N
+    private final DefaultListModel<String> model;
     private PhpModule phpModule;
-    private JList list;
+    private JList<String> list;
     private Popup popup;
     private String level = ""; // NOI18N
+    private String version = "";  // NOI18N
     private boolean popupFlg = false;
 
     static {
@@ -120,11 +127,11 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
         result = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
         result.addLookupListener(new LookupListenerImpl());
 
-        model = new DefaultListModel();
+        model = new DefaultListModel<String>();
         for (String debugLv : debugLevel.keySet()) {
             model.addElement(debugLv);
         }
-        list = new JList(model);
+        list = new JList<String>(model);
 
         // add MouseAdapter
         debugLabel.addMouseListener(new MouseAdapter() {
@@ -135,12 +142,12 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
                 int x = Math.min(labelStart.x, labelStart.x + debugLabel.getSize().width - list.getPreferredSize().width);
                 int y = labelStart.y - list.getPreferredSize().height;
                 if (popup == null) {
-                    popup = PopupFactory.getSharedInstance().getPopup(debugLabel, list, x + 16, y);
+                    popup = PopupFactory.getSharedInstance().getPopup(debugLabel, list, x, y);
                 }
                 list.addListSelectionListener(new ListSelectionListener() {
                     @Override
                     public void valueChanged(ListSelectionEvent e) {
-                        String debugLv = list.getSelectedValue().toString();
+                        String debugLv = list.getSelectedValue();
                         // write file
                         if (!debugLv.equals(level)) {
                             writeConfig(debugLv);
@@ -169,27 +176,48 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      *
      * @param debugLv true or false
      */
-    private void writeConfig(String debugLv) {
-        FileObject config = WPFileUtils.getDirectory(phpModule, WP_CONFIG_PHP);
+    private void writeConfig(final String debugLv) {
+        WordPressModule wpModule = WordPressModule.Factory.forPhpModule(phpModule);
+        FileObject config = wpModule.getDirecotry(DIR_TYPE.ROOT, WP_CONFIG_PHP);
         if (config == null) {
             LOGGER.log(Level.WARNING, "Not found wp-config.php");
             return;
         }
         try {
+            Lookup lookup = config.getLookup();
+            EditorCookie ec = lookup.lookup(EditorCookie.class);
+            if (ec == null) {
+                return;
+            }
+            final StyledDocument docment = ec.openDocument();
+            if (docment == null) {
+                return;
+            }
             List<String> lines = config.asLines(Charset.UTF8);
             Pattern pattern = Pattern.compile(DEBUG_REGEX);
-            PrintWriter pw = new PrintWriter(new OutputStreamWriter(config.getOutputStream(), Charset.UTF8));
-            try {
-                for (String line : lines) {
-                    Matcher matcher = pattern.matcher(line);
-                    if (matcher.find()) {
-                        line = String.format(WP_DEBUG_FORMAT, debugLv);
-                    }
-                    pw.println(line);
+            int lineNumber = 0;
+            for (String line : lines) {
+                Matcher matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    // change
+                    final int startOffset = NbDocument.findLineOffset(docment, lineNumber);
+                    final int removeLength = line.length();
+
+                    NbDocument.runAtomic(docment, new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                docment.remove(startOffset, removeLength);
+                                docment.insertString(startOffset, String.format(WP_DEBUG_FORMAT, debugLv), null);
+                            } catch (BadLocationException ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
+                        }
+                    });
                 }
-            } finally {
-                pw.close();
+                lineNumber++;
             }
+            ec.saveDocument();
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
@@ -212,8 +240,35 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(separator, BorderLayout.WEST);
-        panel.add(cell);
+        panel.add(versionLabel, BorderLayout.CENTER);
+        panel.add(cell, BorderLayout.EAST);
         return panel;
+    }
+
+    /**
+     * Get WordPress version
+     *
+     * @param version version.php
+     * @return version
+     */
+    public String getVersion(FileObject version) {
+        String versionNumber = ""; // NOI18N
+        Pattern pattern = Pattern.compile(VERSION_REGEX);
+
+        try {
+            List<String> lines = version.asLines();
+            for (String line : lines) {
+                Matcher matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    versionNumber = matcher.group(1);
+                    break;
+                }
+            }
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        return versionNumber;
     }
 
     /**
@@ -223,7 +278,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      * @return debug level
      */
     public String getDebugLevel(FileObject config) {
-        String debubLv = ""; // NOI18N
+        String debugLv = ""; // NOI18N
         Pattern pattern = Pattern.compile(DEBUG_REGEX);
 
         try {
@@ -231,7 +286,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             for (String line : lines) {
                 Matcher matcher = pattern.matcher(line);
                 if (matcher.find()) {
-                    debubLv = matcher.group(1);
+                    debugLv = matcher.group(1);
                     break;
                 }
             }
@@ -239,7 +294,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             Exceptions.printStackTrace(ex);
         }
 
-        return debubLv;
+        return debugLv;
     }
 
     /**
@@ -247,21 +302,49 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      *
      * @param debugLv true or false
      */
-    private void setDebugLevelLabel(String debugLv) {
-        if (debugLv.matches("^(true|false)$")) { // NOI18N
-            debugLabel.setText(debugLevel.get(debugLv));
-        } else {
-            debugLabel.setText(debugLv);
-        }
-        debugLabel.setIcon(icon);
+    private void setDebugLevelLabel(final String debugLv) {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                if (debugLv.matches("^(true|false)$")) { // NOI18N
+                    debugLabel.setText(debugLevel.get(debugLv));
+                } else {
+                    debugLabel.setText(debugLv);
+                }
+            }
+        });
+    }
+
+    /**
+     * Set version versionLv.
+     *
+     * @param versionNumber
+     */
+    private void setVersionLabel(final String versionNumber) {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                versionLabel.setText(versionNumber);
+                versionLabel.setIcon(icon);
+            }
+        });
     }
 
     /**
      * Clear debug label
      */
     private void clearLabel() {
-        debugLabel.setText(""); //NOI18N
-        debugLabel.setIcon(null);
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                debugLabel.setText(""); //NOI18N
+                versionLabel.setText(""); // NOI18N
+                versionLabel.setIcon(null);
+            }
+        });
     }
 
     public void setLevel(String level) {
@@ -270,6 +353,14 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
 
     public String getLevel() {
         return level;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getVersion() {
+        return version;
     }
 
     public void setPhpModule(PhpModule phpModule) {
@@ -298,11 +389,11 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
 
         @Override
         public void resultChanged(LookupEvent lookupEvent) {
-            Lookup.Result lookupResult = (Lookup.Result) lookupEvent.getSource();
-            Collection c = lookupResult.allInstances();
+            Lookup.Result<?> lookupResult = (Lookup.Result<?>) lookupEvent.getSource();
+            Collection<?> c = lookupResult.allInstances();
 
             // get FileObject
-            FileObject fileObject = null;
+            FileObject fileObject;
             if (!c.isEmpty()) {
                 fileObject = (FileObject) c.iterator().next();
             } else {
@@ -311,7 +402,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             }
 
             // check whether project is WordPress
-            PhpModule pmTemp = PhpModule.forFileObject(fileObject);
+            PhpModule pmTemp = PhpModule.Factory.forFileObject(fileObject);
             if (!WPUtils.isWP(pmTemp)) {
                 clearLabel();
                 return;
@@ -321,6 +412,7 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             PhpModule pm = getPhpModule();
             if (pm == pmTemp) {
                 setDebugLevelLabel(getLevel());
+                setVersionLabel(getVersion());
                 return;
             } else {
                 if (pm != null) {
@@ -332,7 +424,8 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
             }
 
             // if it is other project, add FileChangeListener to FileObject
-            FileObject config = WPFileUtils.getDirectory(phpModule, WP_CONFIG_PHP);
+            WordPressModule wpModule = WordPressModule.Factory.forPhpModule(phpModule);
+            FileObject config = wpModule.getDirecotry(DIR_TYPE.ROOT, WP_CONFIG_PHP);
             if (config == null) {
                 return;
             }
@@ -342,11 +435,22 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
 
             String level = getDebugLevel(config);
             setLevel(level);
+            list.setSelectedValue(level, true);
             setDebugLevelLabel(level);
+
+            // version
+            FileObject version = wpModule.getVersionFile();
+            String versionNumber = ""; // NOI18N
+            if (version != null) {
+                versionNumber = getVersion(version) + ":"; // NOI18N
+            }
+            setVersion(versionNumber);
+            setVersionLabel(versionNumber);
         }
 
         private void removeFileChangeListenerForConfig(PhpModule pm) {
-            FileObject config = WPFileUtils.getDirectory(pm, WP_CONFIG_PHP);
+            WordPressModule wpModule = WordPressModule.Factory.forPhpModule(pm);
+            FileObject config = wpModule.getDirecotry(DIR_TYPE.ROOT, WP_CONFIG_PHP);
             if (config != null) {
                 config.removeFileChangeListener(fileChangeAdapter);
             }

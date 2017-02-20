@@ -53,7 +53,6 @@ import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -64,43 +63,10 @@ import org.openide.filesystems.FileUtil;
 public class WPFileUtils {
 
     public static final String WP_CONTENT = "wp-content"; // NOI18N
-    public static final String WP_PLUGINS = WP_CONTENT + "/plugins"; // NOI18N
-    public static final String WP_THEMES = WP_CONTENT + "/themes"; // NOI18N
+    public static final String WP_PLUGINS = "%s/plugins"; // NOI18N
+    public static final String WP_THEMES = "%s/themes"; // NOI18N
     public static final String WP_INCLUDES = "wp-includes"; // NOI18N
     public static final String WP_ADMIN = "wp-admin"; // NOI18N
-
-    public static FileObject getPluginsDirectory(PhpModule phpModule) {
-        return getDirectory(phpModule, WP_PLUGINS);
-    }
-
-    public static FileObject getThemesDirectory(PhpModule phpModule) {
-        return getDirectory(phpModule, WP_THEMES);
-    }
-
-    public static FileObject getIncludesDirectory(PhpModule phpModule) {
-        return getDirectory(phpModule, WP_INCLUDES);
-    }
-
-    public static FileObject getIncludesDirectory(PhpModule phpModule, String path) {
-        return getDirectory(phpModule, WP_INCLUDES + "/" + path); // NOI18N
-    }
-
-    public static FileObject getAdminDirectory(PhpModule phpModule) {
-        return getDirectory(phpModule, WP_ADMIN);
-    }
-
-    public static FileObject getDirectory(PhpModule phpModule, String path) {
-        if (phpModule == null) {
-            return null;
-        }
-        FileObject sourceDirectory = phpModule.getSourceDirectory();
-        FileObject fileObject = null;
-        if (sourceDirectory != null) {
-            fileObject = sourceDirectory.getFileObject(path);
-        }
-        return fileObject;
-
-    }
 
     /**
      * Zip compress. Create a zip file to the same hierarchy as the target

@@ -42,6 +42,7 @@
 package org.netbeans.modules.php.wordpress.ui.options;
 
 import java.util.prefs.Preferences;
+import org.netbeans.modules.php.api.util.UiUtils;
 import org.openide.util.NbPreferences;
 
 /**
@@ -50,16 +51,62 @@ import org.openide.util.NbPreferences;
  */
 public class WordPressOptions {
 
-    private static WordPressOptions INSTANCE = new WordPressOptions();
+    public static final String OPTIONS_SUBPATH = "WordPress"; // NOI18N
+    private static final WordPressOptions INSTANCE = new WordPressOptions();
     private static final String PREFERENCES_PATH = "wordpress"; // NOI18N
+    private static final String LOCALE = "locale"; // NOI18N
+    private static final String CHECK_CORE_NEW_VERSION = "check.core.new.version"; // NOI18N
+    private static final String CHECK_PLUGIN_NEW_VERSION = "check.plugin.new.version"; // NOI18N
+    private static final String CHECK_THEME_NEW_VERSION = "check.theme.new.version"; // NOI18N
     private static final String DOWNLOAD_URL = "download.url"; // NOI18N
     private static final String LOCAL_FILE_PATH = "local.file.path"; // NOI18N
+    private static final String WP_CLI_PATH = "wp-cli.path"; // NOI18N
+    private static final String WP_CLI_DOWNLOAD_LOCALE = "wp-cli.download.locale"; // NOI18N
+    private static final String WP_CLI_DOWNLOAD_VERSION = "wp-cli.download.version"; // NOI18N
+    private static final String WP_CLI_GET_COMMANDS_ON_BOOT = "wp-cli.get.commands.on.boot"; // NOI18N
+    private static final String WP_CLI_COMMAND_LIST = "wp-cli.command.list"; // NOI18N
 
     private WordPressOptions() {
     }
 
+    public static String getOptionsPath() {
+        return UiUtils.OPTIONS_PATH + "/" + WordPressOptions.OPTIONS_SUBPATH; // NOI18N
+    }
+
     public static WordPressOptions getInstance() {
         return INSTANCE;
+    }
+
+    public String getWpLocale() {
+        return getPreferences().get(LOCALE, ""); // NOI18N
+    }
+
+    public void setWpLocale(String locale) {
+        getPreferences().put(LOCALE, locale);
+    }
+
+    public boolean isCheckCoreNewVersion() {
+        return getPreferences().getBoolean(CHECK_CORE_NEW_VERSION, true);
+    }
+
+    public void setCheckCoreNewVersion(boolean check) {
+        getPreferences().putBoolean(CHECK_CORE_NEW_VERSION, check);
+    }
+
+    public boolean isCheckPluginNewVersion() {
+        return getPreferences().getBoolean(CHECK_PLUGIN_NEW_VERSION, false);
+    }
+
+    public void setCheckPluginNewVersion(boolean check) {
+        getPreferences().putBoolean(CHECK_PLUGIN_NEW_VERSION, check);
+    }
+
+    public boolean isCheckThemeNewVersion() {
+        return getPreferences().getBoolean(CHECK_THEME_NEW_VERSION, false);
+    }
+
+    public void setCheckThemeNewVersion(boolean check) {
+        getPreferences().putBoolean(CHECK_THEME_NEW_VERSION, check);
     }
 
     public synchronized String getDownloadUrl() {
@@ -78,7 +125,48 @@ public class WordPressOptions {
         getPreferences().put(LOCAL_FILE_PATH, path);
     }
 
+    public String getWpCliPath() {
+        return getPreferences().get(WP_CLI_PATH, ""); // NOI18N
+    }
+
+    public void setWpCliPath(String path) {
+        getPreferences().put(WP_CLI_PATH, path);
+    }
+
+    public String getWpCliDownloadLocale() {
+        return getPreferences().get(WP_CLI_DOWNLOAD_LOCALE, ""); // NOI18N
+    }
+
+    public void setWpCliDownloadLocale(String locale) {
+        getPreferences().put(WP_CLI_DOWNLOAD_LOCALE, locale);
+    }
+
+    public String getWpCliDownloadVersion() {
+        return getPreferences().get(WP_CLI_DOWNLOAD_VERSION, ""); // NOI18N
+    }
+
+    public void setWpCliDownloadVersion(String version) {
+        getPreferences().put(WP_CLI_DOWNLOAD_VERSION, version);
+    }
+
+    public boolean getWpCliGetCommandsOnBoot() {
+        return getPreferences().getBoolean(WP_CLI_GET_COMMANDS_ON_BOOT, true);
+    }
+
+    public void setWpCliGetCommandsOnBoot(boolean get) {
+        getPreferences().putBoolean(WP_CLI_GET_COMMANDS_ON_BOOT, get);
+    }
+
+    public String getWpCliCommandList() {
+        return getPreferences().get(WP_CLI_COMMAND_LIST, null);
+    }
+
+    public void setWpCliCommandList(String text) {
+        getPreferences().put(WP_CLI_COMMAND_LIST, text);
+    }
+
     private Preferences getPreferences() {
         return NbPreferences.forModule(WordPressOptions.class).node(PREFERENCES_PATH);
     }
+
 }

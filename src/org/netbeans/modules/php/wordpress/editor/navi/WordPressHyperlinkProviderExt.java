@@ -56,6 +56,7 @@ import org.netbeans.modules.csl.api.UiUtils;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.editor.NavUtils;
 import org.netbeans.modules.php.editor.api.ElementQuery;
 import org.netbeans.modules.php.editor.api.ElementQueryFactory;
 import org.netbeans.modules.php.editor.api.NameKind;
@@ -63,7 +64,6 @@ import org.netbeans.modules.php.editor.api.QuerySupportFactory;
 import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
-import org.netbeans.modules.php.editor.nav.NavUtils;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
 import org.openide.filesystems.FileObject;
 
@@ -96,7 +96,7 @@ public class WordPressHyperlinkProviderExt implements HyperlinkProviderExt {
         if (fileObject == null) {
             return false;
         }
-        phpModule = PhpModule.forFileObject(fileObject);
+        phpModule = PhpModule.Factory.forFileObject(fileObject);
         if (phpModule == null || !WPUtils.isWP(phpModule)) {
             return false;
         }

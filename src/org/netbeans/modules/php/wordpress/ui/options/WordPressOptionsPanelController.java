@@ -44,21 +44,28 @@ package org.netbeans.modules.php.wordpress.ui.options;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.swing.JComponent;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import org.netbeans.modules.php.api.util.UiUtils;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
-@OptionsPanelController.SubRegistration(
-        location = "org-netbeans-modules-php-project-ui-options-PHPOptionsCategory",
-        displayName = "#AdvancedOption_DisplayName_WordPress",
-        keywords = "#AdvancedOption_Keywords_WordPress",
-        keywordsCategory = "org-netbeans-modules-php-project-ui-options-PHPOptionsCategory/WordPress")
-@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_WordPress=WordPress", "AdvancedOption_Keywords_WordPress=WordPress"})
-public final class WordPressOptionsPanelController extends OptionsPanelController {
+@UiUtils.PhpOptionsPanelRegistration(
+        id = WordPressOptionsPanelController.ID,
+        displayName = "#LBL_WordPressOptionsName",
+        position = 1000
+)
+@NbBundle.Messages({"LBL_WordPressOptionsName=WordPress", "WordPress.options.keywords.TabTitle=Frameworks & Tools"})
+@OptionsPanelController.Keywords(keywords = {"php", "wordpress", "wp"},
+        location = UiUtils.OPTIONS_PATH, tabTitle = "#WordPress.options.keywords.TabTitle")
+public final class WordPressOptionsPanelController extends OptionsPanelController implements ChangeListener {
 
+    static final String ID = "WordPress"; // NOI18N
     private WordPressOptionsPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private boolean changed;
+    private boolean changed = false;
 
     @Override
     public void update() {
@@ -109,12 +116,14 @@ public final class WordPressOptionsPanelController extends OptionsPanelControlle
 
     private WordPressOptionsPanel getPanel() {
         if (panel == null) {
-            panel = new WordPressOptionsPanel(this);
+            panel = new WordPressOptionsPanel();
+            panel.addChangeListener(this);
         }
         return panel;
     }
 
-    void changed() {
+    @Override
+    public void stateChanged(ChangeEvent e) {
         if (!changed) {
             changed = true;
             pcs.firePropertyChange(OptionsPanelController.PROP_CHANGED, false, true);

@@ -55,7 +55,60 @@ import org.netbeans.modules.php.editor.indent.FmtOptions;
 public class WordPressPreferences {
 
     private static final List<String> WITHIN_OPTIONS = new ArrayList<String>();
+    private static final String ENABLED = "enabled"; // NOI18N
+    private static final String CUSTOM_CONTENT_NAME = "custom-content-name"; // NOI18N
+    private static final String WP_ROOT = "wp-root"; // NOI18N
+    private static final String PLUGINS = "plugins"; // NOI18N
+    private static final String THEMES = "themes"; // NOI18N
 
+    private WordPressPreferences() {
+    }
+
+    public static boolean isEnabled(PhpModule phpModule) {
+        return getPreferences(phpModule).getBoolean(ENABLED, false);
+    }
+
+    public static void setEnabled(PhpModule phpModule, boolean isEnabled) {
+        getPreferences(phpModule).putBoolean(ENABLED, isEnabled);
+    }
+
+    public static String getCustomContentName(PhpModule phpModule) {
+        return getPreferences(phpModule).get(CUSTOM_CONTENT_NAME, "wp-content"); // NOI18N
+    }
+
+    public static void setCustomContentName(PhpModule phpModule, String name) {
+        getPreferences(phpModule).put(CUSTOM_CONTENT_NAME, name);
+    }
+
+    public static String getWordPressRootPath(PhpModule phpModule) {
+        return getPreferences(phpModule).get(WP_ROOT, ""); // NOI18N
+    }
+
+    public static void setWordPressRootPath(PhpModule phpModule, String path) {
+        getPreferences(phpModule).put(WP_ROOT, path);
+    }
+
+    public static String getPluginsPath(PhpModule phpModule) {
+        return getPreferences(phpModule).get(PLUGINS, ""); // NOI18N
+    }
+
+    public static void setPluginsPath(PhpModule phpModule, String path) {
+        getPreferences(phpModule).put(PLUGINS, path);
+    }
+
+    public static String getThemesPath(PhpModule phpModule) {
+        return getPreferences(phpModule).get(THEMES, ""); // NOI18N
+    }
+
+    public static void setThemesPath(PhpModule phpModule, String path) {
+        getPreferences(phpModule).put(THEMES, path);
+    }
+
+    private static Preferences getPreferences(PhpModule phpModule) {
+        return phpModule.getPreferences(WordPressPreferences.class, true);
+    }
+
+    // formatting
     static {
         WITHIN_OPTIONS.add(FmtOptions.SPACE_WITHIN_ARRAY_DECL_PARENS);
         WITHIN_OPTIONS.add(FmtOptions.SPACE_WITHIN_CATCH_PARENS);
