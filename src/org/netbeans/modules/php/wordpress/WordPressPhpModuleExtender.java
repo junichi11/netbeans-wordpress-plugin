@@ -252,6 +252,8 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
             WordPressPreferences.setWordPressFormat(pm);
         }
 
+        WordPressPreferences.setEnabled(pm, true);
+
         Set<FileObject> files = new HashSet<>();
         if (sourceDirectory != null) {
             // create wp-config.php
