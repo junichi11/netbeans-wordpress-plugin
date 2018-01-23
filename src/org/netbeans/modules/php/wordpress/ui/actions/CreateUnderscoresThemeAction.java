@@ -51,7 +51,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.spi.framework.actions.BaseAction;
 import org.netbeans.modules.php.wordpress.modules.WordPressModule;
@@ -61,6 +60,7 @@ import org.netbeans.modules.php.wordpress.util.UnderscoresUtils;
 import org.netbeans.modules.php.wordpress.util.UnderscoresZipEntryFilter;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
+import org.netbeans.modules.php.wordpress.util.WordPressUnzipException;
 import org.openide.filesystems.FileAlreadyLockedException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -190,7 +190,7 @@ public class CreateUnderscoresThemeAction extends BaseAction {
             themeFolder.refresh();
         } catch (MalformedURLException ex) {
             LOGGER.log(Level.WARNING, null, ex);
-        } catch (IOException ex) {
+        } catch (IOException | WordPressUnzipException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
         FileObject[] children = themeFolder.getChildren();

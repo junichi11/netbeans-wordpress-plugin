@@ -53,7 +53,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.spi.framework.actions.BaseAction;
@@ -61,6 +60,7 @@ import org.netbeans.modules.php.wordpress.modules.WordPressModule;
 import org.netbeans.modules.php.wordpress.util.GithubZipEntryFilter;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
+import org.netbeans.modules.php.wordpress.util.WordPressUnzipException;
 import org.netbeans.modules.php.wordpress.util.ZipEntryFilter;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -187,8 +187,8 @@ public abstract class CreateThemeBaseAction extends BaseAction {
                     WPFileUtils.unzip(url, themeDirectory, entryFilter);
                 } catch (MalformedURLException ex) {
                     Exceptions.printStackTrace(ex);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
+                } catch (IOException | WordPressUnzipException ex) {
+                    LOGGER.log(Level.WARNING, null, ex);
                 } finally {
                     handle.finish();
                 }
