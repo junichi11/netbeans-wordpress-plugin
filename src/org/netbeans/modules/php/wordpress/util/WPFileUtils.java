@@ -143,14 +143,16 @@ public class WPFileUtils {
      * @throws MalformedURLException
      * @throws IOException
      */
-    public static void unzip(String url, File targetDirectory, ZipEntryFilter filter) throws MalformedURLException, IOException {
+    public static void unzip(String url, File targetDirectory, ZipEntryFilter filter) throws MalformedURLException, IOException, WordPressUnzipException {
         if (targetDirectory == null) {
             return;
         }
         URL zipUrl = new URL(url);
         try (ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(zipUrl.openStream()))) {
             ZipEntry entry;
+            boolean isEmpty = true;
             while ((entry = zipInputStream.getNextEntry()) != null) {
+                isEmpty = false;
                 if (!filter.accept(entry)) {
                     zipInputStream.closeEntry();
                     continue;
@@ -162,6 +164,9 @@ public class WPFileUtils {
                 File outFile = new File(targetDirectory, path);
                 createDirectories(outFile, entry);
                 writeFile(outFile, zipInputStream, entry);
+            }
+            if (isEmpty) {
+                throw new WordPressUnzipException("Cannot unzip:" + url);
             }
         }
     }
