@@ -297,6 +297,9 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
             try {
                 versionCheckApi.parse();
                 downloadUrl = versionCheckApi.getDownload();
+                // follow a redirect url
+                // it seems that the redirect url is used https
+                downloadUrl = downloadUrl.replace("http://", "https://"); // NOI18N
             } catch (IOException ex) {
                 downloadUrl = WP_DL_URL_DEFAULT;
             }
