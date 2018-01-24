@@ -79,18 +79,22 @@ add_filter('the_content', 'w[Ctrl + Space]'); // e.g. start with 'w'
 ```
 
 ### Display And Change Debug Status
-WP_DEBUG value(wp-config.php) is displayed on bottome-right of IDE. 
+WP_DEBUG value(wp-config.php) is displayed on bottom-right of IDE. 
 If you click there, you can change WP_DEBUG value.
 WordPress version number is also displayed.
 
 ### Create New Theme Action
 Right-click Project > WordPress > Create Theme
 
+#### Minimum Theme
+
+Just create a style.css and an empty index.php.
+
 #### Underscores
 Create theme from [Underscores | A Starter Theme for WordPress](http://underscores.me/). Underscores is awesome!
 This plugin uses [Automattic/_s · GitHub](https://github.com/automattic/_s).
 
-**Please notice that license of created theme is GPLv2**
+**Please note that license of created theme is GPLv2**
 
 #### Barebones
 Create theme form [welcomebrand/Barebones · GitHub](https://github.com/welcomebrand/Barebones).

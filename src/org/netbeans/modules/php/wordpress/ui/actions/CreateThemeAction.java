@@ -94,6 +94,7 @@ public class CreateThemeAction extends BaseAction implements Presenter.Menu, Pop
         JMenu menu = new JMenu(getPureName());
         JMenuItem underscores = new JMenuItem(CreateUnderscoresThemeAction.getInstance());
         JMenuItem barebones = new JMenuItem(CreateBarebonesThemeAction.getInstance());
+        menu.add(CreateMinimumBlankThemeAction.getInstance());
         menu.add(underscores);
         menu.add(barebones);
         return menu;
