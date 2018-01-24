@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright 2013 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
  * Other names may be trademarks of their respective owners.
@@ -36,66 +36,31 @@
  * made subject to such option by the copyright holder.
  *
  * Contributor(s):
- *
- * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package org.netbeans.modules.php.wordpress.ui.actions;
-
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import org.netbeans.modules.php.api.phpmodule.PhpModule;
-import org.netbeans.modules.php.spi.framework.actions.BaseAction;
-import org.openide.util.NbBundle;
-import org.openide.util.actions.Presenter;
-import org.openide.util.actions.Presenter.Popup;
+package org.netbeans.modules.php.wordpress.util;
 
 /**
  *
  * @author junichi11
  */
-public class CreateThemeAction extends BaseAction implements Presenter.Menu, Popup {
+public class WordPressUnzipException extends Exception {
 
-    private static final long serialVersionUID = -1533566813298547558L;
-    private static final CreateThemeAction INSTANCE = new CreateThemeAction();
+    private static final long serialVersionUID = 1607655567611796935L;
 
-    private CreateThemeAction() {
+    /**
+     * Creates a new instance of <code>WordPressUnzipException</code> without
+     * detail message.
+     */
+    public WordPressUnzipException() {
     }
 
-    public static CreateThemeAction getInstance() {
-        return INSTANCE;
-    }
-
-    @Override
-    protected String getFullName() {
-        return getPureName();
-    }
-
-    @Override
-    @NbBundle.Messages("LBL_CreateThemeBaseAction=Create Theme")
-    protected String getPureName() {
-        return Bundle.LBL_CreateThemeBaseAction();
-    }
-
-    @Override
-    protected void actionPerformed(PhpModule pm) {
-    }
-
-    @Override
-    public JMenuItem getMenuPresenter() {
-        return createMenuItem();
-    }
-
-    @Override
-    public JMenuItem getPopupPresenter() {
-        return createMenuItem();
-    }
-
-    private JMenuItem createMenuItem() {
-        JMenu menu = new JMenu(getPureName());
-        JMenuItem underscores = new JMenuItem(CreateUnderscoresThemeAction.getInstance());
-        JMenuItem barebones = new JMenuItem(CreateBarebonesThemeAction.getInstance());
-        menu.add(underscores);
-        menu.add(barebones);
-        return menu;
+    /**
+     * Constructs an instance of <code>WordPressUnzipException</code> with the
+     * specified detail message.
+     *
+     * @param msg the detail message.
+     */
+    public WordPressUnzipException(String msg) {
+        super(msg);
     }
 }

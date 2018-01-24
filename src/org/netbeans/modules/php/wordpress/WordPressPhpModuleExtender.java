@@ -82,6 +82,7 @@ import org.netbeans.modules.php.wordpress.util.Charset;
 import org.netbeans.modules.php.wordpress.util.NetUtils;
 import org.netbeans.modules.php.wordpress.util.WPFileUtils;
 import org.netbeans.modules.php.wordpress.util.WPZipEntryFilter;
+import org.netbeans.modules.php.wordpress.util.WordPressUnzipException;
 import org.netbeans.modules.php.wordpress.wpapis.WordPressVersionCheckApi;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -203,7 +204,8 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
                 WPFileUtils.unzip(urlPath, FileUtil.toFile(sourceDirectory), new WPZipEntryFilter(panel.getUnzipStatusTextField()));
             } catch (MalformedURLException ex) {
                 Exceptions.printStackTrace(ex);
-            } catch (IOException ex) {
+            } catch (IOException | WordPressUnzipException ex) {
+                LOGGER.log(Level.WARNING, ex.getMessage());
                 throw new ExtendingException(ex.getLocalizedMessage());
             }
         } else if (panel.useLocalFile()) {
@@ -252,6 +254,8 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
             WordPressPreferences.setWordPressFormat(pm);
         }
 
+        WordPressPreferences.setEnabled(pm, true);
+
         Set<FileObject> files = new HashSet<>();
         if (sourceDirectory != null) {
             // create wp-config.php
@@ -297,6 +301,9 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
             try {
                 versionCheckApi.parse();
                 downloadUrl = versionCheckApi.getDownload();
+                // follow a redirect url
+                // it seems that the redirect url is used https
+                downloadUrl = downloadUrl.replace("http://", "https://"); // NOI18N
             } catch (IOException ex) {
                 downloadUrl = WP_DL_URL_DEFAULT;
             }
