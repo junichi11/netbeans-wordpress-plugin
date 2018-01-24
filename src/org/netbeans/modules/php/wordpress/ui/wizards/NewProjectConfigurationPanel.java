@@ -47,14 +47,18 @@ import javax.swing.JTextField;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
 import org.netbeans.modules.php.wordpress.util.NetUtils;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
 
 /**
  *
  * @author junichi11
  */
-public class NewProjectConfigurationPanel extends javax.swing.JPanel {
+public class NewProjectConfigurationPanel extends JPanel {
 
-    private static final long serialVersionUID = -736782035524380751L;
+    private static final long serialVersionUID = -2999785039732460223L;
+
+    private final WpConfigPanel wpConfigPanel = new WpConfigPanel();
 
     /**
      * Creates new form NewProjectConfigurationPanel
@@ -129,10 +133,6 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
         return createConfigCheckBox.isSelected();
     }
 
-    public JPanel getWpConfigPanel() {
-        return wpConfigPanel;
-    }
-
     public void setAllEnabled(JPanel panel, boolean enabled) {
         if (panel != null) {
             for (Component c : panel.getComponents()) {
@@ -142,27 +142,27 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
     }
 
     public String getDbCharset() {
-        return dbCharsetTextField.getText();
+        return wpConfigPanel.getDbCharset();
     }
 
     public String getDbCollate() {
-        return dbCollateTextField.getText();
+        return wpConfigPanel.getDbCollate();
     }
 
     public String getDbHost() {
-        return dbHostTextField.getText();
+        return wpConfigPanel.getDbHost();
     }
 
     public String getDbName() {
-        return dbNameTextField.getText();
+        return wpConfigPanel.getDbName();
     }
 
     public String getDbPassword() {
-        return dbPasswordTextField.getText();
+        return wpConfigPanel.getDbPassword();
     }
 
     public String getDbUser() {
-        return dbUserTextField.getText();
+        return wpConfigPanel.getDbUser();
     }
 
     /**
@@ -183,20 +183,8 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
         urlLabel = new javax.swing.JLabel();
         localFileLabel = new javax.swing.JLabel();
         formatCheckBox = new javax.swing.JCheckBox();
-        wpConfigPanel = new javax.swing.JPanel();
-        dbNameLabel = new javax.swing.JLabel();
-        dbNameTextField = new javax.swing.JTextField();
-        dbUserLabel = new javax.swing.JLabel();
-        dbUserTextField = new javax.swing.JTextField();
-        dbPasswordLabel = new javax.swing.JLabel();
-        dbHostLabel = new javax.swing.JLabel();
-        dbCharsetLabel = new javax.swing.JLabel();
-        dbCollateLabel = new javax.swing.JLabel();
-        dbPasswordTextField = new javax.swing.JTextField();
-        dbHostTextField = new javax.swing.JTextField();
-        dbCharsetTextField = new javax.swing.JTextField();
-        dbCollateTextField = new javax.swing.JTextField();
         createConfigCheckBox = new javax.swing.JCheckBox();
+        setWpConfigValuesButton = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(unzipLabel, org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.unzipLabel.text")); // NOI18N
 
@@ -229,91 +217,13 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
         formatCheckBox.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(formatCheckBox, org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.formatCheckBox.text")); // NOI18N
 
-        wpConfigPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.wpConfigPanel.border.title"))); // NOI18N
-        wpConfigPanel.setAutoscrolls(true);
-
-        org.openide.awt.Mnemonics.setLocalizedText(dbNameLabel, org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbNameLabel.text")); // NOI18N
-
-        dbNameTextField.setText(org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbNameTextField.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(dbUserLabel, org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbUserLabel.text")); // NOI18N
-
-        dbUserTextField.setText(org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbUserTextField.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(dbPasswordLabel, org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbPasswordLabel.text")); // NOI18N
-        dbPasswordLabel.setToolTipText(org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbPasswordLabel.toolTipText")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(dbHostLabel, org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbHostLabel.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(dbCharsetLabel, org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbCharsetLabel.text")); // NOI18N
-        dbCharsetLabel.setToolTipText(org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbCharsetLabel.toolTipText")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(dbCollateLabel, org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbCollateLabel.text")); // NOI18N
-        dbCollateLabel.setToolTipText(org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbCollateLabel.toolTipText")); // NOI18N
-
-        dbPasswordTextField.setText(org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbPasswordTextField.text")); // NOI18N
-
-        dbHostTextField.setText(org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbHostTextField.text")); // NOI18N
-
-        dbCharsetTextField.setText(org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbCharsetTextField.text")); // NOI18N
-
-        dbCollateTextField.setText(org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.dbCollateTextField.text")); // NOI18N
-
-        javax.swing.GroupLayout wpConfigPanelLayout = new javax.swing.GroupLayout(wpConfigPanel);
-        wpConfigPanel.setLayout(wpConfigPanelLayout);
-        wpConfigPanelLayout.setHorizontalGroup(
-            wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(wpConfigPanelLayout.createSequentialGroup()
-                .addGroup(wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dbNameLabel)
-                    .addComponent(dbHostLabel)
-                    .addComponent(dbCharsetLabel)
-                    .addComponent(dbCollateLabel)
-                    .addComponent(dbUserLabel)
-                    .addComponent(dbPasswordLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dbNameTextField)
-                    .addComponent(dbUserTextField)
-                    .addComponent(dbPasswordTextField)
-                    .addComponent(dbHostTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
-                    .addComponent(dbCharsetTextField)
-                    .addComponent(dbCollateTextField)))
-        );
-        wpConfigPanelLayout.setVerticalGroup(
-            wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(wpConfigPanelLayout.createSequentialGroup()
-                .addGroup(wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dbNameLabel)
-                    .addComponent(dbNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dbUserLabel)
-                    .addComponent(dbUserTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dbPasswordLabel)
-                    .addComponent(dbPasswordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dbHostLabel)
-                    .addComponent(dbHostTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dbCharsetLabel)
-                    .addComponent(dbCharsetTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(wpConfigPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dbCollateLabel)
-                    .addComponent(dbCollateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-
         createConfigCheckBox.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(createConfigCheckBox, org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.createConfigCheckBox.text")); // NOI18N
-        createConfigCheckBox.addActionListener(new java.awt.event.ActionListener() {
+
+        org.openide.awt.Mnemonics.setLocalizedText(setWpConfigValuesButton, org.openide.util.NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.setWpConfigValuesButton.text")); // NOI18N
+        setWpConfigValuesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createConfigCheckBoxActionPerformed(evt);
+                setWpConfigValuesButtonActionPerformed(evt);
             }
         });
 
@@ -339,11 +249,12 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(formatCheckBox)
-                            .addComponent(createConfigCheckBox)
-                            .addComponent(useWpCliRadioButton))
+                            .addComponent(useWpCliRadioButton)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(createConfigCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(setWpConfigValuesButton)))
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(wpConfigPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -366,9 +277,10 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(formatCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(createConfigCheckBox)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(wpConfigPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(createConfigCheckBox)
+                    .addComponent(setWpConfigValuesButton))
+                .addGap(0, 12, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -391,40 +303,26 @@ public class NewProjectConfigurationPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_useLocalFileRadioButtonActionPerformed
 
-    private void createConfigCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createConfigCheckBoxActionPerformed
-        // TODO add your handling code here:
-        if (!createConfigCheckBox.isSelected()) {
-            wpConfigPanel.setEnabled(false);
-            setAllEnabled(wpConfigPanel, false);
-        } else {
-            wpConfigPanel.setEnabled(true);
-            setAllEnabled(wpConfigPanel, true);
+    private void setWpConfigValuesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setWpConfigValuesButtonActionPerformed
+        wpConfigPanel.store();
+        DialogDescriptor dialogDescriptor = new DialogDescriptor(wpConfigPanel, "wp-config", true, DialogDescriptor.OK_CANCEL_OPTION, null, null); // NOI18N
+        Object result = DialogDisplayer.getDefault().notify(dialogDescriptor);
+        if (result != DialogDescriptor.OK_OPTION) {
+            wpConfigPanel.restore();
         }
-    }//GEN-LAST:event_createConfigCheckBoxActionPerformed
+    }//GEN-LAST:event_setWpConfigValuesButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox createConfigCheckBox;
-    private javax.swing.JLabel dbCharsetLabel;
-    private javax.swing.JTextField dbCharsetTextField;
-    private javax.swing.JLabel dbCollateLabel;
-    private javax.swing.JTextField dbCollateTextField;
-    private javax.swing.JLabel dbHostLabel;
-    private javax.swing.JTextField dbHostTextField;
-    private javax.swing.JLabel dbNameLabel;
-    private javax.swing.JTextField dbNameTextField;
-    private javax.swing.JLabel dbPasswordLabel;
-    private javax.swing.JTextField dbPasswordTextField;
-    private javax.swing.JLabel dbUserLabel;
-    private javax.swing.JTextField dbUserTextField;
     private javax.swing.JCheckBox formatCheckBox;
     private javax.swing.JLabel localFileLabel;
+    private javax.swing.JButton setWpConfigValuesButton;
     private javax.swing.JLabel unzipLabel;
     private javax.swing.JTextField unzipStatusTextField;
     private javax.swing.JLabel urlLabel;
     private javax.swing.JRadioButton useLocalFileRadioButton;
     private javax.swing.JRadioButton useURLRadioButton;
     private javax.swing.JRadioButton useWpCliRadioButton;
-    private javax.swing.JPanel wpConfigPanel;
     // End of variables declaration//GEN-END:variables
 }
