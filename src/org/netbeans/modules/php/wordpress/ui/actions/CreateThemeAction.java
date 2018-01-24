@@ -47,12 +47,13 @@ import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.spi.framework.actions.BaseAction;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.Presenter;
+import org.openide.util.actions.Presenter.Popup;
 
 /**
  *
  * @author junichi11
  */
-public class CreateThemeAction extends BaseAction implements Presenter.Menu {
+public class CreateThemeAction extends BaseAction implements Presenter.Menu, Popup {
 
     private static final long serialVersionUID = -1533566813298547558L;
     private static final CreateThemeAction INSTANCE = new CreateThemeAction();
@@ -81,6 +82,15 @@ public class CreateThemeAction extends BaseAction implements Presenter.Menu {
 
     @Override
     public JMenuItem getMenuPresenter() {
+        return createMenuItem();
+    }
+
+    @Override
+    public JMenuItem getPopupPresenter() {
+        return createMenuItem();
+    }
+
+    private JMenuItem createMenuItem() {
         JMenu menu = new JMenu(getPureName());
         JMenuItem underscores = new JMenuItem(CreateUnderscoresThemeAction.getInstance());
         JMenuItem barebones = new JMenuItem(CreateBarebonesThemeAction.getInstance());

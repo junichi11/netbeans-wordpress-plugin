@@ -95,23 +95,23 @@ public class MVCNodeFactory implements NodeFactory {
                 // plugins
                 FileObject pluginsDirectory = module.getPluginsDirectory();
                 if (pluginsDirectory != null) {
-                    addNode(list, pluginsDirectory);
+                    addNode(list, pluginsDirectory, WordPressModule.DIR_TYPE.PLUGINS);
                 }
                 // themes
                 FileObject themesDirectory = module.getThemesDirectory();
                 if (themesDirectory != null) {
-                    addNode(list, themesDirectory);
+                    addNode(list, themesDirectory, WordPressModule.DIR_TYPE.THEMES);
                 }
                 return list;
             }
             return Collections.emptyList();
         }
 
-        private void addNode(List<Node> list, FileObject fileObject) {
+        private void addNode(List<Node> list, FileObject fileObject, WordPressModule.DIR_TYPE type) {
             if (fileObject != null) {
                 DataFolder folder = getFolder(fileObject);
                 if (folder != null) {
-                    list.add(new MVCNode(folder, null, fileObject.getName()));
+                    list.add(new MVCNode(folder, null, fileObject.getName(), type));
                 }
             }
         }

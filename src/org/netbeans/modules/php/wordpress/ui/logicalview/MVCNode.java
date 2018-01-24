@@ -50,6 +50,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import org.netbeans.modules.php.api.util.FileUtils;
+import org.netbeans.modules.php.wordpress.modules.WordPressModule;
+import org.netbeans.modules.php.wordpress.ui.actions.CreateChildThemeAction;
+import org.netbeans.modules.php.wordpress.ui.actions.CreatePluginAction;
+import org.netbeans.modules.php.wordpress.ui.actions.CreateThemeAction;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.FileSensitiveActions;
 import org.netbeans.spi.project.ui.support.ProjectSensitiveActions;
@@ -79,20 +83,22 @@ public class MVCNode extends FilterNode {
 
     private static final String ICON_PATH = "org/netbeans/modules/php/wordpress/resources/wordpress_icon_8.png"; //NOI18N
     private static final Image WP_ICON = ImageUtilities.loadImage(ICON_PATH);
+    private final WordPressModule.DIR_TYPE type;
 
     /**
      * creates source root node based on specified DataFolder. Uses specified
      * name.
      */
-    MVCNode(DataFolder folder, DataFilter filter, String name) {
-        this(folder, new FilterNode(folder.getNodeDelegate(), folder.createNodeChildren(filter)), name);
+    MVCNode(DataFolder folder, DataFilter filter, String name, WordPressModule.DIR_TYPE type) {
+        this(folder, new FilterNode(folder.getNodeDelegate(), folder.createNodeChildren(filter)), name, type);
     }
 
-    private MVCNode(DataFolder folder, FilterNode node, String name) {
+    private MVCNode(DataFolder folder, FilterNode node, String name, WordPressModule.DIR_TYPE type) {
         super(node, new MVCNode.FolderChildren(node, false), new ProxyLookup(folder.getNodeDelegate().getLookup()));
 
         disableDelegation(DELEGATE_GET_DISPLAY_NAME | DELEGATE_SET_DISPLAY_NAME | DELEGATE_GET_SHORT_DESCRIPTION | DELEGATE_GET_ACTIONS);
         setDisplayName(name);
+        this.type = type;
     }
 
     @Override
@@ -134,6 +140,18 @@ public class MVCNode extends FilterNode {
     public Action[] getActions(boolean context) {
         List<Action> actions = new ArrayList<>();
         actions.add(CommonProjectActions.newFileAction());
+        // WordPress Actions
+        switch (type) {
+            case PLUGINS:
+                actions.add(CreatePluginAction.getInstance());
+                break;
+            case THEMES:
+                actions.add(CreateThemeAction.getInstance());
+                actions.add(CreateChildThemeAction.getInstance());
+                break;
+            default:
+                break;
+        }
         actions.add(null);
         actions.add(FileSensitiveActions.fileCommandAction("dowonload", Bundle.LBL_DownloadCommand(), null));
         actions.add(FileSensitiveActions.fileCommandAction("upload", Bundle.LBL_UploadCommand(), null));
