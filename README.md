@@ -48,8 +48,8 @@ You can create a new WordPress project via a wizard.
 
 #### options
 
-- Set format to project : set format option to project.properties
-- create wp-config.php : copy from wp-config-sample.php
+- Set format options for WordPress to this project : add format options for WordPress to project.properties
+- Create a wp-config.php : copy from wp-config-sample.php
 
 ### Custome Content Name
 
