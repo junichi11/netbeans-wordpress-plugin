@@ -10,6 +10,15 @@
             </folder>
         </folder>
     </folder>
+    <folder name="OptionsExport">
+        <folder name="PHP">
+            <file name="WordPress">
+                <attr name="include" stringvalue="config/Preferences/org/netbeans/modules/php/wordpress/.*"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.php.wordpress.resources.Bundle#LBL_WordPressExportName"/>
+                <attr name="position" intvalue="1500"/>
+            </file>
+        </folder>
+    </folder>
     <folder name="org-netbeans-modules-php-wordpress">
         <file name="WpPlugin.php" url="WpPlugin.php" />
         <file name="readme.txt" url="readme.txt" />
