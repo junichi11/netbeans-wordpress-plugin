@@ -51,7 +51,7 @@ You can create a new WordPress project via a wizard.
 - Set format options for WordPress to this project : add format options for WordPress to project.properties
 - Create a wp-config.php : copy from wp-config-sample.php
 
-### Custome Content Name
+### Custom Content Name
 
 If you want to use a custom content name (default value is `wp-content`), please set your content name to the project properties.
 (project properties > Framework > WordPress)
