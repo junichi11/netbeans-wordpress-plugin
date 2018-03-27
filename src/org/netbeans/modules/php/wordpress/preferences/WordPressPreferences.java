@@ -57,6 +57,7 @@ public class WordPressPreferences {
     private static final List<String> WITHIN_OPTIONS = new ArrayList<>();
     private static final String ENABLED = "enabled"; // NOI18N
     private static final String CUSTOM_CONTENT_NAME = "custom-content-name"; // NOI18N
+    private static final String WP_CONTENT_PATH = "custom-content-path"; // NOI18N
     private static final String WP_ROOT = "wp-root"; // NOI18N
     private static final String PLUGINS = "plugins"; // NOI18N
     private static final String THEMES = "themes"; // NOI18N
@@ -78,6 +79,14 @@ public class WordPressPreferences {
 
     public static void setCustomContentName(PhpModule phpModule, String name) {
         getPreferences(phpModule).put(CUSTOM_CONTENT_NAME, name);
+    }
+
+    public static String getWpContentPath(PhpModule phpModule) {
+        return getPreferences(phpModule).get(WP_CONTENT_PATH, ""); // NOI18N
+    }
+
+    public static void setWpContentPath(PhpModule phpModule, String path) {
+        getPreferences(phpModule).put(WP_CONTENT_PATH, path);
     }
 
     public static String getWordPressRootPath(PhpModule phpModule) {

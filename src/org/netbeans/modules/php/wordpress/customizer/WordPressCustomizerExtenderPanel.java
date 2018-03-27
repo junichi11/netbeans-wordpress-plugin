@@ -76,6 +76,7 @@ public class WordPressCustomizerExtenderPanel extends JPanel {
         wordPressRootTextField.getDocument().addDocumentListener(listener);
         pluginsTextField.getDocument().addDocumentListener(listener);
         themesTextField.getDocument().addDocumentListener(listener);
+        wpContentTextField.getDocument().addDocumentListener(listener);
     }
 
     public boolean isPluginEnabled() {
@@ -116,6 +117,14 @@ public class WordPressCustomizerExtenderPanel extends JPanel {
 
     public void setThemesDirectory(String path) {
         themesTextField.setText(path);
+    }
+
+    public String getWpContentDirectory() {
+        return wpContentTextField.getText().trim();
+    }
+
+    public void setWpContentDirectory(String path) {
+        wpContentTextField.setText(path);
     }
 
     public void addChangeListener(ChangeListener cl) {
@@ -159,6 +168,9 @@ public class WordPressCustomizerExtenderPanel extends JPanel {
         pluginsTextField = new javax.swing.JTextField();
         themesLabel = new javax.swing.JLabel();
         themesTextField = new javax.swing.JTextField();
+        wpContentLabel = new javax.swing.JLabel();
+        wpContentTextField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setToolTipText(org.openide.util.NbBundle.getMessage(WordPressCustomizerExtenderPanel.class, "WordPressCustomizerExtenderPanel.toolTipText")); // NOI18N
 
@@ -188,6 +200,12 @@ public class WordPressCustomizerExtenderPanel extends JPanel {
 
         themesTextField.setText(org.openide.util.NbBundle.getMessage(WordPressCustomizerExtenderPanel.class, "WordPressCustomizerExtenderPanel.themesTextField.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(wpContentLabel, org.openide.util.NbBundle.getMessage(WordPressCustomizerExtenderPanel.class, "WordPressCustomizerExtenderPanel.wpContentLabel.text")); // NOI18N
+
+        wpContentTextField.setText(org.openide.util.NbBundle.getMessage(WordPressCustomizerExtenderPanel.class, "WordPressCustomizerExtenderPanel.wpContentTextField.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(WordPressCustomizerExtenderPanel.class, "WordPressCustomizerExtenderPanel.jLabel1.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -209,12 +227,17 @@ public class WordPressCustomizerExtenderPanel extends JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(wordPressRootLabel)
                             .addComponent(pluginsLabel)
-                            .addComponent(themesLabel))
+                            .addComponent(themesLabel)
+                            .addComponent(wpContentLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(wordPressRootTextField)
                             .addComponent(pluginsTextField)
-                            .addComponent(themesTextField))))
+                            .addComponent(themesTextField)
+                            .addComponent(wpContentTextField))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -240,6 +263,12 @@ public class WordPressCustomizerExtenderPanel extends JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(themesLabel)
                     .addComponent(themesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(wpContentLabel)
+                    .addComponent(wpContentTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -254,12 +283,15 @@ public class WordPressCustomizerExtenderPanel extends JPanel {
     private javax.swing.JTextField customContentNameTextField;
     private javax.swing.JLabel customDirectoryPathLabel;
     private javax.swing.JCheckBox enabledCheckBox;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel pluginsLabel;
     private javax.swing.JTextField pluginsTextField;
     private javax.swing.JLabel themesLabel;
     private javax.swing.JTextField themesTextField;
     private javax.swing.JLabel wordPressRootLabel;
     private javax.swing.JTextField wordPressRootTextField;
+    private javax.swing.JLabel wpContentLabel;
+    private javax.swing.JTextField wpContentTextField;
     // End of variables declaration//GEN-END:variables
 
     private class DefaultDocumentListener implements DocumentListener {

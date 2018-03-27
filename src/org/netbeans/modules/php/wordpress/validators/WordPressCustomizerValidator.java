@@ -62,7 +62,7 @@ public final class WordPressCustomizerValidator {
         "WordPressCustomizerValidator.wordpress.source.dir.invalid=Project might be broken...",
         "WordPressCustomizerValidator.wordpress.content.name.contains.shash=The name must not contain slash."
     })
-    public WordPressCustomizerValidator validateWpContent(@NonNull PhpModule phpModule, FileObject wordPressRoot, String name) {
+    public WordPressCustomizerValidator validateWpContent(@NonNull PhpModule phpModule, FileObject wordPressRoot, String name, FileObject wpContentDirectory) {
         FileObject sourceDirectory = phpModule.getSourceDirectory();
         if (sourceDirectory == null) {
             result.addWarning(new ValidationResult.Message("wordpress.dir", Bundle.WordPressCustomizerValidator_wordpress_source_dir_invalid())); // NOI18N
@@ -74,17 +74,21 @@ public final class WordPressCustomizerValidator {
             return this;
         }
 
-        FileObject wpContent = wordPressRoot.getFileObject(name);
-        if (wpContent == null
-                || !wpContent.isFolder()
-                || StringUtils.isEmpty(name)) {
-            result.addWarning(new ValidationResult.Message("wordpress.content.name", Bundle.WordPressCustomizerValidator_wordpress_dir_invalid("content"))); // NOI18N
-            return this;
-        }
+        if (wpContentDirectory == null) {
+            FileObject wpContent = wordPressRoot.getFileObject(name);
+            if (wpContent == null
+                    || !wpContent.isFolder()
+                    || StringUtils.isEmpty(name)) {
+                result.addWarning(new ValidationResult.Message("wordpress.content.name", Bundle.WordPressCustomizerValidator_wordpress_dir_invalid("content"))); // NOI18N
+                return this;
+            }
 
-        if (name.contains("/")) { // NOI18N
-            result.addWarning(new ValidationResult.Message("wordpress.content.name.slash", Bundle.WordPressCustomizerValidator_wordpress_content_name_contains_shash())); // NOI18N
-            return this;
+            if (name.contains("/")) { // NOI18N
+                result.addWarning(new ValidationResult.Message("wordpress.content.name.slash", Bundle.WordPressCustomizerValidator_wordpress_content_name_contains_shash())); // NOI18N
+                return this;
+            }
+        } else {
+
         }
 
         return this;
@@ -100,6 +104,13 @@ public final class WordPressCustomizerValidator {
 
     public WordPressCustomizerValidator validateThemesDirectory(@NonNull PhpModule phpModule, @NonNull String path) {
         return validateDirectory(phpModule, path, "themes"); // NOI18N
+    }
+
+    public WordPressCustomizerValidator validateWpContentDirectory(@NonNull PhpModule phpModule, @NonNull String path) {
+        if (path.isEmpty()) {
+            return this;
+        }
+        return validateDirectory(phpModule, path, "wp-content"); // NOI18N
     }
 
     private WordPressCustomizerValidator validateDirectory(PhpModule phpModule, String path, String dirname) {

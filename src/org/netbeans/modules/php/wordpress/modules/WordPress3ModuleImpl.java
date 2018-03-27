@@ -168,11 +168,17 @@ public class WordPress3ModuleImpl extends WordPressModuleImpl {
         }
         if (wordPressRootDirectory == null) {
             if (WordPressPreferences.isEnabled(phpModule)) {
-                LOGGER.log(Level.WARNING, "WordPress Root is invalid");
+                LOGGER.log(Level.WARNING, "WordPress Root is invalid"); // NOI18N
             }
             return;
         }
         contentDirectory = wordPressRootDirectory.getFileObject(contentName);
+        if (contentDirectory == null) {
+            contentDirectory = sourceDirectory.getFileObject(WordPressPreferences.getWpContentPath(phpModule));
+            if (contentDirectory == null && WordPressPreferences.isEnabled(phpModule)) {
+                LOGGER.log(Level.WARNING, "wp-content directory is invalid"); // NOI18N
+            }
+        }
         includesDirectory = wordPressRootDirectory.getFileObject(WP_INCLUDES);
         adminDirectory = wordPressRootDirectory.getFileObject(WP_ADMIN);
 
