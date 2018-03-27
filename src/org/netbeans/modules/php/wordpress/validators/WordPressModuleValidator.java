@@ -58,7 +58,7 @@ public class WordPressModuleValidator {
     @NbBundle.Messages({
         "WordPressModuleValidator.core.dir.invalid=WordPress directories don't exit."
     })
-    public WordPressModuleValidator validateWordPressDirectories(@NonNull FileObject wordPressRoot, @NonNull String customContentName) {
+    public WordPressModuleValidator validateWordPressDirectories(@NonNull FileObject wordPressRoot, @NonNull String customContentName, FileObject wpContentDirectory) {
         for (String dir : WP_DIRS) {
             FileObject fileObject = wordPressRoot.getFileObject(dir);
             if (fileObject == null) {
@@ -68,7 +68,7 @@ public class WordPressModuleValidator {
 
         // content name
         FileObject content = wordPressRoot.getFileObject(customContentName);
-        if (content == null) {
+        if (content == null && wpContentDirectory == null) {
             result.addWarning(new ValidationResult.Message("wp.dir", Bundle.WordPressModuleValidator_core_dir_invalid())); // NOI18N
         }
 

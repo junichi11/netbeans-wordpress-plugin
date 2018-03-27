@@ -161,7 +161,6 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
             if (localFile.isEmpty()) {
                 // disable all field
                 panel.setAllEnabled(panel, false);
-                panel.setAllEnabled(panel.getWpConfigPanel(), false);
                 errorMessage = Bundle.WordPressPhpModuleExtender_no_installation();
                 return false;
             }
@@ -193,7 +192,6 @@ public class WordPressPhpModuleExtender extends PhpModuleExtender {
     @Override
     public Set<FileObject> extend(PhpModule pm) throws ExtendingException {
         panel.setAllEnabled(panel, false);
-        panel.setAllEnabled(panel.getWpConfigPanel(), false);
 
         FileObject sourceDirectory = pm.getSourceDirectory();
         if (panel.useUrl()) {

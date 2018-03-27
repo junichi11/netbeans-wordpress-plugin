@@ -69,9 +69,11 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
     private boolean isValid;
     private String originalCustomeContentName;
     private String errorMessage;
+    // paths
     private String originalWordPressRoot;
     private String originalPlugins;
     private String originalThemes;
+    private String originalWpContent;
 
     public WordPressCustomizerExtender(PhpModule phpModule) {
         this.phpModule = phpModule;
@@ -125,20 +127,25 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
         String contentName = getPanel().getCustomContentName();
         FileObject sourceDirectory = phpModule.getSourceDirectory();
         FileObject wordPressRoot = null;
+        FileObject wpContentDirectory = null;
         if (sourceDirectory != null) {
             wordPressRoot = sourceDirectory.getFileObject(wordPressRootDirectoryPath);
+            if (!getPanel().getWpContentDirectory().isEmpty()) {
+                wpContentDirectory = sourceDirectory.getFileObject(getPanel().getWpContentDirectory());
+            }
         }
 
         ValidationResult result = new WordPressCustomizerValidator()
-                .validateWpContent(phpModule, wordPressRoot, contentName)
+                .validateWpContent(phpModule, wordPressRoot, contentName, wpContentDirectory)
                 .validateWordPressRootDirectory(phpModule, getPanel().getWordPressRootDirectory())
                 .validatePluginsDirectory(phpModule, getPanel().getPluginsDirectory())
                 .validateThemesDirectory(phpModule, getPanel().getThemesDirectory())
+                .validateWpContentDirectory(phpModule, getPanel().getWpContentDirectory())
                 .getResult();
 
         if (wordPressRoot != null) {
             ValidationResult wpResult = new WordPressModuleValidator()
-                    .validateWordPressDirectories(wordPressRoot, contentName)
+                    .validateWordPressDirectories(wordPressRoot, contentName, wpContentDirectory)
                     .getResult();
             result.merge(wpResult);
         }
@@ -175,18 +182,23 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
         }
 
         String wordPressRoot = getPanel().getWordPressRootDirectory();
-        if (!originalCustomeContentName.equals(wordPressRoot)) {
+        if (!originalWordPressRoot.equals(wordPressRoot)) {
             WordPressPreferences.setWordPressRootPath(phpModule, wordPressRoot);
         }
 
         String plugins = getPanel().getPluginsDirectory();
-        if (!originalCustomeContentName.equals(plugins)) {
+        if (!originalPlugins.equals(plugins)) {
             WordPressPreferences.setPluginsPath(phpModule, plugins);
         }
 
         String themes = getPanel().getThemesDirectory();
-        if (!originalCustomeContentName.equals(themes)) {
+        if (!originalThemes.equals(themes)) {
             WordPressPreferences.setThemesPath(phpModule, themes);
+        }
+
+        String wpContent = getPanel().getWpContentDirectory();
+        if (!originalWpContent.equals(wpContent)) {
+            WordPressPreferences.setWpContentPath(phpModule, wpContent);
         }
 
         WordPressModule wpModule = WordPressModule.Factory.forPhpModule(phpModule);
@@ -202,12 +214,14 @@ public class WordPressCustomizerExtender extends PhpModuleCustomizerExtender {
             originalWordPressRoot = WordPressPreferences.getWordPressRootPath(phpModule);
             originalPlugins = WordPressPreferences.getPluginsPath(phpModule);
             originalThemes = WordPressPreferences.getThemesPath(phpModule);
+            originalWpContent = WordPressPreferences.getWpContentPath(phpModule);
             panel.setPluginEnabled(originalEnabled);
             panel.setCustomContentName(originalCustomeContentName);
             panel.setComponentsEnabled(originalEnabled);
             panel.setWordPressRootDirectory(originalWordPressRoot);
             panel.setPluginsDirectory(originalPlugins);
             panel.setThemesDirectory(originalThemes);
+            panel.setWpContentDirectory(originalWpContent);
         }
 
         return panel;

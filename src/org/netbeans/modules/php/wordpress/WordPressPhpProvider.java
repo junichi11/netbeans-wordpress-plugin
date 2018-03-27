@@ -205,7 +205,7 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
                 return;
             }
             ValidationResult result = new WordPressModuleValidator()
-                    .validateWordPressDirectories(wordPressRoot, WordPressPreferences.getCustomContentName(phpModule))
+                    .validateWordPressDirectories(wordPressRoot, WordPressPreferences.getCustomContentName(phpModule), null)
                     .getResult();
             if (result.hasWarnings()) {
                 return;
