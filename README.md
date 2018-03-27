@@ -55,6 +55,7 @@ You can create a new WordPress project via a wizard.
 
 If you want to use a custom content name (default value is `wp-content`), please set your content name to the project properties.
 (project properties > Framework > WordPress)
+If your wp-content directory is not in your WordPress Root, please set a relative path (from a source directory to wp-content directory) to `wp-content`.
 
 ### Code Templates
 
