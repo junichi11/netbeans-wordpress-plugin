@@ -55,7 +55,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.StringUtils;
@@ -69,6 +68,7 @@ import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Utilities;
 
 final class WordPressOptionsPanel extends javax.swing.JPanel {
 
@@ -537,6 +537,9 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         String script = UiUtils.SearchWindow.search(new UiUtils.SearchWindow.SearchWindowSupport() {
             @Override
             public List<String> detect() {
+                if (Utilities.isWindows()) {
+                    return FileUtils.findFileOnUsersPath(WordPressCli.NAME, WordPressCli.LONG_NAME, WordPressCli.NAME_BAT);
+                }
                 return FileUtils.findFileOnUsersPath(WordPressCli.NAME, WordPressCli.LONG_NAME);
             }
 

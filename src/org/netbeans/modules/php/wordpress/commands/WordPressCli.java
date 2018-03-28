@@ -81,8 +81,9 @@ import org.openide.windows.InputOutput;
  */
 public final class WordPressCli {
 
-    public static String NAME = "wp"; // NOI18N
-    public static String LONG_NAME = "wp-cli.phar"; // NOI18N
+    public static final String NAME = "wp"; // NOI18N
+    public static final String LONG_NAME = "wp-cli.phar"; // NOI18N
+    public static final String NAME_BAT = "wp.bat"; // NOI18N
 
     private final String wpCliPath;
     private boolean noReset = false;
