@@ -70,7 +70,7 @@ public class WordPressOptions {
     }
 
     public static String getOptionsPath() {
-        return UiUtils.OPTIONS_PATH + "/" + WordPressOptions.OPTIONS_SUBPATH; // NOI18N
+        return UiUtils.FRAMEWORKS_AND_TOOLS_OPTIONS_PATH + "/" + WordPressOptions.OPTIONS_SUBPATH; // NOI18N
     }
 
     public static WordPressOptions getInstance() {

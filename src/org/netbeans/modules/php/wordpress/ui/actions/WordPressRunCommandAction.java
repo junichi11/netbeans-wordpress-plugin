@@ -41,10 +41,16 @@
  */
 package org.netbeans.modules.php.wordpress.ui.actions;
 
+import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.spi.framework.actions.RunCommandAction;
 import org.netbeans.modules.php.wordpress.WordPressPhpProvider;
+import org.netbeans.modules.php.wordpress.commands.WordPressCli;
+import org.netbeans.modules.php.wordpress.ui.options.WordPressOptions;
 import org.netbeans.modules.php.wordpress.util.WPUtils;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 
 /**
@@ -54,6 +60,7 @@ import org.openide.util.NbBundle;
 public class WordPressRunCommandAction extends RunCommandAction {
 
     private static final WordPressRunCommandAction INSTANCE = new WordPressRunCommandAction();
+    private static final long serialVersionUID = 158739462398606689L;
 
     private WordPressRunCommandAction() {
     }
@@ -67,6 +74,16 @@ public class WordPressRunCommandAction extends RunCommandAction {
         if (!WPUtils.isWP(phpModule)) {
             return;
         }
+        String wpCliPath = WordPressOptions.getInstance().getWpCliPath();
+        if (StringUtils.isEmpty(wpCliPath)) {
+            openOptionsPanel(Bundle.WordPressRunCommandAction_message_no_wp_cli());
+            return;
+        }
+        String error = WordPressCli.validate(wpCliPath);
+        if (error != null) {
+            openOptionsPanel(Bundle.WordPressRunCommandAction_message_invalid_wp_cli());
+            return;
+        }
         WordPressPhpProvider.getInstance().getFrameworkCommandSupport(phpModule).openPanel();
     }
 
@@ -77,6 +94,19 @@ public class WordPressRunCommandAction extends RunCommandAction {
     @Override
     protected String getFullName() {
         return Bundle.WordPressRunCommandAction_name(getPureName());
+    }
+
+    @NbBundle.Messages({
+        "WordPressRunCommandAction.message.no.wp-cli=Please set wp-cli path.",
+        "WordPressRunCommandAction.message.invalid.wp-cli=Please set valid wp-cli path."
+    })
+    private void openOptionsPanel(String errorMessage) {
+        NotifyDescriptor.Message message = new NotifyDescriptor.Message(
+                errorMessage,
+                NotifyDescriptor.ERROR_MESSAGE
+        );
+        DialogDisplayer.getDefault().notify(message);
+        OptionsDisplayer.getDefault().open(WordPressOptions.getOptionsPath());
     }
 
 }
