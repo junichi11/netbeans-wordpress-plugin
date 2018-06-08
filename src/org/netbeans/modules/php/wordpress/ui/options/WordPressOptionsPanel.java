@@ -50,6 +50,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -78,6 +79,7 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
     private final ChangeSupport changeSupport = new ChangeSupport(this);
     private String wpCliPath;
     private static final Logger LOGGER = Logger.getLogger(WordPressOptionsPanel.class.getName());
+    private static final RequestProcessor RP = new RequestProcessor(WordPressOptionsPanel.class);
 
     WordPressOptionsPanel() {
         initComponents();
@@ -215,13 +217,18 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
 
     private void setWpCliVersoin() {
         if (!StringUtils.isEmpty(getWpCliPath())) {
-            try {
-                WordPressCli wpCli = WordPressCli.getDefault(true);
-                String version = wpCli.getVersion();
-                wpCliVersionLabel.setText(version);
-            } catch (InvalidPhpExecutableException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            RP.post(() -> {
+                try {
+                    WordPressCli wpCli = WordPressCli.getDefault(true);
+                    String version = wpCli.getVersion();
+                    SwingUtilities.invokeLater(() -> {
+                        wpCliVersionLabel.setText(version);
+                    });
+                } catch (InvalidPhpExecutableException ex) {
+                    wpCliVersionLabel.setText(""); // NOI18N
+                    LOGGER.log(Level.WARNING, null, ex);
+                }
+            });
         } else {
             wpCliVersionLabel.setText(""); // NOI18N
         }
@@ -654,7 +661,7 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
 
     @NbBundle.Messages("WordPressOptionsPanel.update.command.progress=Updating wp-cli command list")
     private void updateCommandListXml() {
-        RequestProcessor.getDefault().post(new Runnable() {
+        RP.post(new Runnable() {
 
             @Override
             public void run() {
