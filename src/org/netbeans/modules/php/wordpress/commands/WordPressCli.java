@@ -110,7 +110,7 @@ public final class WordPressCli {
 
     // XXX default?
     private final List<String> DEFAULT_PARAMS = Collections.emptyList();
-    private static final List<FrameworkCommand> commandsCache = new ArrayList<>();
+    private static final List<FrameworkCommand> COMMANDS_CACHE = new ArrayList<>();
 
     private WordPressCli(String wpCliPath) {
         this.wpCliPath = wpCliPath;
@@ -319,10 +319,10 @@ public final class WordPressCli {
      */
     @NbBundle.Messages("WordPressCli.commands.empty=Please check whether config file and DB settings exist.")
     public List<FrameworkCommand> getCommands(boolean isForce) {
-        if (!isForce && !commandsCache.isEmpty()) {
-            return commandsCache;
+        if (!isForce && !COMMANDS_CACHE.isEmpty()) {
+            return COMMANDS_CACHE;
         }
-        commandsCache.clear();
+        COMMANDS_CACHE.clear();
         if (!isForce) {
             // exists xml?
             String commandList = WordPressOptions.getInstance().getWpCliCommandList();
@@ -341,15 +341,15 @@ public final class WordPressCli {
                         // parse
                         FileInputStream fileInputStream = new FileInputStream(temp);
                         InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8"); // NOI18N
-                        WordPressCliCommandsXmlParser.parse(inputStreamReader, commandsCache);
+                        WordPressCliCommandsXmlParser.parse(inputStreamReader, COMMANDS_CACHE);
                     } finally {
                         temp.deleteOnExit();
                     }
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }
-                if (!commandsCache.isEmpty()) {
-                    return commandsCache;
+                if (!COMMANDS_CACHE.isEmpty()) {
+                    return COMMANDS_CACHE;
                 }
             }
         }
@@ -357,18 +357,18 @@ public final class WordPressCli {
         // update
         updateCommands();
 
-        return commandsCache;
+        return COMMANDS_CACHE;
     }
 
     public void updateCommands() {
-        commandsCache.clear();
-        getCommands(Collections.<String>emptyList(), commandsCache);
-        if (commandsCache.isEmpty()) {
+        COMMANDS_CACHE.clear();
+        getCommands(Collections.<String>emptyList(), COMMANDS_CACHE);
+        if (COMMANDS_CACHE.isEmpty()) {
             NotifyDescriptor.Message message = new NotifyDescriptor.Message(Bundle.WordPressCli_commands_empty(), NotifyDescriptor.WARNING_MESSAGE);
             DialogDisplayer.getDefault().notify(message);
         } else {
             WordPressCliCommandListXmlBuilder builder = new WordPressCliCommandListXmlBuilder();
-            builder.build(commandsCache);
+            builder.build(COMMANDS_CACHE);
             String commadlist = builder.asText();
             if (!StringUtils.isEmpty(commadlist)) {
                 WordPressOptions.getInstance().setWpCliCommandList(commadlist);
