@@ -55,6 +55,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
+import static java.util.logging.Level.WARNING;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.base.input.InputProcessor;
 import org.netbeans.api.extexecution.base.input.InputProcessors;
@@ -229,7 +230,7 @@ public final class WordPressCli {
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         } catch (ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(WARNING, null, ex);
         }
         return helpLineProcessor.getHelp();
     }
@@ -389,9 +390,9 @@ public final class WordPressCli {
                 result.get();
             }
         } catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
+            Thread.currentThread().interrupt();
         } catch (ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(WARNING, null, ex);
         }
         List<String> lines = helpLineProcessor.asLines();
 
