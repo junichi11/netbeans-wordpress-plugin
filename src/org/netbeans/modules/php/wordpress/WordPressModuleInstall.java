@@ -108,23 +108,18 @@ public class WordPressModuleInstall extends ModuleInstall {
         WordPressOptions options = WordPressOptions.getInstance();
         String wpCliPath = options.getWpCliPath();
         if (!StringUtils.isEmpty(wpCliPath) && options.getWpCliGetCommandsOnBoot()) {
-            RequestProcessor.getDefault().post(new Runnable() {
-
-                @Override
-                public void run() {
-                    ProgressHandle handle = ProgressHandle.createHandle(Bundle.WordPressModule_get_commands());
+            RequestProcessor.getDefault().post(() -> {
+                ProgressHandle handle = ProgressHandle.createHandle(Bundle.WordPressModule_get_commands());
+                try {
+                    handle.start();
                     try {
-                        handle.start();
-                        try {
-                            WordPressCli wpCli = WordPressCli.getDefault(false);
-                            wpCli.getCommands(false);
-                        } catch (InvalidPhpExecutableException ex) {
-                            LOGGER.log(Level.WARNING, ex.getLocalizedMessage());
-                        }
-
-                    } finally {
-                        handle.finish();
+                        WordPressCli wpCli = WordPressCli.getDefault(false);
+                        wpCli.getCommands(false);
+                    } catch (InvalidPhpExecutableException ex) {
+                        LOGGER.log(Level.WARNING, ex.getLocalizedMessage());
                     }
+                } finally {
+                    handle.finish();
                 }
             });
         }

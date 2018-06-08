@@ -542,12 +542,7 @@ public final class WordPressCli {
      * @return InputProcessorFactory
      */
     private ExecutionDescriptor.InputProcessorFactory2 getOutputProcessorFactory(final LineProcessor lineProcessor) {
-        return new ExecutionDescriptor.InputProcessorFactory2() {
-            @Override
-            public InputProcessor newInputProcessor(InputProcessor defaultProcessor) {
-                return InputProcessors.ansiStripping(InputProcessors.bridge(lineProcessor));
-            }
-        };
+        return (InputProcessor defaultProcessor) -> InputProcessors.ansiStripping(InputProcessors.bridge(lineProcessor));
     }
 
     @NbBundle.Messages({

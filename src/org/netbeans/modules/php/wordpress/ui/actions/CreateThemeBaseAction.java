@@ -173,25 +173,17 @@ public abstract class CreateThemeBaseAction extends BaseAction {
         }
 
         // display progress bar
-        RequestProcessor.getDefault().post(new Runnable() {
-            @Override
-            public void run() {
-                ProgressHandle handle = ProgressHandle.createHandle(Bundle.LBL_CreatingTheme(), new Cancellable() {
-                    @Override
-                    public boolean cancel() {
-                        return true;
-                    }
-                });
-                try {
-                    handle.start();
-                    WPFileUtils.unzip(url, themeDirectory, entryFilter);
-                } catch (MalformedURLException ex) {
-                    Exceptions.printStackTrace(ex);
-                } catch (IOException | WordPressUnzipException ex) {
-                    LOGGER.log(Level.WARNING, null, ex);
-                } finally {
-                    handle.finish();
-                }
+        RequestProcessor.getDefault().post(() -> {
+            ProgressHandle handle = ProgressHandle.createHandle(Bundle.LBL_CreatingTheme(), () -> true);
+            try {
+                handle.start();
+                WPFileUtils.unzip(url, themeDirectory, entryFilter);
+            } catch (MalformedURLException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (IOException | WordPressUnzipException ex) {
+                LOGGER.log(Level.WARNING, null, ex);
+            } finally {
+                handle.finish();
             }
         });
 

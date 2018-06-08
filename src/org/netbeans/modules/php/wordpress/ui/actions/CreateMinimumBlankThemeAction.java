@@ -128,17 +128,14 @@ public class CreateMinimumBlankThemeAction extends BaseAction {
         );
 
         // add ChangeListener
-        ChangeListener changeListener = new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                String themeDirectoryName = panel.getThemeDirectoryName();
-                boolean existsDirectory = themes.contains(themeDirectoryName);
-                dialogDescriptor.setValid(!existsDirectory);
-                if (existsDirectory) {
-                    panel.setErrorMessage(Bundle.CreateMinimumBlankThemeAction_existing_directoryName());
-                } else {
-                    panel.setErrorMessage(" "); // NOI18N
-                }
+        ChangeListener changeListener = (ChangeEvent e) -> {
+            String themeDirectoryName = panel.getThemeDirectoryName();
+            boolean existsDirectory = themes.contains(themeDirectoryName);
+            dialogDescriptor.setValid(!existsDirectory);
+            if (existsDirectory) {
+                panel.setErrorMessage(Bundle.CreateMinimumBlankThemeAction_existing_directoryName());
+            } else {
+                panel.setErrorMessage(" "); // NOI18N
             }
         };
         panel.addChangeListener(changeListener);

@@ -218,24 +218,20 @@ public final class WordPressCoreUpgradeChecker implements WordPressUpgradeChecke
                 return;
             }
 
-            new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        // core update, update-db
-                        WordPressCli wpCli = WordPressCli.getDefault(true);
-                        Future<Integer> result = wpCli.coreUpdate(phpModule, Collections.<String>emptyList());
-                        if (result != null) {
-                            result.get();
-                        }
-                        result = wpCli.coreUpdateDb(phpModule);
-                        if (result != null) {
-                            result.get();
-                        }
-                    } catch (InvalidPhpExecutableException | InterruptedException | ExecutionException ex) {
-                        Exceptions.printStackTrace(ex);
+            new Thread(() -> {
+                try {
+                    // core update, update-db
+                    WordPressCli wpCli = WordPressCli.getDefault(true);
+                    Future<Integer> result = wpCli.coreUpdate(phpModule, Collections.<String>emptyList());
+                    if (result != null) {
+                        result.get();
                     }
+                    result = wpCli.coreUpdateDb(phpModule);
+                    if (result != null) {
+                        result.get();
+                    }
+                } catch (InvalidPhpExecutableException | InterruptedException | ExecutionException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }).start();
         }

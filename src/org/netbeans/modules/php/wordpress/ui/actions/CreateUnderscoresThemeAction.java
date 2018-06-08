@@ -155,24 +155,15 @@ public class CreateUnderscoresThemeAction extends BaseAction {
         final FileObject theme = themeFolder;
 
         // display progress bar
-        RequestProcessor.getDefault().post(new Runnable() {
-            @Override
-            public void run() {
-                ProgressHandle handle = ProgressHandle.createHandle("Createing theme", new Cancellable() {
-                    @Override
-                    public boolean cancel() {
-                        return true;
-                    }
-                });
-                try {
-                    handle.start();
-                    if (!unzipAndReplace(theme)) {
-                        LOGGER.log(Level.WARNING, "fail: create wp theme");
-                    }
-
-                } finally {
-                    handle.finish();
+        RequestProcessor.getDefault().post(() -> {
+            ProgressHandle handle = ProgressHandle.createHandle("Createing theme", () -> true);
+            try {
+                handle.start();
+                if (!unzipAndReplace(theme)) {
+                    LOGGER.log(Level.WARNING, "fail: create wp theme");
                 }
+            } finally {
+                handle.finish();
             }
         });
     }

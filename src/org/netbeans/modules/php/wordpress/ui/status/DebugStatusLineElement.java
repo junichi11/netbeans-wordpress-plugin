@@ -144,19 +144,16 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
                 if (popup == null) {
                     popup = PopupFactory.getSharedInstance().getPopup(debugLabel, list, x, y);
                 }
-                list.addListSelectionListener(new ListSelectionListener() {
-                    @Override
-                    public void valueChanged(ListSelectionEvent e) {
-                        String debugLv = list.getSelectedValue();
-                        // write file
-                        if (!debugLv.equals(level)) {
-                            writeConfig(debugLv);
-                        }
-                        popupFlg = false;
-                        if (popup != null) {
-                            popup.hide();
-                            popup = null;
-                        }
+                list.addListSelectionListener((ListSelectionEvent e1) -> {
+                    String debugLv = list.getSelectedValue();
+                    // write file
+                    if (!debugLv.equals(level)) {
+                        writeConfig(debugLv);
+                    }
+                    popupFlg = false;
+                    if (popup != null) {
+                        popup.hide();
+                        popup = null;
                     }
                 });
                 if (!popupFlg) {
@@ -203,15 +200,12 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
                     final int startOffset = NbDocument.findLineOffset(docment, lineNumber);
                     final int removeLength = line.length();
 
-                    NbDocument.runAtomic(docment, new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                docment.remove(startOffset, removeLength);
-                                docment.insertString(startOffset, String.format(WP_DEBUG_FORMAT, debugLv), null);
-                            } catch (BadLocationException ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
+                    NbDocument.runAtomic(docment, () -> {
+                        try {
+                            docment.remove(startOffset, removeLength);
+                            docment.insertString(startOffset, String.format(WP_DEBUG_FORMAT, debugLv), null);
+                        } catch (BadLocationException ex) {
+                            Exceptions.printStackTrace(ex);
                         }
                     });
                 }
@@ -303,15 +297,11 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      * @param debugLv true or false
      */
     private void setDebugLevelLabel(final String debugLv) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (debugLv.matches("^(true|false)$")) { // NOI18N
-                    debugLabel.setText(debugLevel.get(debugLv));
-                } else {
-                    debugLabel.setText(debugLv);
-                }
+        SwingUtilities.invokeLater(() -> {
+            if (debugLv.matches("^(true|false)$")) { // NOI18N
+                debugLabel.setText(debugLevel.get(debugLv));
+            } else {
+                debugLabel.setText(debugLv);
             }
         });
     }
@@ -322,13 +312,9 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      * @param versionNumber
      */
     private void setVersionLabel(final String versionNumber) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                versionLabel.setText(versionNumber);
-                versionLabel.setIcon(icon);
-            }
+        SwingUtilities.invokeLater(() -> {
+            versionLabel.setText(versionNumber);
+            versionLabel.setIcon(icon);
         });
     }
 
@@ -336,14 +322,10 @@ public class DebugStatusLineElement implements StatusLineElementProvider {
      * Clear debug label
      */
     private void clearLabel() {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                debugLabel.setText(""); //NOI18N
-                versionLabel.setText(""); // NOI18N
-                versionLabel.setIcon(null);
-            }
+        SwingUtilities.invokeLater(() -> {
+            debugLabel.setText(""); //NOI18N
+            versionLabel.setText(""); // NOI18N
+            versionLabel.setIcon(null);
         });
     }
 
