@@ -72,7 +72,7 @@ import org.openide.util.Utilities;
 
 final class WordPressOptionsPanel extends javax.swing.JPanel {
 
-    private static final long serialVersionUID = -4504251144555676048L;
+    private static final long serialVersionUID = 3434388861381283705L;
     private static final String ZIP = ".zip"; // NOI18N
     private static final String WP_CLI_LAST_FOLDER_SUFFIX = ".wp-cli"; // NOI18N
     private final ChangeSupport changeSupport = new ChangeSupport(this);
