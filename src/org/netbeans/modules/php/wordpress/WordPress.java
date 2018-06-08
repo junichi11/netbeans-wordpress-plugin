@@ -41,13 +41,17 @@
  */
 package org.netbeans.modules.php.wordpress;
 
+import org.netbeans.api.annotations.common.StaticResource;
+
 /**
  *
  * @author junichi11
  */
 public final class WordPress {
 
+    @StaticResource
     public static final String WP_ICON_8 = "org/netbeans/modules/php/wordpress/resources/wordpress_icon_8.png"; // NOI18N
+    @StaticResource
     public static final String WP_ICON_16 = "org/netbeans/modules/php/wordpress/resources/wordpress_icon_16.png"; // NOI18N
 
     private WordPress() {
