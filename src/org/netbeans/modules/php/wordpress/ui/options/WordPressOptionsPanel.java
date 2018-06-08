@@ -43,7 +43,6 @@ package org.netbeans.modules.php.wordpress.ui.options;
 
 import java.awt.Cursor;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -116,14 +115,10 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
                 fireChange();
             }
         });
-        wpCliVersionLabel.addPropertyChangeListener(new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                boolean isEnabled = !wpCliVersionLabel.getText().isEmpty();
-                checkPluginNewVersionCheckBox.setEnabled(isEnabled);
-                checkThemeNewVersionCheckBox.setEnabled(isEnabled);
-            }
+        wpCliVersionLabel.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            boolean isEnabled = !wpCliVersionLabel.getText().isEmpty();
+            checkPluginNewVersionCheckBox.setEnabled(isEnabled);
+            checkThemeNewVersionCheckBox.setEnabled(isEnabled);
         });
     }
 
@@ -661,23 +656,18 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
 
     @NbBundle.Messages("WordPressOptionsPanel.update.command.progress=Updating wp-cli command list")
     private void updateCommandListXml() {
-        RP.post(new Runnable() {
-
-            @Override
-            public void run() {
-                ProgressHandle handle = ProgressHandle.createHandle(Bundle.WordPressOptionsPanel_update_command_progress());
+        RP.post(() -> {
+            ProgressHandle handle = ProgressHandle.createHandle(Bundle.WordPressOptionsPanel_update_command_progress());
+            try {
+                handle.start();
                 try {
-                    handle.start();
-                    try {
-                        WordPressCli wpCli = WordPressCli.getDefault(false);
-                        wpCli.updateCommands();
-                    } catch (InvalidPhpExecutableException ex) {
-                        LOGGER.log(Level.WARNING, ex.getLocalizedMessage());
-                    }
-
-                } finally {
-                    handle.finish();
+                    WordPressCli wpCli = WordPressCli.getDefault(false);
+                    wpCli.updateCommands();
+                } catch (InvalidPhpExecutableException ex) {
+                    LOGGER.log(Level.WARNING, ex.getLocalizedMessage());
                 }
+            } finally {
+                handle.finish();
             }
         });
     }
