@@ -116,12 +116,16 @@ public final class WordPressCli {
         this.wpCliPath = wpCliPath;
     }
 
+    public static WordPressCli getDefault(boolean warn) throws InvalidPhpExecutableException {
+        String wpCliPath = WordPressOptions.getInstance().getWpCliPath();
+        return newInstance(wpCliPath, warn);
+    }
+
     @NbBundle.Messages({
         "# {0} - error message",
         "WordPressCli.invalid.wpcli.script=<html>wp-cli is not valid.<br>({0})"
     })
-    public static WordPressCli getDefault(boolean warn) throws InvalidPhpExecutableException {
-        String wpCliPath = WordPressOptions.getInstance().getWpCliPath();
+    public static WordPressCli newInstance(String wpCliPath, boolean warn) throws InvalidPhpExecutableException {
         String error = validate(wpCliPath);
         if (error == null) {
             return new WordPressCli(wpCliPath);
