@@ -335,11 +335,8 @@ public final class WordPressCli {
                     File temp = File.createTempFile("nb-wpcli-tmp", ".xml"); // NOI18N
                     try {
                         FileOutputStream outputStream = new FileOutputStream(temp);
-                        PrintWriter pw = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8")); // NOI18N
-                        try {
+                        try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"))) { // NOI18N
                             pw.println(commandList);
-                        } finally {
-                            pw.close();
                         }
 
                         // parse
