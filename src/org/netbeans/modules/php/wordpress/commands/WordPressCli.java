@@ -54,6 +54,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import static java.util.logging.Level.INFO;
 import java.util.logging.Logger;
 import static java.util.logging.Level.WARNING;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
@@ -362,6 +363,7 @@ public final class WordPressCli {
     }
 
     public void updateCommands() {
+        long startTime = System.currentTimeMillis();
         COMMANDS_CACHE.clear();
         getCommands(Collections.<String>emptyList(), COMMANDS_CACHE);
         if (COMMANDS_CACHE.isEmpty()) {
@@ -375,6 +377,8 @@ public final class WordPressCli {
                 WordPressOptions.getInstance().setWpCliCommandList(commadlist);
             }
         }
+        long endTime = System.currentTimeMillis();
+        LOGGER.log(INFO, "Update Commands: took {0}ms", endTime - startTime); // NOI18N
     }
 
     // XXX get help later?
