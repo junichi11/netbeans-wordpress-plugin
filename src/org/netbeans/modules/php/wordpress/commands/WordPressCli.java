@@ -350,7 +350,7 @@ public final class WordPressCli {
                         temp.deleteOnExit();
                     }
                 } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
+                    LOGGER.log(WARNING, null, ex);
                 }
                 if (!COMMANDS_CACHE.isEmpty()) {
                     return COMMANDS_CACHE;
