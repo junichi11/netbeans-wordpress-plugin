@@ -54,9 +54,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import java.util.logging.Logger;
 import static java.util.logging.Level.WARNING;
+import java.util.regex.Pattern;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.base.input.InputProcessor;
 import org.netbeans.api.extexecution.base.input.InputProcessors;
@@ -112,6 +114,8 @@ public final class WordPressCli {
     // XXX default?
     private final List<String> DEFAULT_PARAMS = Collections.emptyList();
     private static final List<FrameworkCommand> COMMANDS_CACHE = new ArrayList<>();
+
+    private static final Pattern WHITESPACES_PATTERN = Pattern.compile(" +"); // NOI18N
 
     private WordPressCli(String wpCliPath) {
         this.wpCliPath = wpCliPath;
@@ -379,6 +383,7 @@ public final class WordPressCli {
         }
         long endTime = System.currentTimeMillis();
         LOGGER.log(INFO, "Update Commands: took {0}ms", endTime - startTime); // NOI18N
+        LOGGER.log(INFO, "{0} wp-cli commands.", COMMANDS_CACHE.size()); // NOI18N
     }
 
     // XXX get help later?
@@ -403,6 +408,7 @@ public final class WordPressCli {
 
         boolean isSubcommands = false;
         boolean isFirstEmpty = false;
+        LOGGER.log(FINE, "{0} WP Command", StringUtils.implode(subcommands, " ")); // NOI18N
         for (String line : lines) {
             if (isSubcommands) {
                 if (StringUtils.isEmpty(line)) {
@@ -412,8 +418,13 @@ public final class WordPressCli {
                     isFirstEmpty = true;
                     continue;
                 }
+                // XXX just ignore
+                // in the case of long description
+                if (line.startsWith("   ")) { // NOI18N
+                    continue;
+                }
                 line = line.trim();
-                line = line.replaceAll(" +", " "); // NOI18N
+                line = WHITESPACES_PATTERN.matcher(line).replaceAll(" "); // NOI18N
                 int indexOf = line.indexOf(" "); // NOI18N
                 if (indexOf == -1) {
                     continue;
@@ -428,7 +439,7 @@ public final class WordPressCli {
                 String help = getHelp(nextSubcommands);
                 commands.add(new WordPressCliCommand(nextSubcommands.toArray(new String[]{}), description, help)); // NOI18N
 
-                // recursive
+                // get commands recursively
                 getCommands(nextSubcommands, commands);
             }
 
