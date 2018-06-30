@@ -654,20 +654,13 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         }
     }
 
-    @NbBundle.Messages("WordPressOptionsPanel.update.command.progress=Updating wp-cli command list")
     private void updateCommandListXml() {
         RP.post(() -> {
-            ProgressHandle handle = ProgressHandle.createHandle(Bundle.WordPressOptionsPanel_update_command_progress());
             try {
-                handle.start();
-                try {
-                    WordPressCli wpCli = WordPressCli.getDefault(false);
-                    wpCli.updateCommands();
-                } catch (InvalidPhpExecutableException ex) {
-                    LOGGER.log(Level.WARNING, ex.getLocalizedMessage());
-                }
-            } finally {
-                handle.finish();
+                WordPressCli wpCli = WordPressCli.getDefault(false);
+                wpCli.updateCommands();
+            } catch (InvalidPhpExecutableException ex) {
+                LOGGER.log(Level.WARNING, ex.getLocalizedMessage());
             }
         });
     }

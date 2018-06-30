@@ -63,6 +63,7 @@ import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.base.input.InputProcessor;
 import org.netbeans.api.extexecution.base.input.InputProcessors;
 import org.netbeans.api.extexecution.base.input.LineProcessor;
+import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.executable.PhpExecutable;
 import org.netbeans.modules.php.api.executable.PhpExecutableValidator;
@@ -366,28 +367,35 @@ public final class WordPressCli {
         return COMMANDS_CACHE;
     }
 
+    @NbBundle.Messages("WordPressCli.update.command.progress=Updating wp-cli commands...")
     public void updateCommands() {
-        long startTime = System.currentTimeMillis();
-        COMMANDS_CACHE.clear();
-        getCommands(Collections.<String>emptyList(), COMMANDS_CACHE);
-        if (COMMANDS_CACHE.isEmpty()) {
-            NotifyDescriptor.Message message = new NotifyDescriptor.Message(Bundle.WordPressCli_commands_empty(), NotifyDescriptor.WARNING_MESSAGE);
-            DialogDisplayer.getDefault().notify(message);
-        } else {
-            WordPressCliCommandListXmlBuilder builder = new WordPressCliCommandListXmlBuilder();
-            builder.build(COMMANDS_CACHE);
-            String commadlist = builder.asText();
-            if (!StringUtils.isEmpty(commadlist)) {
-                WordPressOptions.getInstance().setWpCliCommandList(commadlist);
+        ProgressHandle handle = ProgressHandle.createHandle(Bundle.WordPressCli_update_command_progress());
+        try {
+            handle.start();
+            long startTime = System.currentTimeMillis();
+            COMMANDS_CACHE.clear();
+            getCommands(Collections.<String>emptyList(), COMMANDS_CACHE, handle);
+            if (COMMANDS_CACHE.isEmpty()) {
+                NotifyDescriptor.Message message = new NotifyDescriptor.Message(Bundle.WordPressCli_commands_empty(), NotifyDescriptor.WARNING_MESSAGE);
+                DialogDisplayer.getDefault().notify(message);
+            } else {
+                WordPressCliCommandListXmlBuilder builder = new WordPressCliCommandListXmlBuilder();
+                builder.build(COMMANDS_CACHE);
+                String commadlist = builder.asText();
+                if (!StringUtils.isEmpty(commadlist)) {
+                    WordPressOptions.getInstance().setWpCliCommandList(commadlist);
+                }
             }
+            long endTime = System.currentTimeMillis();
+            LOGGER.log(INFO, "Update Commands: took {0}ms", endTime - startTime); // NOI18N
+            LOGGER.log(INFO, "{0} wp-cli commands.", COMMANDS_CACHE.size()); // NOI18N
+        } finally {
+            handle.finish();
         }
-        long endTime = System.currentTimeMillis();
-        LOGGER.log(INFO, "Update Commands: took {0}ms", endTime - startTime); // NOI18N
-        LOGGER.log(INFO, "{0} wp-cli commands.", COMMANDS_CACHE.size()); // NOI18N
     }
 
     // XXX get help later?
-    private void getCommands(List<String> subcommands, List<FrameworkCommand> commands) {
+    private void getCommands(List<String> subcommands, List<FrameworkCommand> commands, ProgressHandle handle) {
         ArrayList<String> params = new ArrayList<>(subcommands.size() + 1);
         params.add(HELP_COMMAND);
         params.addAll(subcommands);
@@ -409,6 +417,9 @@ public final class WordPressCli {
         boolean isSubcommands = false;
         boolean isFirstEmpty = false;
         LOGGER.log(FINE, "{0} WP Command", StringUtils.implode(subcommands, " ")); // NOI18N
+        if (handle != null) {
+            handle.progress(StringUtils.implode(subcommands, " ")); // NOI18N
+        }
         for (String line : lines) {
             if (isSubcommands) {
                 if (StringUtils.isEmpty(line)) {
@@ -440,7 +451,7 @@ public final class WordPressCli {
                 commands.add(new WordPressCliCommand(nextSubcommands.toArray(new String[]{}), description, help)); // NOI18N
 
                 // get commands recursively
-                getCommands(nextSubcommands, commands);
+                getCommands(nextSubcommands, commands, handle);
             }
 
             if (line.toLowerCase().startsWith("subcommands")) { // NOI18N
