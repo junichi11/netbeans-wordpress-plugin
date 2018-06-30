@@ -54,11 +54,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
 import java.util.logging.Logger;
+import static java.util.logging.Level.WARNING;
+import java.util.regex.Pattern;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.base.input.InputProcessor;
 import org.netbeans.api.extexecution.base.input.InputProcessors;
 import org.netbeans.api.extexecution.base.input.LineProcessor;
+import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.executable.PhpExecutable;
 import org.netbeans.modules.php.api.executable.PhpExecutableValidator;
@@ -109,18 +114,24 @@ public final class WordPressCli {
 
     // XXX default?
     private final List<String> DEFAULT_PARAMS = Collections.emptyList();
-    private static final List<FrameworkCommand> commandsCache = new ArrayList<>();
+    private static final List<FrameworkCommand> COMMANDS_CACHE = new ArrayList<>();
+
+    private static final Pattern WHITESPACES_PATTERN = Pattern.compile(" +"); // NOI18N
 
     private WordPressCli(String wpCliPath) {
         this.wpCliPath = wpCliPath;
+    }
+
+    public static WordPressCli getDefault(boolean warn) throws InvalidPhpExecutableException {
+        String wpCliPath = WordPressOptions.getInstance().getWpCliPath();
+        return newInstance(wpCliPath, warn);
     }
 
     @NbBundle.Messages({
         "# {0} - error message",
         "WordPressCli.invalid.wpcli.script=<html>wp-cli is not valid.<br>({0})"
     })
-    public static WordPressCli getDefault(boolean warn) throws InvalidPhpExecutableException {
-        String wpCliPath = WordPressOptions.getInstance().getWpCliPath();
+    public static WordPressCli newInstance(String wpCliPath, boolean warn) throws InvalidPhpExecutableException {
         String error = validate(wpCliPath);
         if (error == null) {
             return new WordPressCli(wpCliPath);
@@ -229,7 +240,7 @@ public final class WordPressCli {
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         } catch (ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(WARNING, null, ex);
         }
         return helpLineProcessor.getHelp();
     }
@@ -318,10 +329,10 @@ public final class WordPressCli {
      */
     @NbBundle.Messages("WordPressCli.commands.empty=Please check whether config file and DB settings exist.")
     public List<FrameworkCommand> getCommands(boolean isForce) {
-        if (!isForce && !commandsCache.isEmpty()) {
-            return commandsCache;
+        if (!isForce && !COMMANDS_CACHE.isEmpty()) {
+            return COMMANDS_CACHE;
         }
-        commandsCache.clear();
+        COMMANDS_CACHE.clear();
         if (!isForce) {
             // exists xml?
             String commandList = WordPressOptions.getInstance().getWpCliCommandList();
@@ -330,25 +341,22 @@ public final class WordPressCli {
                     File temp = File.createTempFile("nb-wpcli-tmp", ".xml"); // NOI18N
                     try {
                         FileOutputStream outputStream = new FileOutputStream(temp);
-                        PrintWriter pw = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8")); // NOI18N
-                        try {
+                        try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"))) { // NOI18N
                             pw.println(commandList);
-                        } finally {
-                            pw.close();
                         }
 
                         // parse
                         FileInputStream fileInputStream = new FileInputStream(temp);
                         InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8"); // NOI18N
-                        WordPressCliCommandsXmlParser.parse(inputStreamReader, commandsCache);
+                        WordPressCliCommandsXmlParser.parse(inputStreamReader, COMMANDS_CACHE);
                     } finally {
                         temp.deleteOnExit();
                     }
                 } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
+                    LOGGER.log(WARNING, null, ex);
                 }
-                if (!commandsCache.isEmpty()) {
-                    return commandsCache;
+                if (!COMMANDS_CACHE.isEmpty()) {
+                    return COMMANDS_CACHE;
                 }
             }
         }
@@ -356,27 +364,38 @@ public final class WordPressCli {
         // update
         updateCommands();
 
-        return commandsCache;
+        return COMMANDS_CACHE;
     }
 
+    @NbBundle.Messages("WordPressCli.update.command.progress=Updating wp-cli commands...")
     public void updateCommands() {
-        commandsCache.clear();
-        getCommands(Collections.<String>emptyList(), commandsCache);
-        if (commandsCache.isEmpty()) {
-            NotifyDescriptor.Message message = new NotifyDescriptor.Message(Bundle.WordPressCli_commands_empty(), NotifyDescriptor.WARNING_MESSAGE);
-            DialogDisplayer.getDefault().notify(message);
-        } else {
-            WordPressCliCommandListXmlBuilder builder = new WordPressCliCommandListXmlBuilder();
-            builder.build(commandsCache);
-            String commadlist = builder.asText();
-            if (!StringUtils.isEmpty(commadlist)) {
-                WordPressOptions.getInstance().setWpCliCommandList(commadlist);
+        ProgressHandle handle = ProgressHandle.createHandle(Bundle.WordPressCli_update_command_progress());
+        try {
+            handle.start();
+            long startTime = System.currentTimeMillis();
+            COMMANDS_CACHE.clear();
+            getCommands(Collections.<String>emptyList(), COMMANDS_CACHE, handle);
+            if (COMMANDS_CACHE.isEmpty()) {
+                NotifyDescriptor.Message message = new NotifyDescriptor.Message(Bundle.WordPressCli_commands_empty(), NotifyDescriptor.WARNING_MESSAGE);
+                DialogDisplayer.getDefault().notify(message);
+            } else {
+                WordPressCliCommandListXmlBuilder builder = new WordPressCliCommandListXmlBuilder();
+                builder.build(COMMANDS_CACHE);
+                String commadlist = builder.asText();
+                if (!StringUtils.isEmpty(commadlist)) {
+                    WordPressOptions.getInstance().setWpCliCommandList(commadlist);
+                }
             }
+            long endTime = System.currentTimeMillis();
+            LOGGER.log(INFO, "Update Commands: took {0}ms", endTime - startTime); // NOI18N
+            LOGGER.log(INFO, "{0} wp-cli commands.", COMMANDS_CACHE.size()); // NOI18N
+        } finally {
+            handle.finish();
         }
     }
 
     // XXX get help later?
-    private void getCommands(List<String> subcommands, List<FrameworkCommand> commands) {
+    private void getCommands(List<String> subcommands, List<FrameworkCommand> commands, ProgressHandle handle) {
         ArrayList<String> params = new ArrayList<>(subcommands.size() + 1);
         params.add(HELP_COMMAND);
         params.addAll(subcommands);
@@ -389,14 +408,18 @@ public final class WordPressCli {
                 result.get();
             }
         } catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
+            Thread.currentThread().interrupt();
         } catch (ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(WARNING, null, ex);
         }
         List<String> lines = helpLineProcessor.asLines();
 
         boolean isSubcommands = false;
         boolean isFirstEmpty = false;
+        LOGGER.log(FINE, "{0} WP Command", StringUtils.implode(subcommands, " ")); // NOI18N
+        if (handle != null) {
+            handle.progress(StringUtils.implode(subcommands, " ")); // NOI18N
+        }
         for (String line : lines) {
             if (isSubcommands) {
                 if (StringUtils.isEmpty(line)) {
@@ -406,8 +429,13 @@ public final class WordPressCli {
                     isFirstEmpty = true;
                     continue;
                 }
+                // XXX just ignore
+                // in the case of long description
+                if (line.startsWith("   ")) { // NOI18N
+                    continue;
+                }
                 line = line.trim();
-                line = line.replaceAll(" +", " "); // NOI18N
+                line = WHITESPACES_PATTERN.matcher(line).replaceAll(" "); // NOI18N
                 int indexOf = line.indexOf(" "); // NOI18N
                 if (indexOf == -1) {
                     continue;
@@ -422,8 +450,8 @@ public final class WordPressCli {
                 String help = getHelp(nextSubcommands);
                 commands.add(new WordPressCliCommand(nextSubcommands.toArray(new String[]{}), description, help)); // NOI18N
 
-                // recursive
-                getCommands(nextSubcommands, commands);
+                // get commands recursively
+                getCommands(nextSubcommands, commands, handle);
             }
 
             if (line.toLowerCase().startsWith("subcommands")) { // NOI18N
@@ -537,12 +565,7 @@ public final class WordPressCli {
      * @return InputProcessorFactory
      */
     private ExecutionDescriptor.InputProcessorFactory2 getOutputProcessorFactory(final LineProcessor lineProcessor) {
-        return new ExecutionDescriptor.InputProcessorFactory2() {
-            @Override
-            public InputProcessor newInputProcessor(InputProcessor defaultProcessor) {
-                return InputProcessors.ansiStripping(InputProcessors.bridge(lineProcessor));
-            }
-        };
+        return (InputProcessor defaultProcessor) -> InputProcessors.ansiStripping(InputProcessors.bridge(lineProcessor));
     }
 
     @NbBundle.Messages({

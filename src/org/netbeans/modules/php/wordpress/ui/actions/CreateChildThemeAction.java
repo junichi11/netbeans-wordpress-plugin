@@ -135,21 +135,17 @@ public final class CreateChildThemeAction extends BaseAction implements ChangeLi
         Collections.sort(themes);
 
         // show dialog
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                getDescriptor().setValid(false);
-                DialogDisplayer displayer = DialogDisplayer.getDefault();
-                if (displayer.notify(getDescriptor()) == DialogDescriptor.OK_OPTION) {
-                    try {
-                        createChildTheme(themesDirectory);
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+        SwingUtilities.invokeLater(() -> {
+            getDescriptor().setValid(false);
+            DialogDisplayer displayer = DialogDisplayer.getDefault();
+            if (displayer.notify(getDescriptor()) == DialogDescriptor.OK_OPTION) {
+                try {
+                    createChildTheme(themesDirectory);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
-                clear();
             }
+            clear();
         });
     }
 

@@ -43,13 +43,13 @@ package org.netbeans.modules.php.wordpress.ui.options;
 
 import java.awt.Cursor;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -72,12 +72,13 @@ import org.openide.util.Utilities;
 
 final class WordPressOptionsPanel extends javax.swing.JPanel {
 
-    private static final long serialVersionUID = -4504251144555676048L;
+    private static final long serialVersionUID = 3434388861381283705L;
     private static final String ZIP = ".zip"; // NOI18N
     private static final String WP_CLI_LAST_FOLDER_SUFFIX = ".wp-cli"; // NOI18N
     private final ChangeSupport changeSupport = new ChangeSupport(this);
     private String wpCliPath;
     private static final Logger LOGGER = Logger.getLogger(WordPressOptionsPanel.class.getName());
+    private static final RequestProcessor RP = new RequestProcessor(WordPressOptionsPanel.class);
 
     WordPressOptionsPanel() {
         initComponents();
@@ -114,14 +115,10 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
                 fireChange();
             }
         });
-        wpCliVersionLabel.addPropertyChangeListener(new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                boolean isEnabled = !wpCliVersionLabel.getText().isEmpty();
-                checkPluginNewVersionCheckBox.setEnabled(isEnabled);
-                checkThemeNewVersionCheckBox.setEnabled(isEnabled);
-            }
+        wpCliVersionLabel.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            boolean isEnabled = !wpCliVersionLabel.getText().isEmpty();
+            checkPluginNewVersionCheckBox.setEnabled(isEnabled);
+            checkThemeNewVersionCheckBox.setEnabled(isEnabled);
         });
     }
 
@@ -215,13 +212,18 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
 
     private void setWpCliVersoin() {
         if (!StringUtils.isEmpty(getWpCliPath())) {
-            try {
-                WordPressCli wpCli = WordPressCli.getDefault(true);
-                String version = wpCli.getVersion();
-                wpCliVersionLabel.setText(version);
-            } catch (InvalidPhpExecutableException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            RP.post(() -> {
+                try {
+                    WordPressCli wpCli = WordPressCli.getDefault(true);
+                    String version = wpCli.getVersion();
+                    SwingUtilities.invokeLater(() -> {
+                        wpCliVersionLabel.setText(version);
+                    });
+                } catch (InvalidPhpExecutableException ex) {
+                    wpCliVersionLabel.setText(""); // NOI18N
+                    LOGGER.log(Level.WARNING, null, ex);
+                }
+            });
         } else {
             wpCliVersionLabel.setText(""); // NOI18N
         }
@@ -652,25 +654,13 @@ final class WordPressOptionsPanel extends javax.swing.JPanel {
         }
     }
 
-    @NbBundle.Messages("WordPressOptionsPanel.update.command.progress=Updating wp-cli command list")
     private void updateCommandListXml() {
-        RequestProcessor.getDefault().post(new Runnable() {
-
-            @Override
-            public void run() {
-                ProgressHandle handle = ProgressHandle.createHandle(Bundle.WordPressOptionsPanel_update_command_progress());
-                try {
-                    handle.start();
-                    try {
-                        WordPressCli wpCli = WordPressCli.getDefault(false);
-                        wpCli.updateCommands();
-                    } catch (InvalidPhpExecutableException ex) {
-                        LOGGER.log(Level.WARNING, ex.getLocalizedMessage());
-                    }
-
-                } finally {
-                    handle.finish();
-                }
+        RP.post(() -> {
+            try {
+                WordPressCli wpCli = WordPressCli.getDefault(false);
+                wpCli.updateCommands();
+            } catch (InvalidPhpExecutableException ex) {
+                LOGGER.log(Level.WARNING, ex.getLocalizedMessage());
             }
         });
     }

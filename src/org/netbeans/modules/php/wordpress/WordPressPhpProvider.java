@@ -48,6 +48,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.modules.php.api.framework.BadgeIcon;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.phpmodule.PhpModuleProperties;
@@ -83,6 +84,7 @@ public class WordPressPhpProvider extends PhpFrameworkProvider {
 
     private static final RequestProcessor RP = new RequestProcessor(WordPressPhpProvider.class);
     private static final WordPressPhpProvider INSTANCE = new WordPressPhpProvider();
+    @StaticResource
     private static final String ICON_PATH = "org/netbeans/modules/php/wordpress/resources/wordpress_badge_8.png"; // NOI18N
     private final BadgeIcon badgeIcon;
     public static final Set<String> WP_DIRS = new HashSet<>();

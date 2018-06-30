@@ -156,13 +156,7 @@ public class MVCNodeFactory implements NodeFactory {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (WordPressModule.PROPERTY_CHANGE_WP.equals(evt.getPropertyName())) {
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        fireChange();
-                    }
-                });
+                SwingUtilities.invokeLater(this::fireChange);
             }
         }
 
