@@ -136,6 +136,8 @@ This is very simple feature. If you input a plugin name (plugin_name)...
 This feature is available on the parameters of following functions:
 - add_filter, remove_filter
 - add_action, remove_action
+- add_shortcode
+- register_activation_hook, register_deactivation_hook
 
 Hold down Ctrl key on first or second parameter. If text color is changed to blue, Click there.  
 Then caret position go to function. (first parameter is available when there are the same function names as parameter name : in this case, caret doesn't necessarily go to right position)
