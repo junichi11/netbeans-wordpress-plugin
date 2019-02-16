@@ -78,7 +78,10 @@ public class WordPressHyperlinkProviderExt implements HyperlinkProviderExt {
             "add_filter", // NOI18N
             "remove_filter", // NOI18N
             "add_action", // NOI18N
-            "remove_action"); // NOI18N
+            "remove_action", // NOI18N
+            "register_activation_hook", // NOI18N
+            "register_deactivation_hook", // NOI18N
+            "add_shortcode"); // NOI18N
     private String target;
     private int startOffset;
     private int endOffset;
