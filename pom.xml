@@ -4,7 +4,7 @@
     <groupId>com.junichi11.netbeans.modules</groupId>
     <artifactId>netbeans-wordpress-plugin</artifactId>
     <!-- change the version of build.xml -->
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <packaging>nbm</packaging>
     <name>PHP WordPress Blog/CMS</name>
     <url>https://github.com/junichi11/netbeans-wordpress-plugin</url>

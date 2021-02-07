@@ -13,7 +13,7 @@
     <property name="groupId" value="com.junichi11.netbeans.modules" />
     <property name="artifactId" value="netbeans-wordpress-plugin" />
     <!-- also change the version of pom.xml -->
-    <property name="version" value="1.1.0" />
+    <property name="version" value="1.2.0" />
     <!-- defined maven snapshots and staging repository id and url -->
     <property name="ossrh-snapshots-repository-url"
               value="https://oss.sonatype.org/content/repositories/snapshots/" />
