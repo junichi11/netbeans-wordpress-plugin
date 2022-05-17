@@ -13,7 +13,7 @@
     <property name="groupId" value="com.junichi11.netbeans.modules" />
     <property name="artifactId" value="netbeans-wordpress-plugin" />
     <!-- also change the version of pom.xml -->
-    <property name="version" value="1.1.0" />
+    <property name="version" value="1.2.0" />
     <!-- defined maven snapshots and staging repository id and url -->
     <property name="ossrh-snapshots-repository-url"
               value="https://oss.sonatype.org/content/repositories/snapshots/" />
@@ -22,7 +22,18 @@
     <!-- there server id in the Maven settings.xml -->
     <property name="ossrh-server-id" value="ossrh" />
 
-    <target name="deploy" depends="nbm" description="deploy release version to Maven repository">
+    <target name="update-version-number">
+        <replaceregexp file="pom.xml"
+                       match="(^    &lt;version&gt;).+(&lt;/version&gt;)"
+                       replace="\1${version}\2"
+                       byline="true" />
+        <replaceregexp file="manifest.mf"
+                       match="(OpenIDE-Module-Specification-Version:[ ]*).+"
+                       replace="\1${version}"
+                       byline="true" />
+    </target>
+
+    <target name="deploy" depends="update-version-number,nbm" description="deploy release version to Maven repository">
         <move file="${build}/org-netbeans-modules-php-wordpress.nbm" toFile="${build}/${artifactId}-${version}.nbm"/>
         <artifact:mvn>
             <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
