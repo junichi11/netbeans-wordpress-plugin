@@ -190,6 +190,10 @@ If development version exists, it will be available in the same archive as stabl
 
 [github releases](https://github.com/junichi11/netbeans-wordpress-plugin/releases)
 
+## Donation
+
+- https://github.com/sponsors/junichi11
+
 ## License
 
 [Common Development and Distribution License (CDDL) v1.0 and GNU General Public License (GPL) v2](http://netbeans.org/cddl-gplv2.html)

@@ -2,7 +2,46 @@
 <!-- You may freely edit this file. See harness/README in the NetBeans platform -->
 <!-- for some information on what you could do (e.g. targets to override). -->
 <!-- If you delete this file and reopen the project it will be recreated. -->
-<project name="org.netbeans.modules.php.wordpress" default="netbeans" basedir=".">
+<project name="org.netbeans.modules.php.wordpress" default="netbeans" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <description>Builds, tests, and runs the project org.netbeans.modules.php.wordpress.</description>
     <import file="nbproject/build-impl.xml"/>
+    <path id="maven-ant-tasks.classpath" path="lib/maven-ant-tasks-2.1.3.jar" />
+    <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" />
+
+    <!-- define Maven coordinates -->
+    <property name="build" value="build" />
+    <property name="groupId" value="com.junichi11.netbeans.modules" />
+    <property name="artifactId" value="netbeans-wordpress-plugin" />
+    <!-- also change the version of pom.xml -->
+    <property name="version" value="1.3.0" />
+    <!-- defined maven snapshots and staging repository id and url -->
+    <property name="ossrh-snapshots-repository-url"
+              value="https://oss.sonatype.org/content/repositories/snapshots/" />
+    <property name="ossrh-staging-repository-url"
+              value="https://oss.sonatype.org/service/local/staging/deploy/maven2/" />
+    <!-- there server id in the Maven settings.xml -->
+    <property name="ossrh-server-id" value="ossrh" />
+
+    <target name="update-version-number">
+        <replaceregexp file="pom.xml"
+                       match="(^    &lt;version&gt;).+(&lt;/version&gt;)"
+                       replace="\1${version}\2"
+                       byline="true" />
+        <replaceregexp file="manifest.mf"
+                       match="(OpenIDE-Module-Specification-Version:[ ]*).+"
+                       replace="\1${version}"
+                       byline="true" />
+    </target>
+
+    <target name="deploy" depends="update-version-number,nbm" description="deploy release version to Maven repository">
+        <move file="${build}/org-netbeans-modules-php-wordpress.nbm" toFile="${build}/${artifactId}-${version}.nbm"/>
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${ossrh-staging-repository-url}" />
+            <arg value="-DrepositoryId=${ossrh-server-id}" />
+            <arg value="-DpomFile=pom.xml" />
+            <arg value="-Dfile=${build}/${artifactId}-${version}.nbm" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+    </target>
 </project>

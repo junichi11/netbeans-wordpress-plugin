@@ -43,7 +43,7 @@ package org.netbeans.modules.php.wordpress.validators;
 
 import java.util.Arrays;
 import java.util.Collections;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.netbeans.modules.php.api.validation.ValidationResult;
 
