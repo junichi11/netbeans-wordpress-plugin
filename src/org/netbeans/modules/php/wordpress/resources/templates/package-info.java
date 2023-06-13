@@ -8,6 +8,7 @@
             scriptEngine = "freemarker"),
     @TemplateRegistration(
             folder = "WordPress",
+            category = "PHP",
             iconBase = WordPress.WP_ICON_16,
             displayName = "#WordPress_Plugin_Template_DisplayName",
             content = "WpPlugin.php",
@@ -15,6 +16,7 @@
             scriptEngine = "freemarker"),
     @TemplateRegistration(
             folder = "WordPress",
+            category = "PHP",
             iconBase = WordPress.WP_ICON_16,
             displayName = "#WordPress_Plugin_Readme_DisplayName",
             content = "readme.txt",
@@ -22,6 +24,7 @@
             scriptEngine = "freemarker"),
     @TemplateRegistration(
             folder = "WordPress",
+            category = "PHP",
             iconBase = WordPress.WP_ICON_16,
             displayName = "#WordPress_Theme_Style_DisplayName",
             content = "style.css",
@@ -29,6 +32,7 @@
             scriptEngine = "freemarker"),
     @TemplateRegistration(
             folder = "WordPress",
+            category = "PHP",
             iconBase = WordPress.WP_ICON_16,
             displayName = "#WordPress_Child_Theme_Style_DisplayName",
             content = "child-style.css",
@@ -36,6 +40,7 @@
             scriptEngine = "freemarker"),
     @TemplateRegistration(
             folder = "WordPress",
+            category = "PHP",
             //            iconBase = WordPress.WP_ICON_16,
             displayName = "#WordPress_Permalink_Htaccess_DisplayName",
             content = ".htaccess",
